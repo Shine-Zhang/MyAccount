@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public  void  test2(){
-
+        Log.i("zhangxudong","zhangxudong");
 
         Log.i("lll","llll");
 
