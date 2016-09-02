@@ -26,5 +26,8 @@ public class MainActivity extends AppCompatActivity {
 
         Log.i("lll","llll");
 
+        Log.i("aola","aolaaolaaola");
+
     }
+
 }
