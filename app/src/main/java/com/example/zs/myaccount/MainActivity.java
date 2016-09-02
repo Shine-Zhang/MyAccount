@@ -21,4 +21,11 @@ public class MainActivity extends AppCompatActivity {
         Log.i("haha","云中歌");
 
     }
+
+    public  void  test2(){
+
+
+        Log.i("lll","llll");
+
+    }
 }
