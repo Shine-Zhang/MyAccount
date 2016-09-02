@@ -14,7 +14,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.i(tag,"wennm");
         Log.i(tag,"wennm");
-        Log.i(tag,"wennm");
     }
     public void test(){
 
@@ -27,5 +26,8 @@ public class MainActivity extends AppCompatActivity {
 
         Log.i("lll","llll");
 
+        Log.i("aola","aolaaolaaola");
+
     }
+
 }
