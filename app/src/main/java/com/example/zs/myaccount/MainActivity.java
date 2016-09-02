@@ -30,4 +30,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public  void  test3(){
+
+
+        Log.i("11","大油桃");
+
+
+    }
+
 }
