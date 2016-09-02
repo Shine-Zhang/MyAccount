@@ -13,7 +13,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.i(tag,"wennm");
-        Log.i(tag,"wennm");
     }
     public void test(){
 
@@ -22,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public  void  test2(){
-
+        Log.i("zhangxudong","zhangxudong");
 
         Log.i("lll","llll");
 
