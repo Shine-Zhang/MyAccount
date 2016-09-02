@@ -25,5 +25,7 @@ public class MainActivity extends AppCompatActivity {
     public  void  test2(){
 
 
+        Log.i("lll","llll");
+
     }
 }
