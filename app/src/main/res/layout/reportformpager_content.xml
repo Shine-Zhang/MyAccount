@@ -3,33 +3,66 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout
+    <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center">
-        <ImageButton
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+
+        android:id="@+id/rg_reportform">
+        <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/ib_reportform_income"
+            android:text="收入"
+            android:button="@null"
+            android:background="@drawable/radiobutton_bg_report"
+            android:textColor="@drawable/radionbutton_text_color"
+            android:gravity="center"
+
+            android:id="@+id/rb_reportform_income"
             />
-        <ImageButton
+        <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/ib_reportform_expenditure"
+            android:text="支出"
+            android:button="@null"
+            android:gravity="center"
+            android:textColor="@drawable/radionbutton_text_color"
+            android:background="@drawable/radiobutton_bg_report"
+            android:checked="true"
+            android:id="@+id/rb_reportform_expenditure"
             />
-    </LinearLayout>
+    </RadioGroup>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ababab"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_reportform_time"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:text="2016.9.3"
+        android:gravity="center"
         />
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-    </LinearLayout>
-    <ListView
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ababab"/>
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/lv_reportform_percentage"></ListView>
+        android:id="@+id/fl_reportform">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></LinearLayout>
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></ListView>
+    </FrameLayout>
 </LinearLayout>
