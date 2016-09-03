@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fl_wishpager_content"></FrameLayout>
+
+   <!-- <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#fff">
@@ -21,6 +26,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/tv_wishpagermain_addwish"
             android:text="添加"
+            android:clickable="true"
             android:textColor="#1FB9EC"
             android:textSize="20sp"
             android:layout_alignParentRight="true"
@@ -60,6 +66,6 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/lv_wishpagermain_wish"></ListView>
+        android:id="@+id/lv_wishpagermain_wish"></ListView>-->
 
-</LinearLayout>
+</RelativeLayout>
