@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="15dp">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="拍照"
+        android:textColor="#fff"
+        android:textSize="18sp"
+        android:background="#1FB9EC"
+        android:onClick="toCamera"
+        android:id="@+id/bt_addwishpopupwindow_camera"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="图片库"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:background="#C6C6C6"
+        android:onClick="toGallery"
+        android:id="@+id/bt_addwishpopupwindow_gallery"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="取消"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:background="#C6C6C6"
+        android:onClick="cancel"
+        android:id="@+id/bt_addwishpopupwindow_cancel"/>
+
+</LinearLayout>
