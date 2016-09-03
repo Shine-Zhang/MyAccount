@@ -35,6 +35,8 @@ public class WishPager extends BasePager {
     public View initView() {
         //加载布局文件wishpager.xml
         View view = View.inflate(mActivity, R.layout.wishpager, null);
+
+        //判断文件里是否有未完成愿望，有则显示ShowWishFragment
         fragmentManager = mActivity.getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fl_wishpager_content,new BlankWishFragment(),"blankwish");
