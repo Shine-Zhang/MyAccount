@@ -27,7 +27,6 @@ public abstract class BasePager {
     public BasePager(Activity activity){
         this.mActivity = activity;
         mrootView = initView();
-        initData();
     }
 
     /**
