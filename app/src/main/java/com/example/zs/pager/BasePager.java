@@ -27,6 +27,7 @@ public abstract class BasePager {
     public BasePager(Activity activity){
         this.mActivity = activity;
         mrootView = initView();
+        initData();
     }
 
     /**
@@ -38,5 +39,7 @@ public abstract class BasePager {
      * 该函数实现的是初始化数据
      */
     public abstract void initData();
+
+
 
 }
