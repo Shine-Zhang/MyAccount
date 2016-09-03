@@ -10,7 +10,7 @@ public class ReportFormPager extends BasePager{
 
     @Override
     public View initView() {
-        return super.initView();
+        return null;
     }
 
     @Override
