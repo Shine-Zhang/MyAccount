@@ -16,6 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".AddWishActivity" />
+        <activity android:name=".AddRecordActivity"></activity>
     </application>
 
 </manifest>

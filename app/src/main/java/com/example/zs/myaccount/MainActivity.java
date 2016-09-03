@@ -17,7 +17,9 @@ public class MainActivity extends AppCompatActivity {
 
         Log.i(tag,"wennm");
     }
+    
     public void test(){
+
 
         Log.i("haha","云中歌");
 
