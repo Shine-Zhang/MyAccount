@@ -3,14 +3,86 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.zs.myaccount.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    <!--第一部分-->
+    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:id="@+id/vp_main"
+        android:text=" This is ViewPager!" >
+    </android.support.v4.view.ViewPager>
+
+    <!--第二部分-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp">
+        </View>
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="bottom"
+            android:id="@+id/rg_main_bottom"
+            android:layout_alignParentBottom="true"
+            >
+            <RadioButton
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:button="@null"
+                android:drawableTop="@drawable/radiobutton_main_detail"
+                android:text="明细"
+                android:id="@+id/rb_main_detail"
+                android:paddingBottom="1dp"
+                />
+            <RadioButton
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:button="@null"
+                android:drawableTop="@drawable/radiobutton_main_wish"
+                android:text="愿望"
+                android:id="@+id/rb_main_wish"
+                android:paddingBottom="1dp"
+                />
+            <RadioButton
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:button="@null"
+                android:drawableTop="@drawable/ic_plus_default"
+                android:text=""
+                android:id="@+id/rb_main_plus"
+                />
+            <RadioButton
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:button="@null"
+                android:drawableTop="@drawable/radiobutton_main_list"
+                android:text="报表"
+                android:id="@+id/rb_main_list"
+                android:paddingBottom="1dp"
+                />
+            <RadioButton
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:button="@null"
+                android:drawableTop="@drawable/radiobutton_main_mine"
+                android:text="我的"
+                android:id="@+id/rb_main_mine"
+                android:paddingBottom="1dp"
+                />
+        </RadioGroup>
+
 </RelativeLayout>
