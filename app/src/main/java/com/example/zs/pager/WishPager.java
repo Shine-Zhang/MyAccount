@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.zs.fragment.BlankWishFragment;
+import com.example.zs.fragment.DetailWishFragment;
 import com.example.zs.myaccount.R;
 
 import java.text.SimpleDateFormat;
@@ -35,10 +37,8 @@ public class WishPager extends BasePager {
         View view = View.inflate(mActivity, R.layout.wishpager, null);
         fragmentManager = mActivity.getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-
-//        fragmentTransaction.replace(R.id.fl_wishpager_content,new BlankWishFragment(),"blankwish");
-//        fragmentTransaction.replace(R.id.fl_wishpager_content,new DetailWishFragment(),"detailwish");
+        fragmentTransaction.replace(R.id.fl_wishpager_content,new BlankWishFragment(),"blankwish");
+        fragmentTransaction.replace(R.id.fl_wishpager_content,new DetailWishFragment(),"detailwish");
         fragmentTransaction.commit();
 
 
