@@ -18,14 +18,14 @@
     <!--第二部分-->
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp">
+            android:layout_height="2dp">
         </View>
 
         <RadioGroup
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center"
+            android:gravity="bottom"
             android:id="@+id/rg_main_bottom"
             android:layout_alignParentBottom="true"
             >
@@ -38,6 +38,7 @@
                 android:drawableTop="@drawable/radiobutton_main_detail"
                 android:text="明细"
                 android:id="@+id/rb_main_detail"
+                android:paddingBottom="1dp"
                 />
             <RadioButton
                 android:layout_width="0px"
@@ -48,6 +49,7 @@
                 android:drawableTop="@drawable/radiobutton_main_wish"
                 android:text="愿望"
                 android:id="@+id/rb_main_wish"
+                android:paddingBottom="1dp"
                 />
             <RadioButton
                 android:layout_width="0px"
@@ -68,6 +70,7 @@
                 android:drawableTop="@drawable/radiobutton_main_list"
                 android:text="报表"
                 android:id="@+id/rb_main_list"
+                android:paddingBottom="1dp"
                 />
             <RadioButton
                 android:layout_width="0px"
@@ -78,6 +81,7 @@
                 android:drawableTop="@drawable/radiobutton_main_mine"
                 android:text="我的"
                 android:id="@+id/rb_main_mine"
+                android:paddingBottom="1dp"
                 />
         </RadioGroup>
 
