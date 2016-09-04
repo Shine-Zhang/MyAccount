@@ -30,10 +30,7 @@ public class ReportFormPager extends BasePager{
         reportformpager_content_view = View.inflate(mActivity, R.layout.reportformpager_content, null);
         tv_reportform_time = (TextView) reportformpager_content_view.findViewById(R.id.tv_reportform_time);
         rg_reportform = (RadioGroup) reportformpager_content_view.findViewById(R.id.rg_reportform);
-        //vp_reportform = (ViewPager) reportformpager_content_view.findViewById(R.id.vp_reportform);
 
-        //绑定适配器
-        vp_reportform.setAdapter(new RepotformAdapter());
         //为RadioGroup设置监听事件，根据是收入还是支出呈现不同的page
         rg_reportform.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override

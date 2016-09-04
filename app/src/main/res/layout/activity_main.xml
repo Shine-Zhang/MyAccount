@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.zs.myaccount.MainActivity">
+    tools:context="com.example.zs.myaccount.MainActivity"
+    android:clipChildren="false">
 
     <!--第一部分-->
     <android.support.v4.view.ViewPager
@@ -11,11 +12,19 @@
         android:layout_height="0px"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:id="@+id/vp_main"
-        android:text=" This is ViewPager!" >
+        android:id="@+id/vp_mainactivity"
+        android:text=" This is ViewPager!">
     </android.support.v4.view.ViewPager>
 
     <!--第二部分-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:clipChildren="false"
+        android:background="#B2B2B2">
+    
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp">
@@ -27,8 +36,10 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="bottom"
-            android:id="@+id/rg_main_bottom"
+            android:id="@+id/rg_mainactivity_bottom"
             android:layout_alignParentBottom="true"
+            android:clipChildren="false"
+            android:background="#FFF"
             >
             <RadioButton
                 android:layout_width="0px"
@@ -38,7 +49,7 @@
                 android:button="@null"
                 android:drawableTop="@drawable/radiobutton_main_detail"
                 android:text="明细"
-                android:id="@+id/rb_main_detail"
+                android:id="@+id/rb_mainactivity_detail"
                 android:paddingBottom="1dp"
                 />
             <RadioButton
@@ -49,7 +60,7 @@
                 android:button="@null"
                 android:drawableTop="@drawable/radiobutton_main_wish"
                 android:text="愿望"
-                android:id="@+id/rb_main_wish"
+                android:id="@+id/rb_mainactivity_wish"
                 android:paddingBottom="1dp"
                 />
             <RadioButton
@@ -60,7 +71,7 @@
                 android:button="@null"
                 android:drawableTop="@drawable/ic_plus_default"
                 android:text=""
-                android:id="@+id/rb_main_plus"
+                android:id="@+id/rb_mainactivity_plus"
                 />
             <RadioButton
                 android:layout_width="0px"
@@ -70,7 +81,7 @@
                 android:button="@null"
                 android:drawableTop="@drawable/radiobutton_main_list"
                 android:text="报表"
-                android:id="@+id/rb_main_list"
+                android:id="@+id/rb_mainactivity_list"
                 android:paddingBottom="1dp"
                 />
             <RadioButton
@@ -81,9 +92,11 @@
                 android:button="@null"
                 android:drawableTop="@drawable/radiobutton_main_mine"
                 android:text="我的"
-                android:id="@+id/rb_main_mine"
+                android:id="@+id/rb_mainactivity_mine"
                 android:paddingBottom="1dp"
                 />
         </RadioGroup>
+
+    </LinearLayout>
 
 </RelativeLayout>
