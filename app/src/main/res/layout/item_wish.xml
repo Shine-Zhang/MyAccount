@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="1dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout android:orientation="vertical"
+        android:longClickable="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/rl_itemwish_top"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="我的愿望"
+                android:textSize="18sp"
+                android:textColor="#000"
+                android:id="@+id/tv_itemwish_title"
+                android:layout_marginLeft="15dp" />
+            <TextView
+                android:id="@+id/tv_itemwish_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1000.00"
+                android:textColor="#1FB9EC"
+                android:textSize="18sp"
+                android:layout_marginRight="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true" />
+            <TextView
+                android:textSize="15sp"
+                android:textColor="#898989"
+                android:text="备注"
+                android:id="@+id/tv_itemwish_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/tv_itemwish_amount"
+                android:layout_below="@+id/tv_itemwish_title"
+                android:layout_alignLeft="@id/tv_itemwish_title" />
+        </RelativeLayout>
+        <View
+            android:background="#BFBFBF"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp" />
+
+        <android.support.percent.PercentRelativeLayout
+            android:id="@+id/prl_itemwish_middle"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:longClickable="false"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/iv_itemwish_pic"
+                android:layout_width="80dp"
+                android:layout_height="55dp"
+                android:layout_marginLeft="15dp"
+                android:src="@drawable/ic_default_wish"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true" />
+            <ProgressBar
+                android:id="@+id/pb_itemwish_progress"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_margin="10dp"
+                android:max="100"
+                android:progressDrawable="@drawable/bg_progress"
+                android:layout_toRightOf="@id/iv_itemwish_pic"
+                android:layout_alignParentRight="true"
+                style="@android:style/Widget.ProgressBar.Horizontal" />
+            <TextView
+                android:textSize="15dp"
+                android:textColor="#898989"
+                android:text="梦想实现43%"
+                android:gravity="center"
+                android:id="@+id/tv_itemwish_progresstip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pb_itemwish_progress"
+                android:layout_alignLeft="@id/pb_itemwish_progress"
+                android:layout_alignRight="@id/pb_itemwish_progress" />
+        </android.support.percent.PercentRelativeLayout>
+        <FrameLayout
+            android:background="#E5E5E5"
+            android:longClickable="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/iv_itemwish_delete"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/ic_delete_white" />
+            <TextView
+                android:layout_gravity="end|center"
+                android:id="@+id/tv_itemwish_complete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:textSize="18sp"
+                android:text="完成" />
+        </FrameLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>
