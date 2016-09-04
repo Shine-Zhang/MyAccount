@@ -7,8 +7,10 @@ import android.view.View;
  */
 
 public class OwnerPager extends BasePager {
+
     @Override
     public View initView() {
+
         return null;
     }
 
