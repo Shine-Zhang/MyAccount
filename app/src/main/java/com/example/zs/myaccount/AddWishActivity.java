@@ -1,6 +1,7 @@
 package com.example.zs.myaccount;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -10,8 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -22,12 +25,15 @@ import com.example.zs.view.CircleImageView;
 
 public class AddWishActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final String TAG = "AddWishActivity";
     private TextView et_addwishactivity_mywish;
     private TextView et_addwishactivity_wishfund;
     private TextView et_addwishactivity_notes;
     private PopupWindow popupWindow;
     private CircleImageView civ_addwishactivity_image;
     private Button bt_addwishactivity_addwish;
+    private SharedPreferences wish;
+    private ImageView iv_addwishactivity_photo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +41,14 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_add_wish);
         getSupportActionBar().hide();
 
+        wish = getSharedPreferences("wish", MODE_PRIVATE);
+
         et_addwishactivity_mywish = (TextView) findViewById(R.id.et_addwishactivity_mywish);
         et_addwishactivity_wishfund = (TextView) findViewById(R.id.et_addwishactivity_wishfund);
         et_addwishactivity_notes = (TextView) findViewById(R.id.et_addwishactivity_notes);
         civ_addwishactivity_image = (CircleImageView) findViewById(R.id.civ_addwishactivity_image);
         bt_addwishactivity_addwish = (Button) findViewById(R.id.bt_addwishactivity_addwish);
+        iv_addwishactivity_photo = (ImageView) findViewById(R.id.iv_addwishactivity_photo);
 
         //给civ_addwishactivity_image设置点击事件
         civ_addwishactivity_image.setOnClickListener(new View.OnClickListener() {
@@ -47,6 +56,9 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
             public void onClick(View view) {
                 //点击相机，弹出一个popupwindow让用户选择获取图片的方式
                 getPhoto(view);
+                if(popupWindow.isShowing()){
+                    backgroundAlpha(0.5f);
+                }
             }
         });
 
@@ -64,6 +76,9 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
                         !et_addwishactivity_wishfund.getText().equals("0")){
                     bt_addwishactivity_addwish.setClickable(true);
                     bt_addwishactivity_addwish.setBackgroundColor(Color.rgb(31,185,236));
+                }else{
+                    bt_addwishactivity_addwish.setClickable(false);
+                    bt_addwishactivity_addwish.setBackgroundColor(Color.rgb(229,229,229));
                 }
             }
 
@@ -86,6 +101,9 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
                         !et_addwishactivity_wishfund.getText().equals("0")){
                     bt_addwishactivity_addwish.setClickable(true);
                     bt_addwishactivity_addwish.setBackgroundColor(Color.rgb(31,185,236));
+                }else{
+                    bt_addwishactivity_addwish.setClickable(false);
+                    bt_addwishactivity_addwish.setBackgroundColor(Color.rgb(229,229,229));
                 }
             }
 
@@ -121,7 +139,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
         popupWindow.setContentView(inflate);
         //设置popupWindow的宽高（必须要设置）
         popupWindow.setHeight(RelativeLayout.LayoutParams.WRAP_CONTENT);
-        popupWindow.setWidth(RelativeLayout.LayoutParams.WRAP_CONTENT);
+        popupWindow.setWidth(RelativeLayout.LayoutParams.MATCH_PARENT);
         //设置popupwindow显示的位置
 
         popupWindow.showAtLocation(view,Gravity.BOTTOM,0,0);
@@ -131,6 +149,14 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
         bt_addwishpopupwindow_gallery.setOnClickListener(AddWishActivity.this);
         bt_addwishpopupwindow_cancel.setOnClickListener(AddWishActivity.this);
 
+        //给popupwindow添加监听
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                backgroundAlpha(1f);
+
+            }
+        });
     }
 
     /**
@@ -141,9 +167,11 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
         switch (view.getId()){
             case R.id.bt_addwishpopupwindow_camera:
                 toCamera();
+                popupWindow.dismiss();
                 break;
             case R.id.bt_addwishpopupwindow_gallery:
                 toGallery();
+                popupWindow.dismiss();
                 break;
             case R.id.bt_addwishpopupwindow_cancel:
                 popupWindow.dismiss();
@@ -171,8 +199,10 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
      * 该函数用于调用系统的相机，并将拍好的照片传回来
      */
     private void toCamera() {
-        Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE); //系统常量， 启动相机的关键
-        startActivityForResult(openCameraIntent, 200); // 参数常量为自定义的request code, 在取返回结果时有用
+        //系统常量， 启动相机的关键
+        Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // 参数常量为自定义的request code, 在取返回结果时有用
+        startActivityForResult(openCameraIntent, 200);
     }
 
     /**
@@ -189,10 +219,12 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
             case 100:
                 //获取图片的uri
                 Uri uri = data.getData();
+                Log.i(TAG,"uri="+uri);
                 //保存图片
 
                 //使用自定义控件显示获取到的图片
                 civ_addwishactivity_image.setImageURI(uri);
+                iv_addwishactivity_photo.setVisibility(View.INVISIBLE);
                 break;
 
             //使用相机获取到的数据
@@ -203,9 +235,22 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
 
                     //显示图片
                     civ_addwishactivity_image.setImageBitmap(bitmap);
+                    iv_addwishactivity_photo.setVisibility(View.INVISIBLE);
+
                 }
                 break;
         }
+    }
+
+    /**
+     * 设置添加屏幕的背景透明度
+     * @param bgAlpha
+     */
+    public void backgroundAlpha(float bgAlpha)
+    {
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.alpha = bgAlpha; //0.0-1.0
+        getWindow().setAttributes(lp);
     }
 
 }

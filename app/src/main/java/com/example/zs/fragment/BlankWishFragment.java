@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.zs.myaccount.AddWishActivity;
 import com.example.zs.myaccount.R;
 
+
 /**
  * Created by 韦宇 on 2016/9/3.
  * 该类用于显示还没有添加任何愿望的愿望页面
