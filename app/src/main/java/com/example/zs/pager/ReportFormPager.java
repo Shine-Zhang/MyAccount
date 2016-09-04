@@ -25,6 +25,10 @@ public class ReportFormPager extends BasePager{
     //对应“收入”和“支出”的报表详情
     private ViewPager vp_reportform;
 
+    public ReportFormPager(Activity activity) {
+        super(activity);
+    }
+
     @Override
     public View initView() {
         reportformpager_content_view = View.inflate(mActivity, R.layout.reportformpager_content, null);
