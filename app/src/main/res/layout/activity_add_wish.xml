@@ -84,12 +84,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:text="0"
+                android:hint="0"
+                android:textColorHint="#000"
                 android:textSize="18sp"
                 android:textColor="#000"
                 android:layout_marginLeft="10dp"
                 android:maxLines="1"
-                android:maxLength="12"
+                android:maxLength="7"
+                android:cursorVisible="false"
                 android:id="@+id/et_addwishactivity_wishfund"/>
         </LinearLayout>
 
