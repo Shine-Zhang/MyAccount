@@ -65,25 +65,25 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup radioGroup, int checkId) {
                 switch (checkId){
 
-                    case R.id.rb_main_detail:
+                    case R.id.rb_mainactivity_detail:
                         vp_mainactivity.setCurrentItem(0);
                         break;
 
-                    case R.id.rb_main_wish:
+                    case R.id.rb_mainactivity_wish:
                         vp_mainactivity.setCurrentItem(1);
                         break;
 
-                    case R.id.rb_main_plus:
+                    case R.id.rb_mainactivity_plus:
                         vp_mainactivity.setCurrentItem(2);
                         //跳转
 
                         break;
 
-                    case R.id.rb_main_list:
+                    case R.id.rb_mainactivity_list:
                         vp_mainactivity.setCurrentItem(3);
                         break;
 
-                    case R.id.rb_main_mine:
+                    case R.id.rb_mainactivity_mine:
                         vp_mainactivity.setCurrentItem(4);
                         break;
                 }
