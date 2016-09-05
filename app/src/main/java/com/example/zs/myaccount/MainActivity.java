@@ -84,8 +84,10 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.rb_mainactivity_plus:
-                        vp_mainactivity.setCurrentItem(2);
-                        pageList.get(0).initData();
+                        Log.i(tag,"---");
+                       // vp_mainactivity.setCurrentItem(2);
+                        //pageList.get(0).initData();
+                        startActivity(new Intent(MainActivity.this,AddRecordActivity.class));
                         //跳转
 
                         break;
