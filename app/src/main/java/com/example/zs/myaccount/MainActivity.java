@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         //将每个page页面加入pageList
         //pageList.add(new 帅神页面);
-        //pageList.add(new WishPager(this));//mActivity------Fragment
+        pageList.add(new WishPager(this));
         //pageList.add(new 57页面);
         //pageList.add(new ReportFormPager(this));
         pageList.add(new OwnerPager(this));
