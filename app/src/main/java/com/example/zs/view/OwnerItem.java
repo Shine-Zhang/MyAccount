@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.zs.myaccount.R;
 
@@ -17,6 +19,7 @@ import com.example.zs.myaccount.R;
  * 该类重写了RelativeLayout，实现自定义控件该类重写了RelativeLayout的布局初始化
  */
 public class OwnerItem extends RelativeLayout {
+    private static final String TAG = "OwnerItem";
     private Context ctx;//整个全局域
     private String ownerItemTitle;
     private Drawable ownerItemIcon;
@@ -35,6 +38,8 @@ public class OwnerItem extends RelativeLayout {
         init(attrs);
     }
 
+    /*
+    * 此方法用于初始化“我的”页面的*/
     private void init(AttributeSet attrs) {
 
         if(attrs!=null){//当attrs不为空，则取出属性值
@@ -55,9 +60,15 @@ public class OwnerItem extends RelativeLayout {
         iv_ownerpager_itemicon.setImageDrawable(ownerItemIcon);
         tv_ownerpager_itemtitle.setText(ownerItemTitle);
 
+        //实现OwnerItem的点击
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.i(TAG,"onclick");
+                //判断Item 有被设置自定义的监听，则调用caiiback函数
+                if(OwnerItemOnClickListener!=null){
+                    OwnerItemOnClickListener.onItemClick();
+                }
 
             }
         });
