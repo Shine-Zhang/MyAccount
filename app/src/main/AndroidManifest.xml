@@ -22,6 +22,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".MyBalanceActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".ShareAppActivity" />
+        <activity android:name=".InitializeActivity" />
+        <activity android:name=".FeedbackActivity" />
+        <activity android:name=".QuestionActivity" />
+        <activity android:name=".AboutUsActivity"></activity>
+        <activity android:name=".MyBalanceActivity" />
         <activity android:name=".CompleteWishActivity"></activity>
     </application>
 

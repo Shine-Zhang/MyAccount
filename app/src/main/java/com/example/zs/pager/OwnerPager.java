@@ -13,17 +13,18 @@ import com.example.zs.view.OwnerItem;
 /**
  * Created by 钟云婷 on 2016/9/2.
  */
-
+//该类实现“我的”页面
 public class OwnerPager extends BasePager {
 
     private static final String TAG = "OwnerPager";
     private OwnerItem oi_ownerpager_login;
     private OwnerItem oi_ownerpager_balance;
-    private OwnerItem oi_ownerpager_theme;
     private OwnerItem oi_ownerpager_share;
     private OwnerItem oi_ownerpager_feedback;
     private OwnerItem oi_ownerpager_update;
-    private OwnerItem oi_ownerpager_more;
+    private OwnerItem oi_ownerpager_initialize;
+    private OwnerItem oi_ownerpager_commonQuestion;
+    private OwnerItem oi_ownerpager_aboutUs;
 
     public OwnerPager(Activity activity) {
         super(activity);
@@ -37,73 +38,105 @@ public class OwnerPager extends BasePager {
         //找出OwnerPagerView中的所有控件
         oi_ownerpager_login = (OwnerItem) OwnerPagerView.findViewById(R.id.oi_ownerpager_login);
         oi_ownerpager_balance = (OwnerItem) OwnerPagerView.findViewById(R.id.oi_ownerpager_balance);
-        oi_ownerpager_theme = (OwnerItem) OwnerPagerView.findViewById(R.id.oi_ownerpager_theme);
         oi_ownerpager_share = (OwnerItem) OwnerPagerView.findViewById(R.id.oi_ownerpager_share);
         oi_ownerpager_feedback = (OwnerItem) OwnerPagerView.findViewById(R.id.oi_ownerpager_feedback);
         oi_ownerpager_update = (OwnerItem) OwnerPagerView.findViewById(R.id.oi_ownerpager_update);
-        oi_ownerpager_more = (OwnerItem) OwnerPagerView.findViewById(R.id.oi_ownerpager_more);
-        Log.i(TAG,"OwnerPager initView!");
+        oi_ownerpager_initialize = (OwnerItem) OwnerPagerView.findViewById(R.id.oi_ownerpager_initialize);
+        oi_ownerpager_commonQuestion = (OwnerItem) OwnerPagerView.findViewById(R.id.oi_ownerpager_commonQuestion);
+        oi_ownerpager_aboutUs = (OwnerItem) OwnerPagerView.findViewById(R.id.oi_ownerpager_aboutUs);
 
-        initMyBalance();
-        initTheme();
-        initShareApp();
-        initFeedback();
-        initUpdate();
-        initMore();
+        initLogin();        //登录
+        initMyBalance();    //我的余额
+        initShareApp();     //分享App
+        initClearALl();     //初始化，最初状态
+        initFeedback();     //意见反馈
+        initUpdate();       //检测更新
+        initQuestion();     //常见问题
+        initAboutUs();      //关于我们
 
         return OwnerPagerView;
     }
 
-    //初始化more条目，添加点击事件
-    private void initMore() {
-        oi_ownerpager_more.setMyOwnerItemOnClickListener(new OwnerItem.MyOwnerItemOnClickListener() {
-            //被点击则跳转到more页面
+    //初始化 登录 条目，添加点击事件
+    private void initLogin() {
+        Log.i(TAG,"initMyBalance coming!");
+        oi_ownerpager_login.setMyOwnerItemOnClickListener(new OwnerItem.MyOwnerItemOnClickListener() {
+            //为oi_ownerpager_balance条目设置自定义的监听，当该条目被点击测会调用onItemClick()，然后跳转到MyBalance页面
             @Override
             public void onItemClick() {
+                mActivity.startActivity(new Intent(mActivity, MyBalanceActivity.class));
+            }
+        });
+    }
 
+    //初始化 “初始化”条目，添加点击事件
+    private void initClearALl() {
+        Log.i(TAG,"initMyBalance coming!");
+        oi_ownerpager_initialize.setMyOwnerItemOnClickListener(new OwnerItem.MyOwnerItemOnClickListener() {
+            //为oi_ownerpager_balance条目设置自定义的监听，当该条目被点击测会调用onItemClick()，然后跳转到MyBalance页面
+            @Override
+            public void onItemClick() {
+                mActivity.startActivity(new Intent(mActivity, MyBalanceActivity.class));
+            }
+        });
+    }
+
+    //初始化 常见问题 条目，添加点击事件
+    private void initQuestion() {
+        Log.i(TAG,"initMyBalance coming!");
+        oi_ownerpager_commonQuestion.setMyOwnerItemOnClickListener(new OwnerItem.MyOwnerItemOnClickListener() {
+            //为oi_ownerpager_balance条目设置自定义的监听，当该条目被点击测会调用onItemClick()，然后跳转到MyBalance页面
+            @Override
+            public void onItemClick() {
+                mActivity.startActivity(new Intent(mActivity, MyBalanceActivity.class));
+            }
+        });
+    }
+
+    //初始化 关于我们 条目，添加点击事件
+    private void initAboutUs() {
+        Log.i(TAG,"initMyBalance coming!");
+        oi_ownerpager_aboutUs.setMyOwnerItemOnClickListener(new OwnerItem.MyOwnerItemOnClickListener() {
+            //为oi_ownerpager_balance条目设置自定义的监听，当该条目被点击测会调用onItemClick()，然后跳转到MyBalance页面
+            @Override
+            public void onItemClick() {
+                mActivity.startActivity(new Intent(mActivity, MyBalanceActivity.class));
             }
         });
     }
 
     //初始化 检测更新 条目，添加点击事件
     private void initUpdate() {
+        Log.i(TAG,"initMyBalance coming!");
         oi_ownerpager_update.setMyOwnerItemOnClickListener(new OwnerItem.MyOwnerItemOnClickListener() {
+            //为oi_ownerpager_balance条目设置自定义的监听，当该条目被点击测会调用onItemClick()，然后跳转到MyBalance页面
             @Override
             public void onItemClick() {
-
+                mActivity.startActivity(new Intent(mActivity, MyBalanceActivity.class));
             }
         });
     }
 
     //初始化 意见反馈 条目，添加点击事件
     private void initFeedback() {
-
+        Log.i(TAG,"initMyBalance coming!");
         oi_ownerpager_feedback.setMyOwnerItemOnClickListener(new OwnerItem.MyOwnerItemOnClickListener() {
+            //为oi_ownerpager_balance条目设置自定义的监听，当该条目被点击测会调用onItemClick()，然后跳转到MyBalance页面
             @Override
             public void onItemClick() {
-
+                mActivity.startActivity(new Intent(mActivity, MyBalanceActivity.class));
             }
         });
     }
 
     //初始化 分享App 条目，添加点击事件
     private void initShareApp() {
-
+        Log.i(TAG,"initMyBalance coming!");
         oi_ownerpager_share.setMyOwnerItemOnClickListener(new OwnerItem.MyOwnerItemOnClickListener() {
+            //为oi_ownerpager_balance条目设置自定义的监听，当该条目被点击测会调用onItemClick()，然后跳转到MyBalance页面
             @Override
             public void onItemClick() {
-
-            }
-        });
-    }
-
-    //初始化 主题皮肤 条目，添加点击事件
-    private void initTheme() {
-
-        oi_ownerpager_theme.setMyOwnerItemOnClickListener(new OwnerItem.MyOwnerItemOnClickListener() {
-            @Override
-            public void onItemClick() {
-
+                mActivity.startActivity(new Intent(mActivity, MyBalanceActivity.class));
             }
         });
     }
@@ -112,10 +145,9 @@ public class OwnerPager extends BasePager {
     private void initMyBalance() {
         Log.i(TAG,"initMyBalance coming!");
         oi_ownerpager_balance.setMyOwnerItemOnClickListener(new OwnerItem.MyOwnerItemOnClickListener() {
-            //被点击则跳转到MyBalance页面
+            //为oi_ownerpager_balance条目设置自定义的监听，当该条目被点击测会调用onItemClick()，然后跳转到MyBalance页面
             @Override
             public void onItemClick() {
-                Log.i(TAG,"initMyBalance.onItemClick");
                 mActivity.startActivity(new Intent(mActivity, MyBalanceActivity.class));
             }
         });
