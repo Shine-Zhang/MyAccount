@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         //pageList.add(new 帅神页面);
         //pageList.add(new WishPager(this));//mActivity------Fragment
         //pageList.add(new 57页面);
-        pageList.add(new ReportFormPager(this));
+        //pageList.add(new ReportFormPager(this));
         pageList.add(new OwnerPager(this));
 
         //新建Adapter用于每个RadioButton点击显示不同页面
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.rb_mainactivity_mine:
                         vp_mainactivity.setCurrentItem(4);
-                        pageList.get(1).initData();
+                        pageList.get(0).initData();
                         break;
                 }
             }
