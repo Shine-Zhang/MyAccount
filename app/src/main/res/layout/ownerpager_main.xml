@@ -46,6 +46,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/tv_ownerpager_mybalance"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="50dp"
@@ -53,14 +54,15 @@
             android:textColor="#20C9F5"
             android:text="0.00" />
     </RelativeLayout>
+
     <com.example.zs.view.OwnerItem
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        app:ownerItemIcon="@drawable/ic_zhuti_default"
-        app:ownerItemTitle="主题皮肤"
+        app:ownerItemIcon="@drawable/ic_share_default"
         android:layout_marginTop="10dp"
+        app:ownerItemTitle="分享APP"
         android:background="#FFF"
-        android:id="@+id/oi_ownerpager_theme"
+        android:id="@+id/oi_ownerpager_share"
         ></com.example.zs.view.OwnerItem>
     <View
         android:layout_width="match_parent"
@@ -70,10 +72,10 @@
     <com.example.zs.view.OwnerItem
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        app:ownerItemIcon="@drawable/ic_share_default"
-        app:ownerItemTitle="分享APP"
+        app:ownerItemIcon="@drawable/ic_chushihua_default"
+        app:ownerItemTitle="初始化"
         android:background="#FFF"
-        android:id="@+id/oi_ownerpager_share"
+        android:id="@+id/oi_ownerpager_initialize"
         ></com.example.zs.view.OwnerItem>
     <com.example.zs.view.OwnerItem
         android:layout_width="match_parent"
@@ -84,11 +86,7 @@
         android:background="#FFF"
         android:id="@+id/oi_ownerpager_feedback"
         ></com.example.zs.view.OwnerItem>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/abc_list_pressed_holo_light"
-        android:layout_marginLeft="80dp"/>
+
     <com.example.zs.view.OwnerItem
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -97,13 +95,32 @@
         android:background="#FFF"
         android:id="@+id/oi_ownerpager_update"
         ></com.example.zs.view.OwnerItem>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/abc_list_pressed_holo_light"
+        android:layout_marginLeft="80dp"/>
     <com.example.zs.view.OwnerItem
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        app:ownerItemIcon="@drawable/ic_more_default"
+        app:ownerItemIcon="@drawable/ic_wenti_default"
         android:layout_marginTop="10dp"
-        app:ownerItemTitle="更多"
+        app:ownerItemTitle="常见问题"
         android:background="#FFF"
-        android:id="@+id/oi_ownerpager_more"
+        android:id="@+id/oi_ownerpager_commonQuestion"
         ></com.example.zs.view.OwnerItem>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/abc_list_pressed_holo_light"
+        android:layout_marginLeft="80dp"/>
+    <com.example.zs.view.OwnerItem
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:ownerItemIcon="@drawable/ic_guanyu_default"
+        app:ownerItemTitle="关于我们"
+        android:background="#FFF"
+        android:id="@+id/oi_ownerpager_aboutUs"
+        ></com.example.zs.view.OwnerItem>
+
 </LinearLayout>
