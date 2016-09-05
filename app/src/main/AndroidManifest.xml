@@ -26,7 +26,8 @@
         <activity android:name=".InitializeActivity" />
         <activity android:name=".FeedbackActivity" />
         <activity android:name=".QuestionActivity" />
-        <activity android:name=".AboutUsActivity"></activity>
+        <activity android:name=".AboutUsActivity" />
+        <activity android:name=".ChoiceDateActivity"></activity>
     </application>
 
 </manifest>
