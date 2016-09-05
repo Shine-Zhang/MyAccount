@@ -12,8 +12,8 @@
         android:layout_height="wrap_content"
         android:background="#fff">
         <ImageButton
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:background="#00000000"
             android:scaleType="fitXY"
             android:layout_centerVertical="true"
@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="添加愿望"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:padding="15dp"
             android:textColor="#000"
             android:layout_toRightOf="@id/imgbt_addwishactivity_back"/>
@@ -62,7 +62,7 @@
             android:hint="我的愿望"
             android:textColor="#000"
             android:maxLines="1"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:maxLength="12"
             android:id="@+id/et_addwishactivity_mywish"/>
         <LinearLayout
@@ -80,14 +80,14 @@
                 android:layout_height="wrap_content"
                 android:text="愿望资金"
                 android:textColor="#515151"
-                android:textSize="18sp"/>
+                android:textSize="15sp"/>
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:hint="0"
                 android:textColorHint="#000"
-                android:textSize="18sp"
+                android:textSize="17sp"
                 android:textColor="#000"
                 android:layout_marginLeft="10dp"
                 android:maxLines="1"
@@ -107,7 +107,7 @@
             android:hint="备注"
             android:textColor="#000"
             android:maxLines="1"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:maxLength="12"
             android:id="@+id/et_addwishactivity_notes"/>
         <Button
@@ -120,7 +120,7 @@
             android:text="许下愿望"
             android:textColor="#fff"
             android:background="#E5E5E5"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:id="@+id/bt_addwishactivity_addwish"
             android:clickable="false" />
 

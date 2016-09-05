@@ -11,7 +11,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="愿望"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:padding="15dp"
             android:textColor="#000"
             android:gravity="center"/>
@@ -22,15 +22,15 @@
             android:text="添加"
             android:clickable="true"
             android:textColor="#1FB9EC"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"/>
     </RelativeLayout>
 
     <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
         android:src="@drawable/ic_fish_default"
         android:layout_centerInParent="true"
         android:id="@+id/iv_blankwish_fish"/>
@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="点击添加愿望"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:textColor="#000"
             android:layout_marginTop="10dp"
             android:gravity="center"/>
@@ -52,8 +52,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="人没有梦想和咸鱼有什么区别呢？"
-            android:layout_marginTop="10dp"
-            android:textSize="15sp"
+            android:layout_marginTop="8dp"
+            android:textSize="13sp"
             android:gravity="center"/>
     </LinearLayout>
 
