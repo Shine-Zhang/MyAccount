@@ -46,7 +46,7 @@ public class ReportFormPager extends BasePager{
     public ReportFormPager(Activity activity, View reportformpager_content_view) {
         super(activity);
         this.reportformpager_content_view = reportformpager_content_view;
-        //initChart();
+        initChart();
     }
 
     @Override
