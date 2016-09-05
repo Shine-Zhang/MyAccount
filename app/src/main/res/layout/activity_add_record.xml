@@ -11,33 +11,37 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         >
-        <LinearLayout
+        <RadioGroup
+            android:id="@+id/rg_addRecordActivity_singleChoice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:orientation="horizontal"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             >
-            <Button
+            <RadioButton
                 android:id="@+id/btn_addRecordActivity_income"
                 android:layout_width="90dp"
                 android:layout_height="30dp"
                 android:background="@drawable/bg_addbutton_choice"
                 android:textColor="#ff909090"
                 android:textSize="15sp"
-                android:onClick="switchPage"
+                android:gravity="center"
+                android:button="@null"
                 android:text="收入"
                 />
-            <Button
+            <RadioButton
                 android:id="@+id/btn_addRecordActivity_payout"
                 android:layout_width="90dp"
                 android:layout_height="30dp"
-                android:background="@drawable/w"
+                android:background="@drawable/bg_addbutton_choice"
                 android:textColor="#ff909090"
                 android:textSize="15sp"
-                android:onClick="switchPage"
+                android:gravity="center"
+                android:button="@null"
                 android:text="支出"/>
-        </LinearLayout>
+        </RadioGroup>
         <ImageView
             android:id="@+id/iv_addRecordActivity_"
             android:layout_width="20dp"

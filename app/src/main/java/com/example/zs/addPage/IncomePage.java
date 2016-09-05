@@ -17,12 +17,21 @@ import com.example.zs.myaccount.R;
  */
 public class IncomePage extends AddBasePage {
     private int COLUMS_NUMBER = 5;
+    private int[] icons;
+    private String[] contents;
+
     public IncomePage(Context ctx) {
         super(ctx);
     }
 
     @Override
     public View initView() {
+        //测试数据
+        icons = new int[]{R.drawable.ic_default_wish,R.drawable.ic_default_wish,R.drawable.ic_default_wish,
+                R.drawable.ic_default_wish,R.drawable.ic_default_wish,R.drawable.ic_default_wish,
+                R.drawable.ic_default_wish,R.drawable.ic_default_wish,R.drawable.ic_default_wish};
+        contents = new String[]{"一般","一般","一般","一般","一般","一般","一般","一般",
+                "一般","一般","一般","一般","一般","一般","一般","一般"};
         GridView gridView = new GridView(ctx);
       /*  RecyclerView recyclerView = new RecyclerView(ctx);
         recyclerView.setAdapter();*/
@@ -30,11 +39,6 @@ public class IncomePage extends AddBasePage {
         gridView.setAdapter(new MyGridViewAdapter());
         return gridView;
     }
-    int[] icons = {R.drawable.ic_default_wish,R.drawable.ic_default_wish,R.drawable.ic_default_wish,
-            R.drawable.ic_default_wish,R.drawable.ic_default_wish,R.drawable.ic_default_wish,
-            R.drawable.ic_default_wish,R.drawable.ic_default_wish,R.drawable.ic_default_wish};
-    String [] contents ={"一般","一般","一般","一般","一般","一般","一般","一般",
-            "一般","一般","一般","一般","一般","一般","一般","一般"};
     class MyGridViewAdapter extends BaseAdapter{
         @Override
         public int getCount() {
