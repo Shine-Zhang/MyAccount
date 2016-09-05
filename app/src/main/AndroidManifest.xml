@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".MyBalanceActivity" />
+        <activity android:name=".ChoiceDateActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".ShareAppActivity" />
         <activity android:name=".InitializeActivity" />
