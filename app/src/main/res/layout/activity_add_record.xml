@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:background="#fff"
                 android:textColor="#000"
-                android:textSize="10sp"
+                android:textSize="15sp"
                 android:text="收入"
                 android:layout_marginRight="-8dp"/>
             <Button
@@ -31,8 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#fff"
-                android:textColor="#000"
-                android:textSize="10sp"
+                android:textSize="15sp"
                 android:text="支出"/>
         </LinearLayout>
         <ImageView
@@ -44,24 +43,36 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"/>
     </RelativeLayout>
+    <View
+        android:id="@+id/view_whiteTop"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#000"
+        android:layout_below="@+id/rl_addRecordActivity_title"/>
     <RelativeLayout
         android:id="@+id/ll_addRecordActivity_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/rl_addRecordActivity_title">
+        android:layout_below="@+id/view_whiteTop">
         <Button
             android:id="@+id/btn_addRecordActivity_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#fff"
-            android:textSize="10sp"
-            android:textColor="#000"
+            android:textSize="15sp"
+            android:onClick="choiceTime"
             android:layout_marginLeft="10dp"
             android:text="9月03日"/>
     </RelativeLayout>
+    <View
+        android:id="@+id/view_whiteUp"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#000"
+        android:layout_below="@+id/ll_addRecordActivity_time"/>
    <android.support.v4.view.ViewPager
-       android:id="@+id/ll_addRecordActivity_content"
-       android:layout_below="@+id/ll_addRecordActivity_time"
+       android:id="@+id/vp_addRecordActivity_content"
+       android:layout_below="@+id/view_whiteUp"
        android:layout_width="match_parent"
        android:layout_height="match_parent">
    </android.support.v4.view.ViewPager>
@@ -83,7 +94,7 @@
             android:layout_height="40dp"
             android:src="@drawable/ic_pen2_default"
             android:layout_toRightOf="@+id/iv_addRecordActivity_photo"/>
-        <EditText
+        <TextView
             android:id="@+id/et_addRecordActivity_inputNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -1,5 +1,10 @@
 package com.example.zs.myaccount;
 
+/**
+ * Create by Wang Yu on 2016/09/02
+ */
+
+import android.content.Intent;
 import android.graphics.Color;
 import android.media.Image;
 import android.support.v4.view.PagerAdapter;
@@ -55,8 +60,18 @@ public class GuideActivity extends AppCompatActivity {
                 }
 
                 @Override
+                //设置imagebutton在第三页显示，其它页隐藏
                 public void onPageSelected(int position) {
 
+
+                    if (position==2){
+
+                        ib_guideactivity_enter.setVisibility(View.VISIBLE);
+                    }
+                    else {
+
+                        ib_guideactivity_enter.setVisibility(View.INVISIBLE);
+                    }
                 }
 
                 @Override
@@ -95,5 +110,12 @@ public class GuideActivity extends AppCompatActivity {
 
             container.removeView((ImageView)object);
         }
+    }
+
+    //在点击imagebutton时，跳转至MainActivity
+    public void enterMainActivity (View v){
+
+        startActivity(new Intent(this,MainActivity.class));
+        finish();
     }
 }
