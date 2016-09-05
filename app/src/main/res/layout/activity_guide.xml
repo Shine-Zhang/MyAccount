@@ -17,8 +17,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="invisible"
-        android:onClick="enterHome"
-        android:id="@+id/ib_guideactivity_enter">
-
+        android:onClick="enterMainActivity"
+        android:id="@+id/ib_guideactivity_enter"
+        android:background="@android:color/transparent">
     </ImageButton>
+
+
 </RelativeLayout>
