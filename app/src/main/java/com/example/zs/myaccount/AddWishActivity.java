@@ -248,7 +248,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.tv_bt_popupwindowkekeyboard_delete:
                 //删除wishFundString的最后一个字符
-                if(wishFundString!=null){
+                if(wishFundString!=null && !wishFundString.equals("")){
                     wishFundString.deleteCharAt(wishFundString.length()-1);
                     et_addwishactivity_wishfund.setText(wishFundString);
                 }else {
