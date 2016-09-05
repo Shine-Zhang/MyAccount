@@ -28,6 +28,9 @@ import android.widget.Toast;
 import com.example.zs.view.CircleImageView;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class AddWishActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -49,6 +52,8 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
 
     //该变量用于存放愿望基金的字符串
     private StringBuffer wishFundString;
+    private File tempFile;
+    private FileOutputStream fileOutputStream = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,6 +160,9 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
+        //给“许下愿望”按钮添加点击监听
+        bt_addwishactivity_addwish.setOnClickListener(AddWishActivity.this);
+
     }
 
     /**
@@ -176,9 +184,14 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.bt_addwishactivity_addwish:
                 addWish();
+                //关闭当前页面，刷新数据库
+                finish();
                 break;
             case R.id.tv_popupwindowshowphoto_delete:
                 //删除图片则退出图片显示，图片恢复默认
+                /*if(tempFile.exists()){
+                    tempFile.delete();
+                }*/
                 popupwindow_showphoto.dismiss();
                 civ_addwishactivity_image.setImageResource(R.drawable.blankrect);
                 iv_addwishactivity_photo.setVisibility(View.VISIBLE);
@@ -190,16 +203,22 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
                 if(et_addwishactivity_wishfund.getText().length()==0) {
                     break;
                 }
-                wishFundString.append("0");
-                et_addwishactivity_wishfund.setText(wishFundString);
+                if(wishFundString.toString()=="0"){
+                    break;
+                }else {
+                    wishFundString.append("0");
+                    et_addwishactivity_wishfund.setText(wishFundString);
+                }
+                Log.i(TAG,"wishFundString="+wishFundString+" length="+wishFundString.length());
                 break;
             case R.id.bt_popupwindowkekeyboard_1:
-                if(wishFundString.equals("0")) {
+                if(wishFundString.toString()=="0") {
                     wishFundString.replace(0,1,"1");
                 }else{
                     wishFundString.append("1");
                 }
                 et_addwishactivity_wishfund.setText(wishFundString);
+                Log.i(TAG,"wishFundString="+wishFundString+" length="+wishFundString.length());
                 break;
             case R.id.bt_popupwindowkekeyboard_2:
                 if(wishFundString.equals("0")) {
@@ -208,34 +227,42 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
                     wishFundString.append("2");
                 }
                 et_addwishactivity_wishfund.setText(wishFundString);
+                Log.i(TAG,"wishFundString="+wishFundString+" length="+wishFundString.length());
                 break;
             case R.id.bt_popupwindowkekeyboard_3:
                 wishFundString.append("3");
                 et_addwishactivity_wishfund.setText(wishFundString);
+                Log.i(TAG,"wishFundString="+wishFundString+" length="+wishFundString.length());
                 break;
             case R.id.bt_popupwindowkekeyboard_4:
                 wishFundString.append("4");
                 et_addwishactivity_wishfund.setText(wishFundString);
+                Log.i(TAG,"wishFundString="+wishFundString+" length="+wishFundString.length());
                 break;
             case R.id.bt_popupwindowkekeyboard_5:
                 wishFundString.append("5");
                 et_addwishactivity_wishfund.setText(wishFundString);
+                Log.i(TAG,"wishFundString="+wishFundString+" length="+wishFundString.length());
                 break;
             case R.id.bt_popupwindowkekeyboard_6:
                 wishFundString.append("6");
                 et_addwishactivity_wishfund.setText(wishFundString);
+                Log.i(TAG,"wishFundString="+wishFundString+" length="+wishFundString.length());
                 break;
             case R.id.bt_popupwindowkekeyboard_7:
                 wishFundString.append("7");
                 et_addwishactivity_wishfund.setText(wishFundString);
+                Log.i(TAG,"wishFundString="+wishFundString+" length="+wishFundString.length());
                 break;
             case R.id.bt_popupwindowkekeyboard_8:
                 wishFundString.append("8");
                 et_addwishactivity_wishfund.setText(wishFundString);
+                Log.i(TAG,"wishFundString="+wishFundString+" length="+wishFundString.length());
                 break;
             case R.id.bt_popupwindowkekeyboard_9:
                 wishFundString.append("9");
                 et_addwishactivity_wishfund.setText(wishFundString);
+                Log.i(TAG,"wishFundString="+wishFundString+" length="+wishFundString.length());
                 break;
             case R.id.bt_popupwindowkekeyboard_dot:
                 String wishfundstring = et_addwishactivity_wishfund.getText().toString();
@@ -245,23 +272,45 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
                     wishFundString.append(".");
                 }
                 et_addwishactivity_wishfund.setText(wishFundString);
+                Log.i(TAG,"wishFundString="+wishFundString+" length="+wishFundString.length());
                 break;
             case R.id.tv_bt_popupwindowkekeyboard_delete:
                 //删除wishFundString的最后一个字符
-                if(wishFundString!=null && !wishFundString.equals("")){
+                if(wishFundString.length()>1){
                     wishFundString.deleteCharAt(wishFundString.length()-1);
                     et_addwishactivity_wishfund.setText(wishFundString);
-                }else {
-                    break;
+                }else{
+                    wishFundString.replace(0,1,"0");
                 }
+                /*if(wishFundString!=null && !wishFundString.equals("")){
+                    wishFundString.deleteCharAt(wishFundString.length()-1);
+                    et_addwishactivity_wishfund.setText(wishFundString);
+                }*/
+                Log.i(TAG,"wishFundString="+wishFundString+" length="+wishFundString.length());
                 break;
             case R.id.bt_bt_popupwindowkekeyboard_confirm:
                 et_addwishactivity_wishfund.setText(wishFundString);
                 popupwindow_showkeyboard.dismiss();
+                Log.i(TAG,"wishFundString="+wishFundString+" length="+wishFundString.length());
+                break;
+
         }
 
     }
 
+    /**
+     * 点击标题栏的返回键
+     * 直接关闭activity
+     * @param view
+     */
+    public void back(View view){
+        finish();
+    }
+
+    /**
+     * 当愿望资金的EditText获得焦点时，弹出自定义的键盘。
+     * @param view
+     */
     private void showNumberKeyboard(View view) {
         //初始化popupwindow
         popupwindow_showkeyboard = new PopupWindow();
@@ -313,7 +362,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onDismiss() {
                 et_addwishactivity_wishfund.setText(wishFundString);
-                wishFundString.replace(0,wishFundString.length()-1,"0");
+                wishFundString.replace(0,wishFundString.length(),"0");
             }
         });
     }
@@ -414,13 +463,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
     private void toCamera() {
         //启动相机
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // 判断存储卡是否可以用，可用进行存储
-       /* if (hasSdcard()) {
-            tempFile = new File(Environment.getExternalStorageDirectory(),PHOTO_FILE_NAME);
-            // 从文件中创建uri
-            Uri uri = Uri.fromFile(tempFile);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-        }*/
+
         // 参数常量为自定义的requestcode, 在取返回结果时有用
         startActivityForResult(intent, PHOTO_REQUEST_CAREMA);
     }
@@ -447,10 +490,30 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
                 // 从相机返回的数据
                 Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                 //保存图片
+                tempFile = new File(Environment.getExternalStorageDirectory(),"photo");
+                try {
+                    fileOutputStream = new FileOutputStream(tempFile);
+                    // 把数据写入文件
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }finally {
+                    try {
+                        // 关闭流
+                        if(fileOutputStream!=null)
+                            fileOutputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
+                }
+                // 从文件中创建uri
+                photouri = Uri.fromFile(tempFile);
+                Log.i(TAG,"photouri="+photouri);
                 //显示图片
-                civ_addwishactivity_image.setImageBitmap(bitmap);
+                civ_addwishactivity_image.setImageURI(photouri);
                 iv_addwishactivity_photo.setVisibility(View.INVISIBLE);
+                //civ_addwishactivity_image.setImageBitmap(bitmap);
             }
         }
     }

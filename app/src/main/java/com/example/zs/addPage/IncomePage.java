@@ -2,6 +2,7 @@ package com.example.zs.addPage;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -23,6 +24,8 @@ public class IncomePage extends AddBasePage {
     @Override
     public View initView() {
         GridView gridView = new GridView(ctx);
+      /*  RecyclerView recyclerView = new RecyclerView(ctx);
+        recyclerView.setAdapter();*/
         gridView.setNumColumns(COLUMS_NUMBER);
         gridView.setAdapter(new MyGridViewAdapter());
         return gridView;

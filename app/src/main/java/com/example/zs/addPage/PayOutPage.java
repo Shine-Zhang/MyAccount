@@ -37,8 +37,8 @@ public class PayOutPage extends AddBasePage {
         gridView.setAdapter(new MyGridViewAdapter());
         return gridView;
     }
-    int[] icons = {R.drawable.ic_default_wish,R.drawable.ic_default_wish,R.drawable.ic_default_wish,
-            R.drawable.ic_default_wish,R.drawable.ic_default_wish,R.drawable.ic_default_wish,
+    int[] icons = {R.drawable.ic_2_yellow,R.drawable.ic_3_yellow,R.drawable.ic_default_wish,
+            R.drawable.ic_4_yellow,R.drawable.ic_5_yellow,R.drawable.ic_default_wish,
             R.drawable.ic_default_wish,R.drawable.ic_default_wish,R.drawable.ic_default_wish};
     String [] contents ={"一般","一般","一般","一般","一般","一般","一般","一般",
             "一般","一般","一般","一般","一般","一般","一般","一般"};
