@@ -1,5 +1,6 @@
 package com.example.zs.pager;
 
+import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -21,6 +22,11 @@ public class AccountPager extends BasePager{
 
     private  String[] testDataSource = new String[]{"徐凤年","邓太阿","轩辕青锋","南宫仆射","姜娰","洛阳","孙寅","苟有方","陈芝报",
                                                         "楼荒","与新郎","宫半阙","李淳罡"};
+
+    public AccountPager(Activity activity) {
+        super(activity);
+    }
+
     /**
      * 通过填充布局文件的方式，从而得到整个明细r页面的view以及其中的的各个子控件
      * @return 返回通过布局文件填充得到的View对象
