@@ -8,9 +8,12 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.GridView;
+import android.widget.RadioGroup;
 
 import com.example.zs.addPage.AddBasePage;
 import com.example.zs.addPage.IncomePage;
@@ -28,15 +31,33 @@ import java.util.List;
 public class AddRecordActivity extends AppCompatActivity {
     private int VIEWPAGE_NUMBER = 2;
     private List<AddBasePage> addBasePageInfos;
+    private String TAG="AddRecordActivity";
+    private int year;
+    private int month;
+    private int day;
+    private ViewPager vp_addRecordActivity_content;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_record);
         //隐藏标题栏
         getSupportActionBar().hide();
+        RadioGroup rg_addRecordActivity_singleChoice = (RadioGroup) findViewById(R.id.rg_addRecordActivity_singleChoice);
+        rg_addRecordActivity_singleChoice.check(R.id.btn_addRecordActivity_payout);
+        rg_addRecordActivity_singleChoice.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                if(i==R.id.btn_addRecordActivity_income){
+                    vp_addRecordActivity_content.setCurrentItem(1,false);
+                }else {
+                    vp_addRecordActivity_content.setCurrentItem(0,false);
+                }
+            }
+        });
 
         //找到viewpager控件
-        ViewPager vp_addRecordActivity_content = (ViewPager) findViewById(R.id.vp_addRecordActivity_content);
+        vp_addRecordActivity_content = (ViewPager) findViewById(R.id.vp_addRecordActivity_content);
         //
         addBasePageInfos = new ArrayList<AddBasePage>();
         //默认page为支出page
@@ -78,19 +99,45 @@ public class AddRecordActivity extends AppCompatActivity {
     }
 
     /**
-     * button点击事件，弹出日期选择器，获取日期
+     * 收入和支出page的切换
+     * @param v
+     */
+    public void switchPage(View v){
+        if(v.getId()==R.id.btn_addRecordActivity_income){
+            //false 表示切换page时无动画效果
+            vp_addRecordActivity_content.setCurrentItem(1,false);
+            return;
+        }
+        if(v.getId()==R.id.btn_addRecordActivity_payout){
+            vp_addRecordActivity_content.setCurrentItem(0,false);
+            return;
+        }
+    }
+    /**
+     * button点击事件，弹出日期选择器，获取用户选择的日期
      * @param v
      */
     public void choiceTime(View v){
-        //不用指定位置，就不需要使用popupwindow
 
+        //不用指定位置，就不需要使用popupwindow
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View inflate = View.inflate(this, R.layout.date_choice, null);
-        builder.setView(inflate)
+       // View inflate = View.inflate(this, R.layout.date_choice, null);
+        DatePicker datePicker = new DatePicker(this);
+        //设置监听事件
+        datePicker.init(2016, 9, 3, new DatePicker.OnDateChangedListener() {
+            @Override
+            public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
+                Log.i(TAG,i+"--"+i1+"--"+"--"+i2);
+                year = i;
+                month =i1;
+                day = i2;
+            }
+        });
+        builder.setView(datePicker)
                 .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
+                        //保存到数据库中
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -102,7 +149,7 @@ public class AddRecordActivity extends AppCompatActivity {
         .show()
 
             ;
-
     }
+
 }
 

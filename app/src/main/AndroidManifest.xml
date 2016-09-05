@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
+        android:name="com.example.zs.application.MyAplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_myaccount"
         android:label="@string/app_name"
@@ -22,13 +23,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".MyBalanceActivity" />
+        <activity android:name=".ChoiceDateActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".ShareAppActivity" />
         <activity android:name=".InitializeActivity" />
         <activity android:name=".FeedbackActivity" />
         <activity android:name=".QuestionActivity" />
         <activity android:name=".AboutUsActivity"></activity>
-        <activity android:name=".MyBalanceActivity" />
         <activity android:name=".CompleteWishActivity"></activity>
         <activity android:name=".MyBalanceActivity" />
         <activity android:name=".LoginActivity" />
@@ -37,6 +38,7 @@
         <activity android:name=".FeedbackActivity" />
         <activity android:name=".QuestionActivity" />
         <activity android:name=".AboutUsActivity"></activity>
+        <activity android:name=".AddCategoryActivity"/>
     </application>
 
 </manifest>
