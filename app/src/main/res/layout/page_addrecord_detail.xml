@@ -5,10 +5,10 @@
     android:layout_height="match_parent">
     <com.example.zs.view.CircleImageView
         android:id="@+id/iv_addPage_catagoryIcon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:src="@drawable/ic_yue_default"
+        android:layout_marginTop="10dp"
         android:layout_gravity="center"/>
     <TextView
         android:id="@+id/tv_addPage_catagoryContent"

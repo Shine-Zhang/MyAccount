@@ -30,6 +30,9 @@
         <activity android:name=".FeedbackActivity" />
         <activity android:name=".QuestionActivity" />
         <activity android:name=".AboutUsActivity"></activity>
+        <activity android:name=".CompleteWishActivity"></activity>
+        <activity android:name=".AddCategoryActivity"/>
     </application>
+
 
 </manifest>

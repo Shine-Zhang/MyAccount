@@ -57,37 +57,42 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/fl_reportform">
-        <FrameLayout
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+        <com.github.mikephil.charting.charts.PieChart
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/pc_reportform_piechart">
+        </com.github.mikephil.charting.charts.PieChart>
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
-            <com.github.mikephil.charting.charts.PieChart
+            android:layout_gravity="center"
+
+            android:orientation="vertical">
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:id="@+id/pc_reportform_piechart">
-            </com.github.mikephil.charting.charts.PieChart>
-            <LinearLayout
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:text="总支出"
+                android:id="@+id/tv_reportform_type"/>
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:gravity="center"
-                    android:layout_height="wrap_content"
-                    android:text="总支出"
-                    android:id="@+id/tv_reportform_type"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="25"
-                    android:id="@+id/tv_reportform_money"/>
-            </LinearLayout>
-        </FrameLayout>
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"></ListView>
+                android:gravity="center"
+                android:text="25"
+                android:id="@+id/tv_reportform_money"/>
+        </LinearLayout>
+    </FrameLayout>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lv_reportform_detail"
+        android:overScrollMode="never"
+        android:clipToPadding="false"
+        android:layout_marginTop="200dp">
+    </ListView>
     </FrameLayout>
 </LinearLayout>

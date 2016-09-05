@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.GridView;
+import android.widget.RadioGroup;
 
 import com.example.zs.addPage.AddBasePage;
 import com.example.zs.addPage.IncomePage;
@@ -42,6 +43,18 @@ public class AddRecordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_record);
         //隐藏标题栏
         getSupportActionBar().hide();
+        RadioGroup rg_addRecordActivity_singleChoice = (RadioGroup) findViewById(R.id.rg_addRecordActivity_singleChoice);
+        rg_addRecordActivity_singleChoice.check(R.id.btn_addRecordActivity_payout);
+        rg_addRecordActivity_singleChoice.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                if(i==R.id.btn_addRecordActivity_income){
+                    vp_addRecordActivity_content.setCurrentItem(1,false);
+                }else {
+                    vp_addRecordActivity_content.setCurrentItem(0,false);
+                }
+            }
+        });
 
         //找到viewpager控件
         vp_addRecordActivity_content = (ViewPager) findViewById(R.id.vp_addRecordActivity_content);
