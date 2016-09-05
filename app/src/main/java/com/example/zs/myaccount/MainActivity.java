@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         //将每个page页面加入pageList
         //pageList.add(new 帅神页面);
-        //pageList.add(new WishPager(this));//mActivity------Fragment
+        pageList.add(new WishPager(this));
         //pageList.add(new 57页面);
         //pageList.add(new ReportFormPager(this));
         pageList.add(new OwnerPager(this));
@@ -84,8 +84,10 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.rb_mainactivity_plus:
-                        vp_mainactivity.setCurrentItem(2);
-                        pageList.get(0).initData();
+                        Log.i(tag,"---");
+                       // vp_mainactivity.setCurrentItem(2);
+                        //pageList.get(0).initData();
+                        startActivity(new Intent(MainActivity.this,AddRecordActivity.class));
                         //跳转
 
                         break;

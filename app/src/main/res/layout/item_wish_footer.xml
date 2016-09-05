@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_gravity="right"
+        android:id="@+id/tv_itemwishfooter_completewishes"
+        android:paddingLeft="15dp"
+        android:paddingTop="5dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="已完成愿望"
+        android:textColor="#1FB9EC"
+        android:textSize="18sp"
+        android:clickable="true"/>
+    <LinearLayout
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical"
+        android:id="@+id/ll_itemwishhfooter_noongoingwish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp">
+        <ImageView
+            android:layout_width="210dp"
+            android:layout_height="81dp"
+            android:src="@drawable/ic_no_wish" />
+        <TextView
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="没有进行中的愿望"
+            android:textSize="18sp"/>
+    </LinearLayout>
+</LinearLayout>

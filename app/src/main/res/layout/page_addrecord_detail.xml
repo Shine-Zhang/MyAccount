@@ -3,10 +3,11 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <ImageView
+    <com.example.zs.view.CircleImageView
         android:id="@+id/iv_addPage_catagoryIcon"
         android:layout_width="40dp"
         android:layout_height="40dp"
+
         android:src="@drawable/ic_yue_default"
         android:layout_gravity="center"/>
     <TextView

@@ -3,8 +3,10 @@
     package="com.example.zs.myaccount">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
+        android:name="com.example.zs.application.MyAplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_myaccount"
         android:label="@string/app_name"
@@ -26,8 +28,7 @@
         <activity android:name=".InitializeActivity" />
         <activity android:name=".FeedbackActivity" />
         <activity android:name=".QuestionActivity" />
-        <activity android:name=".AboutUsActivity" />
-        <activity android:name=".ChoiceDateActivity"></activity>
+        <activity android:name=".AboutUsActivity"></activity>
     </application>
 
 </manifest>
