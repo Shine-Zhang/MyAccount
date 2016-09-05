@@ -8,11 +8,14 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.zs.view.CircleImageView;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -25,6 +28,7 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 本类是五个pager中的“报表类”，继承至基类BasePager,主要用饼状图的形式分别呈现出各种类型的收入和支出所占的比重
@@ -36,12 +40,14 @@ public class ReportFormPager extends BasePager{
     private TextView tv_reportform_time;
     //对应”收入“和”支出“按钮的RadioGroup
     private RadioGroup rg_reportform;
-    //饼状图各部分对应的颜色
+    //饼状图各部分对应的颜色，暂时先定为这样，后面根据实际情况动态调整
     private int[] colors = new int[]{Color.CYAN,Color.DKGRAY,Color.BLUE,Color.GREEN,Color.RED};
-    //饼状图各部分代表的内容
+    //饼状图各部分代表的内容，暂时先定为这样，后面根据实际情况动态调整
     private String[] datas = new String[]{"一般","电影","吃饭","衣服","零食"};
     private PieChart pc_reportform_piechart;
-
+    private ListView lv_reportform_detail;
+    //ListView用的到的数据集,这里要根据以后的实际情况进行调整
+    public List<String> mDatas;
 
     public ReportFormPager(Activity activity) {
         super(activity);
@@ -51,15 +57,25 @@ public class ReportFormPager extends BasePager{
     @Override
     public View initView() {
         reportformpager_content_view = View.inflate(mActivity, R.layout.reportformpager_content, null);
+        //时间
         tv_reportform_time = (TextView) reportformpager_content_view.findViewById(R.id.tv_reportform_time);
+        //最上面的两个按钮，收入和支出
         rg_reportform = (RadioGroup) reportformpager_content_view.findViewById(R.id.rg_reportform);
+        //中间的圆饼图
         pc_reportform_piechart = (PieChart) reportformpager_content_view.findViewById(R.id.pc_reportform_piechart);
+        //最下面的ListView
+        lv_reportform_detail = (ListView) reportformpager_content_view.findViewById(R.id.lv_reportform_detail);
+        //绑定适配器
+        lv_reportform_detail.setAdapter(new ReportFormAdapter());
         return reportformpager_content_view;
     }
 
     @Override
     public void initData() {
-
+        mDatas = new ArrayList<String>();
+        for(int i = 0;i < 50; i ++){
+            mDatas.add("item" + i);
+        }
     }
 
     private void initChart() {
@@ -103,13 +119,14 @@ public class ReportFormPager extends BasePager{
 
                 float rotationAngle = pc_reportform_piechart.getRotationAngle();
                 Log.i("dataSetIndex",rotationAngle + "");
-                //pc_reportform_piechart.setRotationEnabled(true);
-                RotateAnimation rotateAnimation =
+
+                //动画暂时实现不了
+                /*RotateAnimation rotateAnimation =
                         new RotateAnimation(0, 90, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                 //设置旋转时间为1000毫秒
                 rotateAnimation.setDuration(1000);
                 rotateAnimation.setFillAfter(true);
-                pc_reportform_piechart.startAnimation(rotateAnimation);
+                pc_reportform_piechart.startAnimation(rotateAnimation);*/
                 //显示动画效果
                 //showAmination();
             }
@@ -175,4 +192,33 @@ public class ReportFormPager extends BasePager{
         pc_reportform_piechart.setData(pieData);
     }
 
+    //ListView的适配器
+    class ReportFormAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return mDatas.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View item_view = View.inflate(mActivity, R.layout.item_reportform_listview, null);
+            CircleImageView iv_itemreport_icon = (CircleImageView) item_view.findViewById(R.id.civ_itemreport_icon);
+            TextView tv_itemreport_name = (TextView) item_view.findViewById(R.id.tv_itemreport_name);
+            TextView tv_itemreport_percent = (TextView) item_view.findViewById(R.id.tv_itemreport_percent);
+            TextView tv_reportform_money = (TextView) item_view.findViewById(R.id.tv_reportform_money);
+
+            return item_view;
+        }
+    }
 }
