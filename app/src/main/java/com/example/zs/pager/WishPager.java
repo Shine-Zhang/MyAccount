@@ -1,5 +1,6 @@
 package com.example.zs.pager;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.view.View;
@@ -31,6 +32,9 @@ public class WishPager extends BasePager {
      * 该方法用于初始化WishPager的页面
      * @return 返回值为页面要显示的view
      */
+    public WishPager(Activity activity){
+        super(activity);
+    }
     @Override
     public View initView() {
         //加载布局文件wishpager.xml
@@ -66,7 +70,7 @@ public class WishPager extends BasePager {
         return view;*/
 
 
-        return null;
+        return view;
     }
 
     /**

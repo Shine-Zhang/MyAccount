@@ -20,9 +20,6 @@ public abstract class BasePager {
     //该视图的根布局控件
     public View mrootView;
 
-    public BasePager(){
-
-    }
 
     public BasePager(Activity activity){
         this.mActivity = activity;
