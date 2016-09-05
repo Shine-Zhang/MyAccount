@@ -43,9 +43,8 @@ public class ReportFormPager extends BasePager{
     private PieChart pc_reportform_piechart;
 
 
-    public ReportFormPager(Activity activity, View reportformpager_content_view) {
+    public ReportFormPager(Activity activity) {
         super(activity);
-        this.reportformpager_content_view = reportformpager_content_view;
         initChart();
     }
 
