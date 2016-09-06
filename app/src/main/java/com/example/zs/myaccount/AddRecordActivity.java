@@ -18,6 +18,7 @@ import android.widget.RadioGroup;
 import com.example.zs.addPage.AddBasePage;
 import com.example.zs.addPage.IncomePage;
 import com.example.zs.addPage.PayOutPage;
+import com.example.zs.bean.UserAddCategoryInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,9 @@ public class AddRecordActivity extends AppCompatActivity {
     private int month;
     private int day;
     private ViewPager vp_addRecordActivity_content;
+    private   int getResourceID;
+    private   String  getCategoryName;
+    public boolean ActivityResult_FLAG;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +68,31 @@ public class AddRecordActivity extends AppCompatActivity {
         addBasePageInfos.add(new PayOutPage(this));
         addBasePageInfos.add(new IncomePage(this));
         vp_addRecordActivity_content.setAdapter(new MyViewPagerAdapter());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i(TAG,""+requestCode);
+        //直接返回时，intent为null
+        if(requestCode==100&&data!=null){
+            //确认按钮返回的,标志位置为true
+            ActivityResult_FLAG = true;
+            //接收由intent携带的数据
+            getResourceID= data.getIntExtra("resourceID", R.drawable.ic_yiban_default);
+            getCategoryName = data.getStringExtra("categoryName");
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    /**
+     * page页面跳转到addCategory页面。addCategory页面返回的信息只能子啊addRecord页面接收
+     * @return
+     */
+    public UserAddCategoryInfo getActivityResult(){
+        //page调用后，标记为置为false
+        ActivityResult_FLAG = false;
+        UserAddCategoryInfo userAddCategoryInfo = new UserAddCategoryInfo(getResourceID, getCategoryName);
+        return  userAddCategoryInfo;
     }
 
     /**
@@ -98,10 +127,10 @@ public class AddRecordActivity extends AppCompatActivity {
         }
     }
 
-    /**
+   /* *//**
      * 收入和支出page的切换
      * @param v
-     */
+     *//*
     public void switchPage(View v){
         if(v.getId()==R.id.btn_addRecordActivity_income){
             //false 表示切换page时无动画效果
@@ -112,7 +141,7 @@ public class AddRecordActivity extends AppCompatActivity {
             vp_addRecordActivity_content.setCurrentItem(0,false);
             return;
         }
-    }
+    }*/
     /**
      * button点击事件，弹出日期选择器，获取用户选择的日期
      * @param v

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 /**
  * Created by wuqi on 2016/9/5 0005.
- * allCategoryInfo数据库的查询接口,
+ * allCategory数据库的查询接口,
  * 因allCategoryInfo为初始化数据，只支持查询，不能修改
  */
 public class AllCategoryDAO {
@@ -25,7 +25,7 @@ public class AllCategoryDAO {
     public AllCategoryDAO(Context ctx) {
         this.ctx = ctx;
         //数据操作的准备工作
-        AllCategoryDB initCategory = new AllCategoryDB(ctx, "initCategory", null, 1);
+        AllCategoryDB initCategory = new AllCategoryDB(ctx, "allCategory.db", null, 1);
         db = initCategory.getReadableDatabase();
     }
     //查询接口
