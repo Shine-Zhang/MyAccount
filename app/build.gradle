@@ -30,4 +30,9 @@ dependencies {
     compile 'com.android.support:percent:23.4.0'
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.5'
     compile project(':calendarlibrary')
+    compile files('libs/avoscloud-feedback-v3.14.5.jar')
+    compile files('libs/avoscloud-sdk-v3.14.5.jar')
+    compile files('libs/fastjson.jar')
+    compile files('libs/okhttp-2.6.0-leancloud.jar')
+    compile files('libs/okio-1.6.0-leancloud.jar')
 }
