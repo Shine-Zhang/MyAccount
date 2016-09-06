@@ -13,6 +13,7 @@ import com.example.zs.dao.PayoutCategoryDAO;
 import com.example.zs.myaccount.AddCategoryActivity;
 import com.example.zs.myaccount.AddRecordActivity;
 import com.example.zs.myaccount.R;
+import com.example.zs.view.CircleImageView;
 
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -35,6 +36,7 @@ public class PayOutPage extends AddBasePage {
     private String[] contents;
     private AddRecordActivity addRecordActivity;
     private ArrayList<UserAddCategoryInfo> payoutCategoryToDB;
+    private MyGridViewAdapter myGridViewAdapter;
 
     public PayOutPage(Activity activity) {
         super(activity);
@@ -42,6 +44,8 @@ public class PayOutPage extends AddBasePage {
 
     @Override
     public View initView() {
+        //初始化父类构造器时多态执行子类的执行initView（）时tag还为初始化
+        TAG="PayOutPage";
         Log.i(TAG,"initView");
         initData();
         addRecordActivity = (AddRecordActivity) activity;
@@ -59,15 +63,15 @@ public class PayOutPage extends AddBasePage {
         //设置GridView控件参数
         //gridView.setColumnWidth(40);
         //gridView.setNumColumns(COLUMS_NUMBER);
-        gridView.setAdapter(new MyGridViewAdapter());
+        myGridViewAdapter = new MyGridViewAdapter();
+        gridView.setAdapter(myGridViewAdapter);
         //设置gridviewItem监听事件
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if(i==icons.length){
+                if(i==payoutCategoryToDB.size()){
                     //跳转到addCategory页面
                     activity.startActivityForResult(new Intent(activity, AddCategoryActivity.class),100);
-                    getActivityResult();
                 }
                 Log.i(TAG,"--"+i);
             }
@@ -82,18 +86,16 @@ public class PayOutPage extends AddBasePage {
         Log.i(TAG,"initData");
         PayoutCategoryDAO payoutCategoryDAO = new PayoutCategoryDAO(activity);
         payoutCategoryToDB = payoutCategoryDAO.getPayoutCategoryToDB();
-        Log.i(TAG, payoutCategoryToDB.toString());
-        Log.i(TAG, payoutCategoryToDB.get(0).toString());
+       // Log.i(TAG, payoutCategoryToDB.toString());
+       // Log.i(TAG, payoutCategoryToDB.get(0).toString());
     }
 
-    private void getActivityResult() {
-        if (addRecordActivity.ActivityResult_FLAG){
-            //AddCategoryActivity传回了数据
-            //调用addRecordActivity的方法获取返回的数据
-            UserAddCategoryInfo activityResult = addRecordActivity.getActivityResult();
-            //gridview刷新数据
-
-        }
+    public void getActivityResult(int id,String name) {
+        Log.i(TAG,"getActivityResult");
+        UserAddCategoryInfo categoryInfo = new UserAddCategoryInfo(id, name);
+        //gridview刷新数据
+        payoutCategoryToDB.add(categoryInfo);
+        myGridViewAdapter.notifyDataSetChanged();
     }
 
 
@@ -117,11 +119,12 @@ public class PayOutPage extends AddBasePage {
         public View getView(int i, View view, ViewGroup viewGroup) {
             //
             View inflate = View.inflate(activity, R.layout.page_addrecord_detail, null);
-            ImageView iv_addPage_catagoryIcon = (ImageView) inflate.findViewById(R.id.iv_addPage_catagoryIcon);
+            CircleImageView iv_addPage_catagoryIcon = (CircleImageView) inflate.findViewById(R.id.iv_addPage_catagoryIcon);
             TextView tv_addPage_catagoryContent = (TextView) inflate.findViewById(R.id.tv_addPage_catagoryContent);
             if(i<payoutCategoryToDB.size()){
                /* iv_addPage_catagoryIcon.setImageResource(icons[i]);
                 tv_addPage_catagoryContent.setText(contents[i]+"");*/
+                //Log.i(TAG,payoutCategoryToDB.get(i).getResourceID()+"getResourceID");
                 iv_addPage_catagoryIcon.setImageResource(payoutCategoryToDB.get(i).getResourceID());
                 tv_addPage_catagoryContent.setText(payoutCategoryToDB.get(i).getCategoryName());
 

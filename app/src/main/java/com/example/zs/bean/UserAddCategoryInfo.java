@@ -9,7 +9,7 @@ public class UserAddCategoryInfo {
 
     public UserAddCategoryInfo( int resourceIDString,String categoryName) {
         this.categoryName = categoryName;
-        this.resourceID = resourceID;
+        this.resourceID = resourceIDString;
     }
 
     public String getCategoryName() {

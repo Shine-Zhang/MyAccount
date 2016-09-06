@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.zs.bean.UserAddCategoryInfo;
 import com.example.zs.dataBase.AllCategoryDB;
@@ -24,7 +25,6 @@ public class PayoutCategoryDAO {
         PayoutCategoryDB payoutCategory = new PayoutCategoryDB(ctx, "payoutCategory.db", null, 1);
         db = payoutCategory.getReadableDatabase();
     }
-
     /**
      * 插入单个数据到表格
      * @param resource
@@ -40,8 +40,9 @@ public class PayoutCategoryDAO {
         ArrayList<UserAddCategoryInfo> userAddCategoryInfos = new ArrayList<>();
         Cursor cursor = db.rawQuery("select * from payoutCategoryInfo", null);
         while (cursor.moveToNext()){
-            int resourceID = cursor.getInt(0);
-            String name = cursor.getString(1);
+            int resourceID = cursor.getInt(1);
+            Log.i("000","resourceID"+resourceID);
+            String name = cursor.getString(2);
             UserAddCategoryInfo userAddCategoryInfo = new UserAddCategoryInfo(resourceID, name);
             userAddCategoryInfos.add(userAddCategoryInfo);
         }
