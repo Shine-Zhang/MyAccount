@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/ll_dialogwishcomplete_detail"
+        android:background="#fff"
+        android:paddingBottom="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:layout_centerHorizontal="true">
+        <ImageView
+            android:id="@+id/iv_dialogwishcomplete_toppic"
+            android:layout_width="200dp"
+            android:layout_height="90dp"
+            android:src="@drawable/ic_tanchuang_default" />
+        <TextView
+            android:textSize="14sp"
+            android:textColor="#000"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="愿望达成啦" />
+        <Button
+            android:background="@drawable/bg_button_dialogwishcomplete"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/bt_dialogwishcomplete_chcekcomplwish"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="查看已完成愿望"
+            android:textColor="#1FB9EC"
+            android:textSize="14sp"/>
+    </LinearLayout>
+    <ImageView
+        android:layout_gravity="right"
+        android:id="@+id/iv_dialogwishcomplete_close"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="-10dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_x2_default"
+        android:layout_alignRight="@id/ll_dialogwishcomplete_detail" />
+</RelativeLayout>
