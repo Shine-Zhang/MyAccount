@@ -7,6 +7,7 @@
         android:id="@+id/iv_addPage_catagoryIcon"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:background="#31C9F2"
         android:src="@drawable/ic_yue_default"
         android:layout_marginTop="10dp"
         android:layout_gravity="center"/>
