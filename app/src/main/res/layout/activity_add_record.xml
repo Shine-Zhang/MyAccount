@@ -100,29 +100,63 @@
         android:layout_marginBottom="10dp"
         android:layout_above="@+id/ll_addRecordActivity_keyboard"
        >
-        <ImageView
-            android:id="@+id/iv_addRecordActivity_photo"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/ic_photo60_default"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"/>
-        <ImageView
-            android:id="@+id/iv_addRecordActivity_remark"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/ic_pen2_default"
-            android:layout_toRightOf="@+id/iv_addRecordActivity_photo"/>
-        <TextView
-            android:id="@+id/et_addRecordActivity_inputNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="0"
-            android:textSize="25sp"
-            android:textColor="#31C9F2"
-            android:layout_marginRight="10dp"
-            />
+        <RelativeLayout
+            android:id="@+id/rl_addRecordActivity_remarklayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:visibility="gone">
+            <TextView
+                android:id="@+id/tv_addCategory_markTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="备注"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_centerVertical="true"
+                android:textSize="10sp"/>
+            <EditText
+                android:id="@+id/et_addCategory_markContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_toRightOf="@+id/tv_addCategory_markTitle"
+                />
+            <Button
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:text="完成"
+                android:background="@drawable/bg_bttonrectangle_date"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+            <ImageView
+                android:id="@+id/iv_addRecordActivity_photo"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_photo60_default"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"/>
+            <ImageView
+                android:id="@+id/iv_addRecordActivity_remark"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_pen2_default"
+                android:layout_toRightOf="@+id/iv_addRecordActivity_photo"/>
+            <TextView
+                android:id="@+id/tv_addRecordActivity_inputNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="0"
+                android:textSize="25sp"
+                android:textColor="#31C9F2"
+                android:layout_marginRight="10dp"
+                />
+        </RelativeLayout>
     </RelativeLayout>
     <View
         android:id="@+id/view_whiteUp2"
@@ -146,6 +180,7 @@
                 android:layout_height="0px"
                 android:layout_weight="1">
                 <TextView
+                    android:id="@+id/tv_addCategory_1"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -154,6 +189,7 @@
                     android:textSize="20sp"
                     android:textColor="#000"/>
                 <TextView
+                    android:id="@+id/tv_addCategory_2"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -162,6 +198,7 @@
                     android:textSize="20sp"
                     android:textColor="#000"/>
                 <TextView
+                    android:id="@+id/tv_addCategory_3"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -175,6 +212,7 @@
                 android:layout_height="0px"
                 android:layout_weight="1">
                 <TextView
+                    android:id="@+id/tv_addCategory_4"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -183,6 +221,7 @@
                     android:textSize="20sp"
                     android:textColor="#000"/>
                 <TextView
+                    android:id="@+id/tv_addCategory_5"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -191,6 +230,7 @@
                     android:textSize="20sp"
                     android:textColor="#000"/>
                 <TextView
+                    android:id="@+id/tv_addCategory_6"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -204,6 +244,7 @@
                 android:layout_height="0px"
                 android:layout_weight="1">
                 <TextView
+                    android:id="@+id/tv_addCategory_7"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -212,6 +253,7 @@
                     android:textSize="20sp"
                     android:textColor="#000"/>
                 <TextView
+                    android:id="@+id/tv_addCategory_8"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -220,6 +262,7 @@
                     android:textSize="20sp"
                     android:textColor="#000"/>
                 <TextView
+                    android:id="@+id/tv_addCategory_9"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -233,6 +276,7 @@
                 android:layout_height="0px"
                 android:layout_weight="1">
                 <TextView
+                    android:id="@+id/tv_addCategory_10"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -241,9 +285,10 @@
                     android:textSize="20sp"
                     android:textColor="#000"/>
                 <TextView
+                    android:id="@+id/tv_addCategory_0"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:gravity="center"
                     android:text="0"
                     android:textSize="20sp"
@@ -261,6 +306,7 @@
                   android:layout_weight="1"
                   android:gravity="center">
                   <ImageView
+                      android:id="@+id/tv_addCategory_removeNumber"
                       android:layout_width="40dp"
                       android:layout_height="40dp"
                       android:src="@drawable/ic_key_del"/>
@@ -272,6 +318,7 @@
                   android:layout_weight="1"
                   android:gravity="center">
                   <TextView
+                      android:id="@+id/tv_addCategory_submit"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:text="确定"

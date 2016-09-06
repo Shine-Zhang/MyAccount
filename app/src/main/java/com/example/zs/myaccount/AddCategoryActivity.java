@@ -99,6 +99,7 @@ public class AddCategoryActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.putExtra("resourceID",userChoiceID);
                 intent.putExtra("categoryName",resultName);
+                setResult(10,intent);
                 finish();
             }
 
