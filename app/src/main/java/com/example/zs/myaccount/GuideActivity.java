@@ -5,6 +5,7 @@ package com.example.zs.myaccount;
  */
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.Image;
 import android.support.v4.view.PagerAdapter;
@@ -18,6 +19,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.zs.application.MyAplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +82,13 @@ public class GuideActivity extends AppCompatActivity {
 
                 }
             });
+
+            //记录向导页面是否进入到过SharePreferce
+            /*SharedPreferences enterGuide = getSharedPreferences("EnterGuide", MODE_PRIVATE);
+            SharedPreferences.Editor edit = enterGuide.edit();
+            SharedPreferences.Editor enterguide = edit.putBoolean("enterGuide", true);
+            enterguide.commit();*/
+            MyAplication.saveBooleanToSp("enterguide", true);
         }
     }
 
