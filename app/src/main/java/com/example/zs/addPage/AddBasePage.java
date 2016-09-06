@@ -1,6 +1,6 @@
 package com.example.zs.addPage;
 
-import android.content.Context;
+import android.app.Activity;
 import android.view.View;
 
 /**
@@ -8,10 +8,10 @@ import android.view.View;
  */
 public abstract class AddBasePage {
     public View mView;
-    Context ctx;
+    public Activity activity;
 
-    public AddBasePage(Context ctx) {
-        this.ctx = ctx;
+    public AddBasePage(Activity activity) {
+        this.activity = activity;
         mView = initView();
     }
     public abstract View initView();

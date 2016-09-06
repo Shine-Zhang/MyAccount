@@ -1,6 +1,6 @@
 package com.example.zs.addPage;
 
-import android.content.Context;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -20,8 +20,8 @@ public class IncomePage extends AddBasePage {
     private int[] icons;
     private String[] contents;
 
-    public IncomePage(Context ctx) {
-        super(ctx);
+    public IncomePage(Activity activity) {
+        super(activity);
     }
 
     @Override
@@ -32,8 +32,8 @@ public class IncomePage extends AddBasePage {
                 R.drawable.ic_default_wish,R.drawable.ic_default_wish,R.drawable.ic_default_wish};
         contents = new String[]{"一般","一般","一般","一般","一般","一般","一般","一般",
                 "一般","一般","一般","一般","一般","一般","一般","一般"};
-        GridView gridView = new GridView(ctx);
-      /*  RecyclerView recyclerView = new RecyclerView(ctx);
+        GridView gridView = new GridView(activity);
+      /*  RecyclerView recyclerView = new RecyclerView(activity);
         recyclerView.setAdapter();*/
         gridView.setNumColumns(COLUMS_NUMBER);
         gridView.setAdapter(new MyGridViewAdapter());
@@ -58,7 +58,7 @@ public class IncomePage extends AddBasePage {
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
             //
-            View inflate = View.inflate(ctx, R.layout.page_addrecord_detail, null);
+            View inflate = View.inflate(activity, R.layout.page_addrecord_detail, null);
             ImageView iv_addPage_catagoryIcon = (ImageView) inflate.findViewById(R.id.iv_addPage_catagoryIcon);
             TextView tv_addPage_catagoryContent = (TextView) inflate.findViewById(R.id.tv_addPage_catagoryContent);
             iv_addPage_catagoryIcon.setImageResource(icons[i]);

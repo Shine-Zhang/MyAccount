@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.example.zs.bean.MyAllCatoryInfo;
 import com.example.zs.dao.AllCategoryDAO;
+import com.example.zs.dao.PayoutCategoryDAO;
 
 import java.util.ArrayList;
 
@@ -18,8 +19,13 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
     }
     //测试AllCategoryInfoDAO
     public void testCategory(){
+
         AllCategoryDAO allCategoryDAO = new AllCategoryDAO(getContext());
         ArrayList<MyAllCatoryInfo> cateoryList = allCategoryDAO.getCateoryList();
         Log.i("--",cateoryList.toString());
+    }
+    public void testCategory1(){
+        PayoutCategoryDAO payoutCategoryDAO = new PayoutCategoryDAO(getContext());
+        payoutCategoryDAO.addPayoutCategoryToDB(23,"hhah");
     }
 }
