@@ -16,15 +16,15 @@
         android:layout_height="wrap_content">
         <RelativeLayout
             android:id="@+id/rl_itemwish_top"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="我的愿望"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:textColor="#000"
                 android:id="@+id/tv_itemwish_title"
                 android:layout_marginLeft="15dp" />
@@ -34,12 +34,12 @@
                 android:layout_height="wrap_content"
                 android:text="1000.00"
                 android:textColor="#1FB9EC"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:layout_marginRight="15dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true" />
             <TextView
-                android:textSize="15sp"
+                android:textSize="13sp"
                 android:textColor="#898989"
                 android:text="备注"
                 android:id="@+id/tv_itemwish_description"
@@ -52,7 +52,7 @@
         <View
             android:background="#BFBFBF"
             android:layout_width="match_parent"
-            android:layout_height="1px"
+            android:layout_height="1dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp" />
 
@@ -61,7 +61,7 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:longClickable="false"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
                 android:id="@+id/iv_itemwish_pic"
@@ -82,7 +82,7 @@
                 android:layout_alignParentRight="true"
                 style="@android:style/Widget.ProgressBar.Horizontal" />
             <TextView
-                android:textSize="15dp"
+                android:textSize="13sp"
                 android:textColor="#898989"
                 android:text="梦想实现43%"
                 android:gravity="center"
@@ -112,7 +112,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="15dp"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:text="完成" />
         </FrameLayout>
     </LinearLayout>
