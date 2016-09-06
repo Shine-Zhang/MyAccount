@@ -1,19 +1,24 @@
 package com.example.zs.pager;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.support.annotation.ColorInt;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.zs.myaccount.RportFormDatePickerActivity;
 import com.example.zs.view.CircleImageView;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -48,6 +53,13 @@ public class ReportFormPager extends BasePager{
     private ListView lv_reportform_detail;
     //ListView用的到的数据集,这里要根据以后的实际情况进行调整
     public List<String> mDatas;
+    public int[] rportFormIcon = new int[]{R.drawable.ic_20_yellow,R.drawable.ic_21_yellow,R.drawable.ic_22_yellow,
+            R.drawable.ic_27_yellow,R.drawable.ic_28_yellow,R.drawable.ic_29_yellow,
+            R.drawable.ic_dianying_yellow,
+            R.drawable.ic_launcher};
+
+    public ReportFormAdapter reportFormAdapter;
+    private SharedPreferences reporFormsp;
 
     public ReportFormPager(Activity activity) {
         super(activity);
@@ -66,7 +78,55 @@ public class ReportFormPager extends BasePager{
         //最下面的ListView
         lv_reportform_detail = (ListView) reportformpager_content_view.findViewById(R.id.lv_reportform_detail);
         //绑定适配器
-        lv_reportform_detail.setAdapter(new ReportFormAdapter());
+        reportFormAdapter = new ReportFormAdapter();
+        lv_reportform_detail.setAdapter(reportFormAdapter);
+
+        //接收由RportFormDataPickerActivity回传的数据
+        Intent intent = mActivity.getIntent();
+        String date = intent.getStringExtra("date");
+        //将数据保存到SharedPreferences,以便下次进入的时候回写
+        reporFormsp = mActivity.getSharedPreferences("reportformData", mActivity.MODE_PRIVATE);
+        SharedPreferences.Editor edit = reporFormsp.edit();
+        edit.putString("time",date);
+        edit.commit();
+        if(date != null){
+            tv_reportform_time.setText(date);
+        }else {
+            String string = reporFormsp.getString("time", "还没有设定时间");
+            tv_reportform_time.setText(string);
+        }
+
+        //为显示时间阶段的TextView设置监听器
+        tv_reportform_time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActivity.startActivity(new Intent(mActivity,RportFormDatePickerActivity.class));
+            }
+        });
+        //为ListView设置监听器,跳转到下一个页面
+        lv_reportform_detail.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //这里是暂时实验用的，还要写别的逻辑
+                lv_reportform_detail.smoothScrollToPosition(0,0);
+            }
+        });
+
+        //为两个按钮，收入和支出设置监听器，通过点击不同按钮切换收入和支出报表状况
+        rg_reportform.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId){
+                    //支出对应报表页面
+                    case R.id.rb_reportform_expenditure:
+                        break;
+                    //收入对应报表页面
+                    case R.id.rb_reportform_income:
+                        break;
+                }
+            }
+        });
+
         return reportformpager_content_view;
     }
 
@@ -87,17 +147,12 @@ public class ReportFormPager extends BasePager{
         pc_reportform_piechart.setDrawCenterText(true);
         //设置圆盘中间的颜色
         pc_reportform_piechart.setHoleColor(Color.WHITE);
-        //饼状图中间的文字，通过调用generateCenterSpannableText()来动态的调整显示内容
-        //pc_reportform_piechart.setCenterText(generateCenterSpannableText());
         //设置中间圆盘的半径,值为所占饼图的百分比
         pc_reportform_piechart.setHoleRadius(60);
         //设置中间透明圈的半径,值为所占饼图的百分比
         //pc_reportform_piechart.setTransparentCircleRadius(65);
         //设置圆盘是否可以转动
         pc_reportform_piechart.setRotationEnabled(true);
-        //旋转角度
-        //pc_reportform_piechart.setRotationAngle(100);
-        //pc_reportform_piechart.animateXY(1000, 1000);  //设置动画
         //将在下方显示的比例视图隐藏掉
         customizeLegend();
         //设置饼图右下角的文字描述
@@ -107,7 +162,6 @@ public class ReportFormPager extends BasePager{
         pc_reportform_piechart.setDescriptionColor(Color.BLACK);
         //设置饼图右下角的文字大小
         pc_reportform_piechart.setDescriptionTextSize(16);
-        //pc_reportform_piechart.setExtraOffsets(15, -20, 15, 0);//left   top  right  bottom
         //绑定数据,括号中的内容代表的饼状图将被分为几部分
         bindData(5);
         // 设置一个选中区域监听
@@ -181,16 +235,10 @@ public class ReportFormPager extends BasePager{
         dataSet.setColors(color);
 
         PieData pieData = new PieData(nameList, dataSet);
-       /* //设置以百分比显示
-        pieData.setValueFormatter(new PercentFormatter());
-        //区域文字的大小
-        dataSet.setValueTextSize(11f);
-        //设置区域文字颜色
-        dataSet.setValueTextColor(Color.WHITE);
-        //字体
-        dataSet.setValueTypeface(Typeface.DEFAULT);*/
         pc_reportform_piechart.setData(pieData);
     }
+
+
 
     //ListView的适配器
     class ReportFormAdapter extends BaseAdapter {
@@ -218,6 +266,7 @@ public class ReportFormPager extends BasePager{
             TextView tv_itemreport_percent = (TextView) item_view.findViewById(R.id.tv_itemreport_percent);
             TextView tv_reportform_money = (TextView) item_view.findViewById(R.id.tv_reportform_money);
 
+            iv_itemreport_icon.setImageResource(rportFormIcon[position]);
             return item_view;
         }
     }
