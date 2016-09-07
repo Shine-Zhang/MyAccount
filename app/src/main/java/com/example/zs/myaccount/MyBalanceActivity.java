@@ -29,6 +29,7 @@ public class MyBalanceActivity extends AppCompatActivity {
         if(!choiceDate.isEmpty()){
             tv_mybalanceactivity_choiceDate.setText(choiceDate);
         }
+
     }
 
     /**
@@ -36,7 +37,6 @@ public class MyBalanceActivity extends AppCompatActivity {
      * @param view
      */
     public void settingtime(View view){
-
         startActivityForResult(new Intent(MyBalanceActivity.this,ChoiceDateActivity.class),100);
     }
 

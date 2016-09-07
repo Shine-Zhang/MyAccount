@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.zs.myaccount.AddWishActivity">
 
     <RelativeLayout
@@ -109,11 +108,11 @@
             android:maxLines="1"
             android:textSize="15sp"
             android:maxLength="12"
-            android:id="@+id/et_addwishactivity_notes"/>
+            android:id="@+id/et_addwishactivity_description"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/et_addwishactivity_notes"
+            android:layout_below="@id/et_addwishactivity_description"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"

@@ -40,8 +40,6 @@ public class AddCategoryActivity extends AppCompatActivity {
         cv_addaddCategory_choiceIcon = (CircleImageView) findViewById(R.id.cv_addCategory_choiceIcon);
         et_addCategory_categoryName = (EditText) findViewById(R.id.et_addCategory_categoryName);
 
-        //准备好对PayoutCategory表格查询的DAO实例
-        payoutCategoryDAO = new PayoutCategoryDAO(this);
         //从AllCategoryDB表格获取全部的Category信息
         getInfoFromDB();
 
@@ -94,7 +92,7 @@ public class AddCategoryActivity extends AppCompatActivity {
                     //用户没有选择，设置默认的图标
                     userChoiceID = R.drawable.ic_yiban_default;
                 }
-                payoutCategoryDAO.addPayoutCategoryToDB(userChoiceID,resultName);
+                //payoutCategoryDAO.addPayoutCategoryToDB(userChoiceID,resultName);
                 //携带数据到addRecord页面
                 Intent intent = new Intent();
                 intent.putExtra("resourceID",userChoiceID);

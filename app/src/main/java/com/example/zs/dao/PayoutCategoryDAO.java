@@ -38,7 +38,7 @@ public class PayoutCategoryDAO {
     }
     public ArrayList<UserAddCategoryInfo> getPayoutCategoryToDB(){
         ArrayList<UserAddCategoryInfo> userAddCategoryInfos = new ArrayList<>();
-        Cursor cursor = db.rawQuery("select * from payoutCategoryInfo", null);
+        Cursor cursor = db.rawQuery("select * from payoutCategoryInfo;", null);
         while (cursor.moveToNext()){
             int resourceID = cursor.getInt(1);
             Log.i("000","resourceID"+resourceID);
