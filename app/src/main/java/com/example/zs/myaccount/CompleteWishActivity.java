@@ -137,7 +137,7 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
         boolean hasphoto = true;
         if(hasphoto){
             //显示图片
-            iv_popupwindowwishdetail_photo.setImageResource(R.drawable.a);
+            iv_popupwindowwishdetail_photo.setImageResource(R.drawable.ic_7_default);
         }else{
             //没有图片，隐藏ImageView控件
             iv_popupwindowwishdetail_photo.setVisibility(View.GONE);

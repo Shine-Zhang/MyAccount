@@ -14,5 +14,23 @@
         android:layout_height="match_parent"
         android:src="@drawable/ic_3_yellow"
         android:id="@+id/rl_splashactivity_bg"
-        ></ImageView>>
+        ></ImageView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sp_date"
+        android:layout_centerInParent="true"
+        android:text="日期写入"
+        android:textSize="10dp"
+        >
+    </TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="又是咸鱼翻身的一天"
+        android:textSize="10dp"
+        android:layout_below="@+id/sp_date">
+    </TextView>
+
 </RelativeLayout>

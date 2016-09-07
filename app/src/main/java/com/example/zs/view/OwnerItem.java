@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.zs.application.MyAplication;
 import com.example.zs.myaccount.R;
 
 /**
@@ -30,6 +31,7 @@ public class OwnerItem extends RelativeLayout {
         super(context);
         ctx = context;
         init(null);
+
     }
 
     public OwnerItem(Context context, AttributeSet attrs) {
