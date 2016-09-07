@@ -2,9 +2,13 @@ package com.example.zs.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.zs.bean.PayouContentInfo;
+import com.example.zs.dataBase.PayOutContentDB;
+
+import java.util.ArrayList;
 
 /**
  * Created by wuqi on 2016/9/7 0007.
@@ -15,16 +19,69 @@ public class PayOutContentDAO {
 
     public PayOutContentDAO(Context ctx) {
         this.ctx = ctx;
+        PayOutContentDB payOutContentDB = new PayOutContentDB(ctx, "PayOutContent.db", null, 1);
+        db = payOutContentDB.getReadableDatabase();
     }
+
+    /**查询
+     * 以集合形式返回表格中所有数据
+     * @return
+     */
+    public ArrayList<PayouContentInfo> getAllPayoutContentFromDB(){
+        ArrayList<PayouContentInfo> payouContentInfos = new ArrayList<>();
+        Cursor cursor = db.rawQuery("select * from payouContent", null);
+        while (cursor.moveToNext()){
+            int anInt = cursor.getInt(0);
+            int anInt1 = cursor.getInt(1);
+            int anInt2 = cursor.getInt(2);
+            int anInt3 = cursor.getInt(3);
+            int anInt4 = cursor.getInt(4);
+            String string1 = cursor.getString(5);
+            String string2 = cursor.getString(6);
+            String string3 = cursor.getString(7);
+            String string4 = cursor.getString(8);
+            PayouContentInfo payouContentInfo = new PayouContentInfo(anInt,anInt1, string1, anInt2, anInt3, anInt4, string2, string3, string4);
+            payouContentInfos.add(payouContentInfo);
+        }
+        return payouContentInfos;
+    }
+
+    /**
+     * 修改时，除id外，其它全部更新下
+     * @param payouContentInfo 传入表格当行所有信息
+     */
+    public void updataPayoutContentDB(int id,PayouContentInfo payouContentInfo){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("resourceID",payouContentInfo.resourceID);
+        contentValues.put("year",payouContentInfo.year);
+        contentValues.put("mouth",payouContentInfo.mouth);
+        contentValues.put("day",payouContentInfo.day);
+        contentValues.put("category",payouContentInfo.category);
+        contentValues.put("money",payouContentInfo.money);
+        contentValues.put("remarks",payouContentInfo.remarks);
+        contentValues.put("photo",payouContentInfo.photo);
+        db.update("payouContent",contentValues,"id=?",new String[]{id+""});
+
+    }
+
+    /**
+     * 单个插入到数据库中
+     * @param payouContentInfo
+     */
     public void addPayoutContentToDB(PayouContentInfo payouContentInfo){
         ContentValues contentValues = new ContentValues();
         contentValues.put("resourceID",payouContentInfo.resourceID);
-        contentValues.put("category",payouContentInfo.year);
+        contentValues.put("year",payouContentInfo.year);
         contentValues.put("mouth",payouContentInfo.mouth);
         contentValues.put("day",payouContentInfo.day);
+        contentValues.put("category",payouContentInfo.category);
         contentValues.put("money",payouContentInfo.money);
         contentValues.put("remarks",payouContentInfo.remarks);
         contentValues.put("photo",payouContentInfo.photo);
         db.insert("payouContent",null,contentValues);
+    }
+    //单个删除
+    public void deletePayoutContentItemFromDB(int id){
+        db.delete("payouContent","id=?",new String[]{""+id});
     }
 }
