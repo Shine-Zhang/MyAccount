@@ -57,6 +57,11 @@ public class ChoiceDateActivity extends AppCompatActivity {
      * 返回到前一个页面，并且销毁当前页面
      */
     public void back(View view){
+        //将选择的日期数据传递回前一个页面
+        Intent intent = new Intent();
+        intent.putExtra("choiceDate", "");
+        // 设置结果，并进行传送
+        this.setResult(200, intent);
         finish();
     }
 

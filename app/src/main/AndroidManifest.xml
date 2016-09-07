@@ -3,7 +3,10 @@
     package="com.example.zs.myaccount">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name="com.example.zs.application.MyAplication"
@@ -16,11 +19,7 @@
         <activity android:name=".AddWishActivity" />
         <activity android:name=".AddRecordActivity" />
         <activity android:name=".GuideActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".MyBalanceActivity" />
         <activity android:name=".ChoiceDateActivity" />
@@ -29,16 +28,19 @@
         <activity android:name=".InitializeActivity" />
         <activity android:name=".FeedbackActivity" />
         <activity android:name=".QuestionActivity" />
-        <activity android:name=".AboutUsActivity"></activity>
-        <activity android:name=".CompleteWishActivity"></activity>
-        <activity android:name=".MyBalanceActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".ShareAppActivity" />
-        <activity android:name=".InitializeActivity" />
-        <activity android:name=".FeedbackActivity" />
-        <activity android:name=".QuestionActivity" />
-        <activity android:name=".AboutUsActivity"></activity>
-        <activity android:name=".AddCategoryActivity"/>
+        <activity android:name=".AboutUsActivity" />
+        <activity android:name=".CompleteWishActivity" />
+        <activity android:name=".AddCategoryActivity" />
+        <activity android:name="com.avos.avoscloud.feedback.ThreadActivity"></activity>
+        <activity android:name=".SplashActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>
