@@ -23,8 +23,11 @@ import android.widget.TextView;
 import com.example.zs.addPage.AddBasePage;
 import com.example.zs.addPage.IncomePage;
 import com.example.zs.addPage.PayOutPage;
+import com.example.zs.application.MyAplication;
+import com.example.zs.bean.IncomeContentInfo;
 import com.example.zs.bean.PayouContentInfo;
 import com.example.zs.bean.UserAddCategoryInfo;
+import com.example.zs.dao.IncomeContentDAO;
 import com.example.zs.dao.PayOutContentDAO;
 
 import java.util.ArrayList;
@@ -52,11 +55,14 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private Button btn_addRecordActivity_time;
     private StringBuffer stringNumber;
     private TextView tv_addRecordActivity_inputNumber;
-    private boolean isPayoutPage;
+    private boolean isIncomePage;
     private PayOutContentDAO payOutContentDAO;
     public LinearLayout ll_addRecordActivity_downRegion;
     public LinearLayout ll_addRecordActivity_keyboard;
     private IncomePage incomePage;
+    private int idNumberPay;
+    private int idNumberIn;
+    private IncomeContentDAO incomeContentDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +72,18 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         getSupportActionBar().hide();
         RadioGroup rg_addRecordActivity_singleChoice = (RadioGroup) findViewById(R.id.rg_addRecordActivity_singleChoice);
         btn_addRecordActivity_time = (Button) findViewById(R.id.btn_addRecordActivity_time);
+        ImageView iv_addRecordActivity_finish = (ImageView) findViewById(R.id.iv_addRecordActivity_finish);
         ll_addRecordActivity_downRegion = (LinearLayout) findViewById(R.id.ll_addRecordActivity_downRegion);
         ll_addRecordActivity_keyboard = (LinearLayout) findViewById(R.id.ll_addRecordActivity_keyboard);
 
+        //关闭当前页面按钮
+        iv_addRecordActivity_finish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveIdIfo();
+                finish();
+            }
+        });
         //键盘位置的点击事件实现
         stringNumber= new StringBuffer();
         keyBoard();
@@ -79,6 +94,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 if(i==R.id.btn_addRecordActivity_income){
                     vp_addRecordActivity_content.setCurrentItem(1,false);
+                    isIncomePage = true;
                 }else {
                     vp_addRecordActivity_content.setCurrentItem(0,false);
                 }
@@ -96,8 +112,13 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         addBasePageInfos.add(incomePage);
         //显示日期
         setDate();
-        vp_addRecordActivity_content.setAdapter(new MyViewPagerAdapter());
         payOutContentDAO = new PayOutContentDAO(this);
+        incomeContentDAO = new IncomeContentDAO(this);
+        vp_addRecordActivity_content.setAdapter(new MyViewPagerAdapter());
+
+        //获取表的id值
+        idNumberPay = MyAplication.getIntFromSp("idNumberPay");
+        idNumberIn = MyAplication.getIntFromSp("idNumberIn");
     }
 
     private void keyBoard() {
@@ -187,7 +208,36 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 break;
             case R.id.tv_addCategory_submit:
                 //保存数据数据库中
-                savePayoutInfoToDB();
+                if (!isIncomePage){
+                    savePayoutInfoToDB();
+                    //传回数据给mainactivity
+                    Intent intent = new Intent();
+                    intent.putExtra("id",idNumberPay);
+                    intent.putExtra("resourceID",payOutPage.selectResourceID);
+                    intent.putExtra("categoryName",payOutPage.selectCategoryName);
+                    intent.putExtra("year",year);
+                    intent.putExtra("mouth",month);
+                    intent.putExtra("day",day);
+                    intent.putExtra("money",stringNumber.toString());
+                    intent.putExtra("marks","this is mark");
+                    intent.putExtra("photo","this is photo");
+                    setResult(555,intent);
+                }else {
+                    saveIncomeInfoToDB();
+                    //传回数据给mainactivity
+                    Intent intent = new Intent();
+                    intent.putExtra("id",idNumberIn);
+                    intent.putExtra("resourceID",payOutPage.selectResourceID);
+                    intent.putExtra("categoryName",payOutPage.selectCategoryName);
+                    intent.putExtra("year",year);
+                    intent.putExtra("mouth",month);
+                    intent.putExtra("day",day);
+                    intent.putExtra("money",stringNumber.toString());
+                    intent.putExtra("marks","this is mark");
+                    intent.putExtra("photo","this is photo");
+                    setResult(444,intent);
+                }
+                saveIdIfo();
                 finish();
                 break;
             case R.id.iv_addRecordActivity_remark:
@@ -196,13 +246,27 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    private void saveIdIfo() {
+        MyAplication.saveIntToSp("idNumberPay",idNumberPay);
+        MyAplication.saveIntToSp("idNumberIn",idNumberIn);
+    }
+
+    private void saveIncomeInfoToDB() {
+
+        IncomeContentInfo incomeContentInfo = new IncomeContentInfo(idNumberPay,payOutPage.selectResourceID, payOutPage.selectCategoryName,
+                year, month, day, stringNumber.toString(), "this is mark", "this is photo");
+        idNumberIn++;
+        incomeContentDAO.addIncomeContentToDB(incomeContentInfo);
+    }
+
     /**
      * 保存数据到数据库中，供主页面显示
      */
     private void savePayoutInfoToDB() {
-        //id传入一个int即可，数据库插入时使用的id为自增，不同于此时传入
-        PayouContentInfo payouContentInfo = new PayouContentInfo(1,payOutPage.selectResourceID, payOutPage.selectCategoryName,
+
+        PayouContentInfo payouContentInfo = new PayouContentInfo(idNumberPay,payOutPage.selectResourceID, payOutPage.selectCategoryName,
                 year, month, day, stringNumber.toString(), "this is mark", "this is photo");
+        idNumberPay++;
         payOutContentDAO.addPayoutContentToDB(payouContentInfo);
 
     }
@@ -303,7 +367,9 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 month = i1;
                 day = i2;
                 btn_addRecordActivity_time.setText(month+"月"+day+"日");
-
+                PayOutContentDAO payOutContentDAO = new PayOutContentDAO(AddRecordActivity.this);
+                int moneySum = payOutContentDAO.getMoneySum();
+                Log.i(TAG, "moneySum="+moneySum);
               /*  //test数据
                 payOutContentDAO.deletePayoutContentItemFromDB(1);
                 PayouContentInfo test = new PayouContentInfo(2, 12, "test类", 15, 3, 3, "1", "----", "--");

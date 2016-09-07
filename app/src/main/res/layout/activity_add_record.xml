@@ -43,7 +43,7 @@
                 android:text="支出"/>
         </RadioGroup>
         <ImageView
-            android:id="@+id/iv_addRecordActivity_"
+            android:id="@+id/iv_addRecordActivity_finish"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_centerVertical="true"

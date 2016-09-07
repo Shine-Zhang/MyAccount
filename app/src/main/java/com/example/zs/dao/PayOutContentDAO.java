@@ -70,6 +70,7 @@ public class PayOutContentDAO {
      */
     public void addPayoutContentToDB(PayouContentInfo payouContentInfo){
         ContentValues contentValues = new ContentValues();
+        contentValues.put("id",payouContentInfo.id);
         contentValues.put("resourceID",payouContentInfo.resourceID);
         contentValues.put("year",payouContentInfo.year);
         contentValues.put("mouth",payouContentInfo.mouth);
@@ -83,5 +84,15 @@ public class PayOutContentDAO {
     //单个删除
     public void deletePayoutContentItemFromDB(int id){
         db.delete("payouContent","id=?",new String[]{""+id});
+    }
+    public  int getMoneySum(){
+        int sum=0;
+        Cursor cursor = db.rawQuery("select money from payouContent;", null);
+        while (cursor.moveToNext()){
+            String s = cursor.getString(0);
+            int i = Integer.parseInt(s);
+            sum+=i;
+        }
+        return sum;
     }
 }

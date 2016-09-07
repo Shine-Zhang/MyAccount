@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.example.zs.bean.UserAddCategoryInfo;
+import com.example.zs.dao.PayOutContentDAO;
 import com.example.zs.dao.PayoutCategoryDAO;
 import com.example.zs.myaccount.AddCategoryActivity;
 import com.example.zs.myaccount.AddRecordActivity;
@@ -79,7 +80,7 @@ public class PayOutPage extends AddBasePage {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //显示键盘区
-                keyAnimationVisble();
+               // keyAnimationVisble();
                 if(i==payoutCategoryToDB.size()){
                     //跳转到addCategory页面
                     activity.startActivityForResult(new Intent(activity, AddCategoryActivity.class),100);
@@ -108,7 +109,7 @@ public class PayOutPage extends AddBasePage {
                         Log.i(TAG,"ACTION_MOVE"+Math.abs(endY-startY));
                         if (Math.abs(endY-startY)>100){
                             //动画隐藏掉键盘
-                            keyAnimationInVisble();
+                            //keyAnimationInVisble();
                         }
                         break;
                     case MotionEvent.ACTION_UP:
@@ -152,7 +153,7 @@ public class PayOutPage extends AddBasePage {
         Log.i(TAG,"initData");
         PayoutCategoryDAO payoutCategoryDAO = new PayoutCategoryDAO(activity);
         payoutCategoryToDB = payoutCategoryDAO.getPayoutCategoryToDB();
-       // Log.i(TAG, payoutCategoryToDB.toString());
+        // Log.i(TAG, payoutCategoryToDB.toString());
        // Log.i(TAG, payoutCategoryToDB.get(0).toString());
     }
 
