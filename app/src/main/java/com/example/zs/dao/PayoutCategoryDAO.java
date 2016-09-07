@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.zs.bean.PayouContentInfo;
 import com.example.zs.bean.UserAddCategoryInfo;
 import com.example.zs.dataBase.AllCategoryDB;
 import com.example.zs.dataBase.PayoutCategoryDB;
@@ -49,4 +50,24 @@ public class PayoutCategoryDAO {
         return userAddCategoryInfos;
     }
 
+    //张旭东添加取数据方法,用来读取“支出”数据
+    public ArrayList<PayouContentInfo> getPayoutCategoryFromDB(){
+        ArrayList<PayouContentInfo> PayouContentInfo = new ArrayList<>();
+        Cursor cursor = db.rawQuery("select * from payoutCategoryInfo;", null);
+        while(cursor.moveToNext()){
+            int id = cursor.getInt(0);
+            int resourceID= cursor.getInt(1);
+            int year = cursor.getInt(2);
+            int mouth = cursor.getInt(3);
+            int day = cursor.getInt(4);
+            String category = cursor.getString(5);
+            String money = cursor.getString(6);
+            String remarks = cursor.getString(7);
+            String photo = cursor.getString(8);
+            com.example.zs.bean.PayouContentInfo payouContentInfo =
+                    new PayouContentInfo(id, resourceID, category, year, mouth, day, money, remarks, photo);
+            PayouContentInfo.add(payouContentInfo);
+        }
+        return PayouContentInfo;
+    }
 }
