@@ -6,13 +6,16 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.widget.TextView;
 
 import com.example.zs.application.MyAplication;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 /**
@@ -22,9 +25,11 @@ public class SplashActivity extends Activity {
 
     private View rl_splashactivity_bg;
     private SharedPreferences enterGuide;
+    private TextView tv_splashactivity_date;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splash);
 
         rl_splashactivity_bg = findViewById(R.id.rl_splashactivity_bg);
@@ -32,7 +37,9 @@ public class SplashActivity extends Activity {
         showAmination();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
-
+        String format = sdf.format(new Date());
+        tv_splashactivity_date = (TextView) findViewById(R.id.tv_splashactivity_date);
+        tv_splashactivity_date.setText(format);
     }
 
     private void showAmination() {

@@ -15,7 +15,9 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".AddWishActivity" />
         <activity android:name=".AddRecordActivity" />
-        <activity android:name=".GuideActivity">
+        <activity android:name=".GuideActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            >
         </activity>
         <activity android:name=".MyBalanceActivity" />
         <activity android:name=".ChoiceDateActivity" />
@@ -28,7 +30,9 @@
         <activity android:name=".CompleteWishActivity" />
         <activity android:name=".AddCategoryActivity" />
         <activity android:name=".RportFormDatePickerActivity"></activity>
-        <activity android:name=".SplashActivity" >
+        <activity android:name=".SplashActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
