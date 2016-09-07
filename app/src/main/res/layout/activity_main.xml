@@ -18,7 +18,7 @@
     </android.support.v4.view.ViewPager>
 
     <!--第二部分-->
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="59dp"
         android:orientation="vertical"
@@ -70,9 +70,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:button="@null"
-                android:drawableTop="@drawable/ic_plus_default"
-                android:text=""
-                android:id="@+id/rb_mainactivity_plus"
+               android:drawableTop="@drawable/ic_plus_default" android:text="444"
+             android:id="@+id/rb_mainactivity_plusainactivity_plus"
                 />
             <RadioButton
                 android:layout_width="0px"
@@ -97,7 +96,13 @@
                 android:paddingBottom="2dp"
                 />
         </RadioGroup>
-
-    </LinearLayout>
+        <ImageButton
+            android:id="@+id/ib_main_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:onClick="add"
+            android:src="@drawable/ic_plus_default"/>
+    </RelativeLayout>
 
 </LinearLayout>
