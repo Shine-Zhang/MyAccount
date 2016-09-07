@@ -60,4 +60,14 @@ public class MyAplication extends Application{
     public static Boolean getBooleanFromSp(String name){
         return   sp.getBoolean(name,false);
     }
+
+    public static void saveIntToSp(String key,int value){
+        SharedPreferences.Editor edit = sp.edit();
+        edit.putInt(key,value);
+        edit.commit();
+    }
+    public static int getIntFromSp(String name){
+        return   sp.getInt(name,0);
+    }
+
 }

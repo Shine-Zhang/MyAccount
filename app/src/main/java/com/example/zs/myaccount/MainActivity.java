@@ -13,6 +13,7 @@ import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.example.zs.bean.PayouContentInfo;
 import com.example.zs.pager.BasePager;
 import com.example.zs.pager.OwnerPager;
 import com.example.zs.pager.ReportFormPager;
@@ -160,7 +161,30 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public void add(View v){
-        startActivity(new Intent(MainActivity.this,AddRecordActivity.class));
+        startActivityForResult(new Intent(MainActivity.this,AddRecordActivity.class),310);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        Log.i(tag,resultCode+"--");
+        //确认健返回
+        if(resultCode==555&&intent!=null){
+            int id = intent.getIntExtra("id", 0);
+            int resourceID = intent.getIntExtra("resourceID", 0);
+            String categoryName = intent.getStringExtra("categoryName");
+            int year = intent.getIntExtra("year", 0);
+            int mouth = intent.getIntExtra("mouth", 0);
+            int day = intent.getIntExtra("day", 0);
+            String money = intent.getStringExtra("money");
+            String marks = intent.getStringExtra("marks");
+            String photo = intent.getStringExtra("photo");
+            PayouContentInfo payouContentInfo = new PayouContentInfo(id, resourceID, categoryName, year, mouth, day, money, marks, photo);
+            Log.i(tag,payouContentInfo.toString());
+            //super无法执行到
+            // return;
+        }else if(resultCode==444){
+
+        }
+        super.onActivityResult(requestCode, resultCode, intent);
+    }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<com.example.zs.view.WishItemCardView
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,7 +9,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <com.example.zs.view.WishItemLinearLayout
         android:orientation="vertical"
         android:longClickable="false"
         android:layout_width="match_parent"
@@ -19,7 +19,8 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:clickable="true">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -54,7 +55,9 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp" />
+            android:layout_marginRight="15dp"
+            android:id="@+id/view_itemview_line"
+            android:clickable="true"/>
 
         <android.support.percent.PercentRelativeLayout
             android:id="@+id/prl_itemwish_middle"
@@ -62,7 +65,8 @@
             android:paddingBottom="8dp"
             android:longClickable="false"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:clickable="true">
             <ImageView
                 android:id="@+id/iv_itemwish_pic"
                 android:layout_width="80dp"
@@ -76,7 +80,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:layout_margin="10dp"
-                android:max="100"
                 android:progressDrawable="@drawable/bg_progressbar_itemwish"
                 android:layout_toRightOf="@id/iv_itemwish_pic"
                 android:layout_alignParentRight="true"
@@ -93,11 +96,13 @@
                 android:layout_alignLeft="@id/pb_itemwish_progress"
                 android:layout_alignRight="@id/pb_itemwish_progress" />
         </android.support.percent.PercentRelativeLayout>
-        <FrameLayout
+        <com.example.zs.view.WishItemFramLayout
             android:background="#E5E5E5"
             android:longClickable="false"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:id="@+id/fl_itemwish_bottom"
+            android:clickable="true">
             <ImageView
                 android:id="@+id/iv_itemwish_delete"
                 android:layout_width="20dp"
@@ -114,6 +119,6 @@
                 android:layout_marginRight="15dp"
                 android:textSize="15sp"
                 android:text="完成" />
-        </FrameLayout>
-    </LinearLayout>
-</android.support.v7.widget.CardView>
+        </com.example.zs.view.WishItemFramLayout>
+    </com.example.zs.view.WishItemLinearLayout>
+</com.example.zs.view.WishItemCardView>

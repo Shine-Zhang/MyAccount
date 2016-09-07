@@ -53,6 +53,7 @@ public class IncomeContentDAO {
      */
     public void updataIncomeContentDB(int id,IncomeContentInfo incomeContentInfo){
         ContentValues contentValues = new ContentValues();
+        contentValues.put("id",incomeContentInfo.id);
         contentValues.put("resourceID",incomeContentInfo.resourceID);
         contentValues.put("year",incomeContentInfo.year);
         contentValues.put("mouth",incomeContentInfo.mouth);
@@ -84,5 +85,15 @@ public class IncomeContentDAO {
     //单个删除
     public void deleteIncomeContentItemFromDB(int id){
         db.delete("incomeContent","id=?",new String[]{""+id});
+    }
+    public  int getMoneySum(){
+        int sum=0;
+        Cursor cursor = db.rawQuery("select money from incomeContent;", null);
+        while (cursor.moveToNext()){
+            String s = cursor.getString(0);
+            int i = Integer.parseInt(s);
+            sum+=i;
+        }
+        return sum;
     }
 }
