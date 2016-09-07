@@ -16,6 +16,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -53,6 +54,9 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private TextView tv_addRecordActivity_inputNumber;
     private boolean isPayoutPage;
     private PayOutContentDAO payOutContentDAO;
+    public LinearLayout ll_addRecordActivity_downRegion;
+    public LinearLayout ll_addRecordActivity_keyboard;
+    private IncomePage incomePage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +66,9 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         getSupportActionBar().hide();
         RadioGroup rg_addRecordActivity_singleChoice = (RadioGroup) findViewById(R.id.rg_addRecordActivity_singleChoice);
         btn_addRecordActivity_time = (Button) findViewById(R.id.btn_addRecordActivity_time);
+        ll_addRecordActivity_downRegion = (LinearLayout) findViewById(R.id.ll_addRecordActivity_downRegion);
+        ll_addRecordActivity_keyboard = (LinearLayout) findViewById(R.id.ll_addRecordActivity_keyboard);
+
         //键盘位置的点击事件实现
         stringNumber= new StringBuffer();
         keyBoard();
@@ -84,7 +91,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         addBasePageInfos = new ArrayList<AddBasePage>();
         //默认page为支出page
         payOutPage = new PayOutPage(this);
-        IncomePage incomePage = new IncomePage(this);
+        incomePage = new IncomePage(this);
         addBasePageInfos.add(payOutPage);
         addBasePageInfos.add(incomePage);
         //显示日期
@@ -204,14 +211,18 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.i(TAG,"requestCode"+requestCode);
         //直接返回时，intent为null
-        if(requestCode==100&&data!=null){
+        if(resultCode==10&&data!=null){
             //确认按钮返回的,标志位置为true
             //接收由intent携带的数据
             getResourceID= data.getIntExtra("resourceID", R.drawable.ic_yiban_default);
             getCategoryName = data.getStringExtra("categoryName");
             Log.i(TAG,getResourceID+"--"+getCategoryName);
-            //传给payOutPage
-            payOutPage.getActivityResult(getResourceID,getCategoryName);
+            if(requestCode==100){
+                //传给payOutPage
+                payOutPage.getActivityResult(getResourceID,getCategoryName);
+            }else {
+                incomePage.getActivityResult(getResourceID,getCategoryName);
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
