@@ -138,10 +138,10 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
         rpb_popupwindowwishdetail_progress.getProgress();
 
         //显示图片  如果有图，显示图片，没有则隐藏控件
-        if(Integer.parseInt(data[2])!=0){
+        boolean hasphoto = true;
+        if(hasphoto){
             //显示图片
-            iv_popupwindowwishdetail_photo.setVisibility(View.VISIBLE);
-            iv_popupwindowwishdetail_photo.setImageResource(Integer.parseInt(data[2]));
+            iv_popupwindowwishdetail_photo.setImageResource(R.drawable.a);
         }else{
             //没有图片，隐藏ImageView控件
             iv_popupwindowwishdetail_photo.setVisibility(View.GONE);
@@ -166,15 +166,13 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
     class TestData {
         String title;
         String description;
-        int photoid;
 
         public TestData() {
         }
 
-        public TestData(String title, String description,int photoid) {
+        public TestData(String title, String description) {
             this.title = title;
             this.description = description;
-            this.photoid = photoid;
         }
     }
 
@@ -184,11 +182,9 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
             case R.id.imgbt_completewishactivity_back:
                 //关掉已完成愿望列表页面
                 finish();
-                break;
             case R.id.civ_popupwindowwishdetail_close:
                 //关掉愿望详情页面
                 popupwindow_showwishdetail.dismiss();
-                break;
         }
 
     }

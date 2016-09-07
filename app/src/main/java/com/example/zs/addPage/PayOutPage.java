@@ -4,11 +4,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Transformation;
+import android.view.animation.TranslateAnimation;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.example.zs.bean.UserAddCategoryInfo;
+import com.example.zs.dao.PayOutContentDAO;
 import com.example.zs.dao.PayoutCategoryDAO;
 import com.example.zs.myaccount.AddCategoryActivity;
 import com.example.zs.myaccount.AddRecordActivity;
@@ -19,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -37,6 +43,8 @@ public class PayOutPage extends AddBasePage {
     private AddRecordActivity addRecordActivity;
     private ArrayList<UserAddCategoryInfo> payoutCategoryToDB;
     private MyGridViewAdapter myGridViewAdapter;
+    public  String selectCategoryName;
+    public  int selectResourceID;
 
     public PayOutPage(Activity activity) {
         super(activity);
@@ -65,34 +73,95 @@ public class PayOutPage extends AddBasePage {
         //gridView.setNumColumns(COLUMS_NUMBER);
         myGridViewAdapter = new MyGridViewAdapter();
         gridView.setAdapter(myGridViewAdapter);
+        //girdview区滑动监听事件实现
+        slideGridView();
         //设置gridviewItem监听事件
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //显示键盘区
+               // keyAnimationVisble();
                 if(i==payoutCategoryToDB.size()){
                     //跳转到addCategory页面
                     activity.startActivityForResult(new Intent(activity, AddCategoryActivity.class),100);
+                }else {
+                    selectResourceID = payoutCategoryToDB.get(i).getResourceID();
+                    selectCategoryName = payoutCategoryToDB.get(i).getCategoryName();
                 }
                 Log.i(TAG,"--"+i);
             }
         });
         return gridView;
     }
+    float startY;
+    private void slideGridView() {
+
+        gridView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                float rawY = motionEvent.getRawY();
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        startY = motionEvent.getRawY();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        float endY = motionEvent.getRawY();
+                        Log.i(TAG,"ACTION_MOVE"+Math.abs(endY-startY));
+                        if (Math.abs(endY-startY)>100){
+                            //动画隐藏掉键盘
+                            //keyAnimationInVisble();
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        startY = motionEvent.getRawY();
+                        break;
+                }
+                //优先控件内部点击事件处理，如不处理，touch消耗掉事件
+                return false;
+            }
+        });
+    }
+
+    private void keyAnimationInVisble() {
+        float x = addRecordActivity.ll_addRecordActivity_downRegion.getX();
+        float y = addRecordActivity.ll_addRecordActivity_downRegion.getY();
+        int height = addRecordActivity.ll_addRecordActivity_keyboard.getMeasuredHeight();
+        Log.i(TAG,x+"-"+y+"-"+height+"-");
+        TranslateAnimation translateAnimation = new TranslateAnimation(0,0,0,height);
+        translateAnimation.setDuration(1000);
+        translateAnimation.setFillAfter(true);
+        addRecordActivity.ll_addRecordActivity_downRegion.startAnimation(translateAnimation);
+    }
+    private void keyAnimationVisble() {
+        float x = addRecordActivity.ll_addRecordActivity_downRegion.getX();
+        float y = addRecordActivity.ll_addRecordActivity_downRegion.getMeasuredHeight();
+        int height = addRecordActivity.ll_addRecordActivity_keyboard.getMeasuredHeight();
+        Log.i(TAG,x+"-"+y+"-"+height+"-");
+        TranslateAnimation translateAnimation = new TranslateAnimation(0,0,y,y-height);
+        translateAnimation.setDuration(1000);
+        translateAnimation.setFillAfter(true);
+        addRecordActivity.ll_addRecordActivity_downRegion.startAnimation(translateAnimation);
+    }
 
     /**
      * 主要为进入page时查询数据，填充gridview
      */
     private void initData() {
+        //默认为一般种类
+        selectResourceID = R.drawable.ic_yiban_default;
+        selectCategoryName = "一般";
         Log.i(TAG,"initData");
         PayoutCategoryDAO payoutCategoryDAO = new PayoutCategoryDAO(activity);
         payoutCategoryToDB = payoutCategoryDAO.getPayoutCategoryToDB();
-       // Log.i(TAG, payoutCategoryToDB.toString());
+        // Log.i(TAG, payoutCategoryToDB.toString());
        // Log.i(TAG, payoutCategoryToDB.get(0).toString());
     }
 
     public void getActivityResult(int id,String name) {
         Log.i(TAG,"getActivityResult");
         UserAddCategoryInfo categoryInfo = new UserAddCategoryInfo(id, name);
+        PayoutCategoryDAO payoutCategoryDAO = new PayoutCategoryDAO(activity);
+        payoutCategoryDAO.addPayoutCategoryToDB(id,name);
         //gridview刷新数据
         payoutCategoryToDB.add(categoryInfo);
         myGridViewAdapter.notifyDataSetChanged();

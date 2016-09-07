@@ -13,6 +13,7 @@ import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.example.zs.bean.PayouContentInfo;
 import com.example.zs.pager.BasePager;
 import com.example.zs.pager.OwnerPager;
 import com.example.zs.pager.ReportFormPager;
@@ -48,10 +49,9 @@ public class MainActivity extends AppCompatActivity {
         //RadioButton
         rb_mainactivity_detail = (RadioButton) findViewById(R.id.rb_mainactivity_detail);
         rb_mainactivity_wish = (RadioButton) findViewById(R.id.rb_mainactivity_wish);
-        rb_mainactivity_plus = (RadioButton) findViewById(R.id.rb_mainactivity_plus);
+       // rb_mainactivity_plus = (RadioButton) findViewById(R.id.rb_mainactivity_plus);
         rb_mainactivity_list = (RadioButton) findViewById(R.id.rb_mainactivity_list);
         rb_mainactivity_mine = (RadioButton) findViewById(R.id.rb_mainactivity_mine);
-
         //将“明细”（第一个）按钮默认设为选定状态
         rg_mainactivity_bottom.check(R.id.rb_mainactivity_detail);
 
@@ -78,20 +78,10 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.rb_mainactivity_wish:
-
+                        Log.i(tag,"00");
                         vp_mainactivity.setCurrentItem(1);
                         pageList.get(0).initData();
                         break;
-
-                    case R.id.rb_mainactivity_plus:
-                        Log.i(tag,"---");
-                       // vp_mainactivity.setCurrentItem(2);
-                        //pageList.get(0).initData();
-                        startActivity(new Intent(MainActivity.this,AddRecordActivity.class));
-                        //跳转
-
-                        break;
-
                     case R.id.rb_mainactivity_list:
                         vp_mainactivity.setCurrentItem(3);
                         pageList.get(0).initData();
@@ -170,5 +160,31 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    public void add(View v){
+        startActivityForResult(new Intent(MainActivity.this,AddRecordActivity.class),310);
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        Log.i(tag,resultCode+"--");
+        //确认健返回
+        if(resultCode==555&&intent!=null){
+            int id = intent.getIntExtra("id", 0);
+            int resourceID = intent.getIntExtra("resourceID", 0);
+            String categoryName = intent.getStringExtra("categoryName");
+            int year = intent.getIntExtra("year", 0);
+            int mouth = intent.getIntExtra("mouth", 0);
+            int day = intent.getIntExtra("day", 0);
+            String money = intent.getStringExtra("money");
+            String marks = intent.getStringExtra("marks");
+            String photo = intent.getStringExtra("photo");
+            PayouContentInfo payouContentInfo = new PayouContentInfo(id, resourceID, categoryName, year, mouth, day, money, marks, photo);
+            Log.i(tag,payouContentInfo.toString());
+            //super无法执行到
+            // return;
+        }else if(resultCode==444){
+
+        }
+        super.onActivityResult(requestCode, resultCode, intent);
+    }
 }

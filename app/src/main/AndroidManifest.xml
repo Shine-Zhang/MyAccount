@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.zs.myaccount">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -15,12 +16,9 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".AddWishActivity" />
         <activity android:name=".AddRecordActivity" />
-        <activity android:name=".GuideActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity android:name=".GuideActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            >
         </activity>
         <activity android:name=".MyBalanceActivity" />
         <activity android:name=".ChoiceDateActivity" />
@@ -33,6 +31,15 @@
         <activity android:name=".CompleteWishActivity" />
         <activity android:name=".AddCategoryActivity" />
         <activity android:name=".RportFormDatePickerActivity"></activity>
+        <activity android:name=".SplashActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>>
     </application>
 
 </manifest>

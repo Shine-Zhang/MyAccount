@@ -5,7 +5,9 @@ import android.test.ApplicationTestCase;
 import android.util.Log;
 
 import com.example.zs.bean.MyAllCatoryInfo;
+import com.example.zs.bean.PayouContentInfo;
 import com.example.zs.dao.AllCategoryDAO;
+import com.example.zs.dao.PayOutContentDAO;
 import com.example.zs.dao.PayoutCategoryDAO;
 
 import java.util.ArrayList;
@@ -27,5 +29,10 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
     public void testCategory1(){
         PayoutCategoryDAO payoutCategoryDAO = new PayoutCategoryDAO(getContext());
         payoutCategoryDAO.addPayoutCategoryToDB(23,"hhah");
+    }
+    public void testpayout(){
+        PayOutContentDAO payOutContentDAO = new PayOutContentDAO(getContext());
+        PayouContentInfo payouContentInfo = new PayouContentInfo(1,123, "购物", 2016, 9, 7, "250", "打折买的", "--");
+        payOutContentDAO.addPayoutContentToDB(payouContentInfo);
     }
 }
