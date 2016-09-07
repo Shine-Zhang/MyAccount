@@ -63,6 +63,7 @@ public class ReportFormPager extends BasePager{
 
     public ReportFormPager(Activity activity) {
         super(activity);
+        initData();
         initChart();
     }
 
@@ -122,6 +123,7 @@ public class ReportFormPager extends BasePager{
                         break;
                     //收入对应报表页面
                     case R.id.rb_reportform_income:
+
                         break;
                 }
             }
@@ -132,6 +134,8 @@ public class ReportFormPager extends BasePager{
 
     @Override
     public void initData() {
+        //从数据库拿数据
+
         mDatas = new ArrayList<String>();
         for(int i = 0;i < 50; i ++){
             mDatas.add("item" + i);
