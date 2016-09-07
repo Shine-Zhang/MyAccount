@@ -3,6 +3,7 @@ package com.example.zs.pager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -20,6 +21,7 @@ import com.example.zs.myaccount.AboutUsActivity;
 import com.example.zs.myaccount.FeedbackActivity;
 import com.example.zs.myaccount.InitializeActivity;
 import com.example.zs.myaccount.LoginActivity;
+import com.example.zs.myaccount.MainActivity;
 import com.example.zs.myaccount.MyBalanceActivity;
 import com.example.zs.myaccount.QuestionActivity;
 import com.example.zs.myaccount.R;
@@ -135,7 +137,33 @@ public class OwnerPager extends BasePager {
             //为oi_ownerpager_balance条目设置自定义的监听，当该条目被点击测会调用onItemClick()，然后跳转到MyBalance页面
             @Override
             public void onItemClick() {
-                mActivity.startActivity(new Intent(mActivity, InitializeActivity.class));
+
+                new AlertDialog.Builder(mActivity)
+                        .setTitle("注意")
+                        .setMessage("初始化将会删除您所有的记录并恢复到软件的初始设置，您确定这么做吗？")
+                        .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                
+                                String path = "/data/data/"+mActivity.getPackageName();
+                                String databasesPath = path+"/databases/";//数据库路径
+                                String shared_prefsPath = path+"/shared_prefs/";//shared_prefs路径
+                                Log.i(TAG,"databasesPath="+databasesPath);
+                                Log.i(TAG,"shared_prefsPath="+shared_prefsPath);
+
+                                File databasesFile = new File(databasesPath);
+                                File shared_prefsFile = new File(shared_prefsPath);
+
+                                delete(databasesFile);
+                                delete(shared_prefsFile);
+
+                                Toast.makeText(mActivity, "初始化成功！", Toast.LENGTH_SHORT).show();
+                                mActivity.startActivity(new Intent(mActivity, MainActivity.class));
+                            }
+                        })
+                        .setNegativeButton("否",null)
+                        .show();
+                //mActivity.startActivity(new Intent(mActivity, InitializeActivity.class));
             }
         });
     }
@@ -212,11 +240,11 @@ public class OwnerPager extends BasePager {
      * 起一个线程获取服务器中App的版本，返回消息
      */
     private void checkVersionFromServer() {
+        Log.i(TAG,"checkVersionFromServer");
         //起一个线程联网
         new Thread(new Runnable() {
             @Override
             public void run() {
-                //String urlpath = "http://10.0.2.2/MobileManager/version.json";
                 Message msg = new Message();
                 try {
                     URL url = new URL(VERSION_IN_SERVER_PATH);
@@ -278,7 +306,7 @@ public class OwnerPager extends BasePager {
     Handler myHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-
+            Log.i(TAG,"myHandler");
             switch(msg.what){
                 case MSG_OK:
                     String[] info = (String[]) msg.obj;
@@ -312,6 +340,7 @@ public class OwnerPager extends BasePager {
      * @param description
      */
     private void askUserToUpdate(String description) {
+        Log.i(TAG,"askUserToUpdate");
         new AlertDialog.Builder(mActivity)
                 .setTitle("发现新版本，是否要更新？")
                 .setMessage(description)
@@ -330,6 +359,7 @@ public class OwnerPager extends BasePager {
      * 使用Xutils去下载apk文件
      */
     private void downloaAPK() {
+        Log.i(TAG,"downloaAPK");
         HttpUtils httpUtils = new HttpUtils();
 
         String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -380,6 +410,7 @@ public class OwnerPager extends BasePager {
      * @return
      */
     private int getVersionCode() {
+        Log.i(TAG,"getVersionCode");
         int versionCode = -1;
         //PackageManager可以去获取任意的app信息
         PackageManager packageManager = mActivity.getPackageManager();
@@ -410,6 +441,30 @@ public class OwnerPager extends BasePager {
         }
 
         return versionName;
+    }
+
+    //递归删除文件及文件夹
+    private static void delete(File file) {
+        //如果是文件，则直接删除
+        if (file.isFile()) {
+            file.delete();
+            return;
+        }
+        //如果是文件夹，则判断文件夹中是否有子文件
+        if(file.isDirectory()){
+            File[] childFiles = file.listFiles();
+            if (childFiles == null || childFiles.length == 0) {
+                //是空文件夹，直接删除
+                file.delete();
+                return;
+            }
+            //不是空文件夹，递归删除旗下的子文件
+            for (int i = 0; i < childFiles.length; i++) {
+                delete(childFiles[i]);
+            }
+            //最后将文件夹删除
+            file.delete();
+        }
     }
 
     @Override

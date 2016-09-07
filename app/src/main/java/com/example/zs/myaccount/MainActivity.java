@@ -48,10 +48,9 @@ public class MainActivity extends AppCompatActivity {
         //RadioButton
         rb_mainactivity_detail = (RadioButton) findViewById(R.id.rb_mainactivity_detail);
         rb_mainactivity_wish = (RadioButton) findViewById(R.id.rb_mainactivity_wish);
-        rb_mainactivity_plus = (RadioButton) findViewById(R.id.rb_mainactivity_plus);
+       // rb_mainactivity_plus = (RadioButton) findViewById(R.id.rb_mainactivity_plus);
         rb_mainactivity_list = (RadioButton) findViewById(R.id.rb_mainactivity_list);
         rb_mainactivity_mine = (RadioButton) findViewById(R.id.rb_mainactivity_mine);
-
         //将“明细”（第一个）按钮默认设为选定状态
         rg_mainactivity_bottom.check(R.id.rb_mainactivity_detail);
 
@@ -78,20 +77,10 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.rb_mainactivity_wish:
-
+                        Log.i(tag,"00");
                         vp_mainactivity.setCurrentItem(1);
                         pageList.get(0).initData();
                         break;
-
-                    case R.id.rb_mainactivity_plus:
-                        Log.i(tag,"---");
-                       // vp_mainactivity.setCurrentItem(2);
-                        //pageList.get(0).initData();
-                        startActivity(new Intent(MainActivity.this,AddRecordActivity.class));
-                        //跳转
-
-                        break;
-
                     case R.id.rb_mainactivity_list:
                         vp_mainactivity.setCurrentItem(3);
                         pageList.get(0).initData();
@@ -169,6 +158,9 @@ public class MainActivity extends AppCompatActivity {
         Log.i("11","大油桃");
 
 
+    }
+    public void add(View v){
+        startActivity(new Intent(MainActivity.this,AddRecordActivity.class));
     }
 
 }

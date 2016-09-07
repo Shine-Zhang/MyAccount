@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.zs.myaccount.MainActivity"
     android:orientation="vertical"
+    android:background="#FFF"
     android:clipChildren="false">
 
     <!--第一部分-->
@@ -12,34 +13,34 @@
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="1"
-        android:orientation="vertical"
         android:id="@+id/vp_mainactivity"
-        android:text=" This is ViewPager!">
+        android:clipChildren="false">
     </android.support.v4.view.ViewPager>
 
     <!--第二部分-->
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="59dp"
-        android:orientation="vertical"
-        android:layout_alignParentBottom="true"
-        android:clipChildren="false"
-        android:background="#B2B2B2">
-
+        android:layout_height="57dp"
+        android:clipChildren="false">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#B2B2B2"
+            android:layout_alignParentBottom="true">
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp">
+            android:layout_height="1dp"
+            android:background="#B2B2B2"
+            >
         </View>
 
-    <!--第三部分-->
         <RadioGroup
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="bottom"
             android:id="@+id/rg_mainactivity_bottom"
-            android:layout_alignParentBottom="true"
-            android:clipChildren="false"
             android:background="#FFF"
             >
             <RadioButton
@@ -64,16 +65,12 @@
                 android:id="@+id/rb_mainactivity_wish"
                 android:paddingBottom="2dp"
                 />
-            <RadioButton
+            <View
                 android:layout_width="0px"
-                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:button="@null"
-                android:drawableTop="@drawable/ic_plus_default"
-                android:text=""
-                android:id="@+id/rb_mainactivity_plus"
-                />
+                android:layout_height="wrap_content"
+                >
+            </View>
             <RadioButton
                 android:layout_width="0px"
                 android:layout_height="wrap_content"
@@ -97,7 +94,16 @@
                 android:paddingBottom="2dp"
                 />
         </RadioGroup>
-
-    </LinearLayout>
+        </LinearLayout>
+        <ImageButton
+            android:id="@+id/ib_main_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="add"
+            android:src="@drawable/ic_plus_default"
+            android:layout_centerInParent="true"
+            android:paddingBottom="55dp"
+            android:background="#FFF"/>
+    </RelativeLayout>
 
 </LinearLayout>
