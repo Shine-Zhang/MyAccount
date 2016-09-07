@@ -56,7 +56,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/fl_reportform">
+        android:id="@+id/fl_reportform"
+        android:visibility="visible">
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -77,13 +78,13 @@
                 android:gravity="center"
                 android:layout_height="wrap_content"
                 android:text="总支出"
-                android:id="@+id/tv_reportform_type"/>
+                android:id="@+id/tv_reportform_zhichu"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="25"
-                android:id="@+id/tv_reportform_money"/>
+                android:id="@+id/tv_reportform_zhichumoney"/>
         </LinearLayout>
     </FrameLayout>
     <ListView
