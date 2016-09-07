@@ -4,6 +4,7 @@ package com.example.zs.myaccount;
  * Create by Wang Yu on 2016/09/02
  */
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -25,7 +26,7 @@ import com.example.zs.application.MyAplication;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuideActivity extends AppCompatActivity {
+public class GuideActivity extends Activity {
 
     private ViewPager vp_guide;
 
@@ -40,7 +41,6 @@ public class GuideActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide);
-        getSupportActionBar().hide();
 
         vp_guide = (ViewPager) findViewById(R.id.vp_guide);
 
@@ -127,5 +127,6 @@ public class GuideActivity extends AppCompatActivity {
 
         startActivity(new Intent(this,MainActivity.class));
         finish();
+
     }
 }
