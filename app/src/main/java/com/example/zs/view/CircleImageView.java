@@ -15,6 +15,7 @@
  */
 package com.example.zs.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;

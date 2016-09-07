@@ -12,6 +12,8 @@ import android.view.animation.AnimationSet;
 
 import com.example.zs.application.MyAplication;
 
+import java.text.SimpleDateFormat;
+
 
 /**
  * Create by Wang Yu on 2016/09/05
@@ -28,6 +30,9 @@ public class SplashActivity extends Activity {
         rl_splashactivity_bg = findViewById(R.id.rl_splashactivity_bg);
 
         showAmination();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+
     }
 
     private void showAmination() {
@@ -36,7 +41,7 @@ public class SplashActivity extends Activity {
 
         //渐变动画
         AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
-        alphaAnimation.setDuration(2000);
+        alphaAnimation.setDuration(5000);
 
         animationSet.addAnimation(alphaAnimation);
         rl_splashactivity_bg.setAnimation(animationSet);

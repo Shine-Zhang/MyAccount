@@ -37,6 +37,8 @@ public class PayOutPage extends AddBasePage {
     private AddRecordActivity addRecordActivity;
     private ArrayList<UserAddCategoryInfo> payoutCategoryToDB;
     private MyGridViewAdapter myGridViewAdapter;
+    public  String selectCategoryName;
+    public  int selectResourceID;
 
     public PayOutPage(Activity activity) {
         super(activity);
@@ -72,6 +74,9 @@ public class PayOutPage extends AddBasePage {
                 if(i==payoutCategoryToDB.size()){
                     //跳转到addCategory页面
                     activity.startActivityForResult(new Intent(activity, AddCategoryActivity.class),100);
+                }else {
+                    selectResourceID = payoutCategoryToDB.get(i).getResourceID();
+                    selectCategoryName = payoutCategoryToDB.get(i).getCategoryName();
                 }
                 Log.i(TAG,"--"+i);
             }
@@ -83,6 +88,9 @@ public class PayOutPage extends AddBasePage {
      * 主要为进入page时查询数据，填充gridview
      */
     private void initData() {
+        //默认为一般种类
+        selectResourceID = R.drawable.ic_yiban_default;
+        selectCategoryName = "一般";
         Log.i(TAG,"initData");
         PayoutCategoryDAO payoutCategoryDAO = new PayoutCategoryDAO(activity);
         payoutCategoryToDB = payoutCategoryDAO.getPayoutCategoryToDB();

@@ -2,7 +2,6 @@ package com.example.zs.myaccount;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -12,7 +11,6 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
@@ -23,8 +21,8 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.zs.utils.ScreenUtils;
 import com.example.zs.view.CircleImageView;
 
 import java.io.File;
@@ -37,15 +35,13 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
     private static final String TAG = "AddWishActivity";
     private TextView et_addwishactivity_mywish;
     private TextView et_addwishactivity_wishfund;
-    private TextView et_addwishactivity_notes;
+    private TextView et_addwishactivity_description;
     private PopupWindow popupwindow_getphoto;
     private CircleImageView civ_addwishactivity_image;
     private Button bt_addwishactivity_addwish;
-    private SharedPreferences wish;
     private ImageView iv_addwishactivity_photo;
     private static final int PHOTO_REQUEST_CAREMA = 100;// 拍照
     private static final int PHOTO_REQUEST_GALLERY = 101;// 从相册中选择
-    private static final int PHOTO_REQUEST_CUT = 102;// 结果
     private Uri photouri;
     private PopupWindow popupwindow_showphoto;
     private PopupWindow popupwindow_showkeyboard;
@@ -61,17 +57,41 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_add_wish);
         getSupportActionBar().hide();
 
-        wish = getSharedPreferences("wish", MODE_PRIVATE);
-
         wishFundString = new StringBuffer();
-        //wishFundString.append("0");
 
         et_addwishactivity_mywish = (TextView) findViewById(R.id.et_addwishactivity_mywish);
         et_addwishactivity_wishfund = (TextView) findViewById(R.id.et_addwishactivity_wishfund);
-        et_addwishactivity_notes = (TextView) findViewById(R.id.et_addwishactivity_notes);
+        et_addwishactivity_description = (TextView) findViewById(R.id.et_addwishactivity_description);
         civ_addwishactivity_image = (CircleImageView) findViewById(R.id.civ_addwishactivity_image);
         bt_addwishactivity_addwish = (Button) findViewById(R.id.bt_addwishactivity_addwish);
         iv_addwishactivity_photo = (ImageView) findViewById(R.id.iv_addwishactivity_photo);
+
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        String from = bundle.getString("from");
+        if(from.equals("add")){
+            //点击“添加”过来的
+            return;
+        }else {
+            String title = bundle.getString("title","");
+            String description = bundle.getString("description","");
+            String wishfund = bundle.getString("wishfund","");
+            String photoid = bundle.getString("photoid","");
+
+            et_addwishactivity_mywish.setText(title);
+            et_addwishactivity_description.setText(description);
+            et_addwishactivity_wishfund.setText(wishfund);
+            if(photoid.length()==0){
+                return;
+            }else {
+                iv_addwishactivity_photo.setVisibility(View.INVISIBLE);
+                civ_addwishactivity_image.setImageResource(Integer.parseInt(photoid));
+            }
+            if(title.length()!=0 && description.length()!=0){
+                bt_addwishactivity_addwish.setClickable(true);
+                bt_addwishactivity_addwish.setBackgroundColor(Color.rgb(31,185,236));
+            }
+        }
 
         //给civ_addwishactivity_image设置点击事件
         //当用户尚未选择图片的时候，点击它会弹框让用户选择显示图片的路径
@@ -89,9 +109,9 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
                     //点击相机，弹出一个popupwindow让用户选择获取图片的方式
                     getPhoto(view);
                     if(popupwindow_getphoto.isShowing()){
-                        backgroundAlpha(0.5f);
+                        ScreenUtils.backgroundAlpha(AddWishActivity.this,0.5f);
                     }else{
-                        backgroundAlpha(1.0f);
+                        ScreenUtils.backgroundAlpha(AddWishActivity.this,1.0f);
                     }
                 }
 
@@ -166,7 +186,8 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     /**
-     * popupwindow 的三个button点击时的callback
+     * OnClickListener的callback
+     * 点击事件
      */
     @Override
     public void onClick(View view) {
@@ -282,10 +303,6 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
                 }else{
                     wishFundString.replace(0,1,"0");
                 }
-                /*if(wishFundString!=null && !wishFundString.equals("")){
-                    wishFundString.deleteCharAt(wishFundString.length()-1);
-                    et_addwishactivity_wishfund.setText(wishFundString);
-                }*/
                 Log.i(TAG,"wishFundString="+wishFundString+" length="+wishFundString.length());
                 break;
             case R.id.bt_bt_popupwindowkekeyboard_confirm:
@@ -372,6 +389,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
      * 实现效果由popupwindow来完成
      */
     private void showPhoto(View view) {
+
         //初始化popupwindow
         popupwindow_showphoto = new PopupWindow();
         //加载popupwindow的界面
@@ -434,8 +452,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
         popupwindow_getphoto.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                backgroundAlpha(1f);
-
+                ScreenUtils.backgroundAlpha(AddWishActivity.this,1.0f);
             }
         });
     }
@@ -518,16 +535,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    /**
-     * 设置添加屏幕的背景透明度
-     * @param bgAlpha
-     */
-    public void backgroundAlpha(float bgAlpha)
-    {
-        WindowManager.LayoutParams lp = getWindow().getAttributes();
-        lp.alpha = bgAlpha; //0.0-1.0
-        getWindow().setAttributes(lp);
-    }
+
 
     /**
      * 判断sdcard是否被挂载

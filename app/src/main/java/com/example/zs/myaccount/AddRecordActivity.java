@@ -22,7 +22,9 @@ import android.widget.TextView;
 import com.example.zs.addPage.AddBasePage;
 import com.example.zs.addPage.IncomePage;
 import com.example.zs.addPage.PayOutPage;
+import com.example.zs.bean.PayouContentInfo;
 import com.example.zs.bean.UserAddCategoryInfo;
+import com.example.zs.dao.PayOutContentDAO;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,13 +44,15 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private int month;
     private int day;
     private ViewPager vp_addRecordActivity_content;
-    private   int getResourceID;
-    private   String  getCategoryName;
+    private int getResourceID;
+    private String  getCategoryName;
     private PayOutPage payOutPage;
     private DatePicker datePicker;
     private Button btn_addRecordActivity_time;
     private StringBuffer stringNumber;
     private TextView tv_addRecordActivity_inputNumber;
+    private boolean isPayoutPage;
+    private PayOutContentDAO payOutContentDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +90,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         //显示日期
         setDate();
         vp_addRecordActivity_content.setAdapter(new MyViewPagerAdapter());
+        payOutContentDAO = new PayOutContentDAO(this);
     }
 
     private void keyBoard() {
@@ -188,6 +193,10 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
      * 保存数据到数据库中，供主页面显示
      */
     private void savePayoutInfoToDB() {
+        //id传入一个int即可，数据库插入时使用的id为自增，不同于此时传入
+        PayouContentInfo payouContentInfo = new PayouContentInfo(1,payOutPage.selectResourceID, payOutPage.selectCategoryName,
+                year, month, day, stringNumber.toString(), "this is mark", "this is photo");
+        payOutContentDAO.addPayoutContentToDB(payouContentInfo);
 
     }
 
@@ -279,9 +288,17 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
                 Log.i(TAG,i+"--"+i1+"--"+"--"+i2);
-                AddRecordActivity.this.year = i;
-                AddRecordActivity.this.month =i1;
+                year = i;
+                month = i1;
                 day = i2;
+                btn_addRecordActivity_time.setText(month+"月"+day+"日");
+
+              /*  //test数据
+                payOutContentDAO.deletePayoutContentItemFromDB(1);
+                PayouContentInfo test = new PayouContentInfo(2, 12, "test类", 15, 3, 3, "1", "----", "--");
+                payOutContentDAO.updataPayoutContentDB(2,test);
+                ArrayList<PayouContentInfo> allPayoutContentFromDB = payOutContentDAO.getAllPayoutContentFromDB();
+                Log.i(TAG,allPayoutContentFromDB.get(0).toString());*/
             }
         });
         builder.setView(datePicker)
