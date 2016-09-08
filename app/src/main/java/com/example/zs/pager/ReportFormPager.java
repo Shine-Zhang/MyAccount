@@ -97,7 +97,7 @@ public class ReportFormPager extends BasePager {
     public FrameLayout fl_reportform_zhichu;
     public LinearLayout ll_reportform_shouru;
     public LinearLayout ll_reportform_zhichu;
-    public PieChart pc_reportform_shourupiechart;
+
 
     private SharedPreferences reporFormsp;
 
@@ -119,15 +119,11 @@ public class ReportFormPager extends BasePager {
 
     @Override
     public View initView() {
-        initChart();
-        //加载收入页面
-        reportFormincome = new ReportFormIncome(mActivity);
 
         reportformpager_content_view = View.inflate(mActivity, R.layout.reportformpager_content, null);
 
         //收入和支出对应的饼图
         pc_reportform_piechart = (PieChart) reportformpager_content_view.findViewById(R.id.pc_reportform_piechart);
-        pc_reportform_shourupiechart = (PieChart) reportformpager_content_view.findViewById(R.id.pc_reportform_shourupiechart);
 
         //最上方的RadioGroup和显示时间的控件
         tv_reportform_time = (TextView) reportformpager_content_view.findViewById(R.id.tv_reportform_time);
@@ -144,6 +140,7 @@ public class ReportFormPager extends BasePager {
         //整体的framlauout包含了支出和收入
         fl_reportform = (FrameLayout) reportformpager_content_view.findViewById(R.id.fl_reportform);
 
+        initChart();
         //接收由RportFormDataPickerActivity回传的数据
         Intent intent = mActivity.getIntent();
         String date = intent.getStringExtra("date");
@@ -176,13 +173,15 @@ public class ReportFormPager extends BasePager {
                     case R.id.rb_reportform_expenditure:
                         ll_reportform_shouru.setVisibility(View.GONE);
                         ll_reportform_zhichu.setVisibility(View.VISIBLE);
+                        fl_reportform_shouru.removeView(reportFormincome.pieChart);
                         break;
                     //收入对应报表页面
                     case R.id.rb_reportform_income:
+                        //加载收入页面
+                        reportFormincome = new ReportFormIncome(mActivity);
                         ll_reportform_zhichu.setVisibility(View.GONE);
                         ll_reportform_shouru.setVisibility(View.VISIBLE);
-                        ll_reportform_shouru.addView(reportFormincome.mView);
-                        break;
+                        fl_reportform_shouru.addView(reportFormincome.pieChart);
                 }
             }
         });
