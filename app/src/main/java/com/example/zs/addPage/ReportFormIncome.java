@@ -29,8 +29,6 @@ import java.util.ArrayList;
  * Created by zhangxudong on 2016/9/8 0008.
  */
 public class ReportFormIncome extends AddBasePage{
-
-    private PieChart pc_reportform_shourupiechart;
     //饼状图各部分代表的内容
     public String[] shouruDataType = new String[]{"工资","兼职","零花钱","红包","理财收益"};
     //各个收入类型代表的颜色
@@ -45,6 +43,7 @@ public class ReportFormIncome extends AddBasePage{
     public  float linghuaqianPercent;
     public  float hongbaoPercent;
     public  float licaiPercent;
+    public PieChart pieChart;
 
     public ReportFormIncome(Activity activity) {
         super(activity);
@@ -53,41 +52,40 @@ public class ReportFormIncome extends AddBasePage{
 
     @Override
     public View initView() {
-        View reportFormView = View.inflate(activity, R.layout.reportformpager_content, null);
-        pc_reportform_shourupiechart = (PieChart) reportFormView.findViewById(R.id.pc_reportform_shourupiechart);
+        pieChart = new PieChart(activity);
         initChart();
-        return pc_reportform_shourupiechart;
+        return pieChart;
     }
 
     private void initChart() {
         //设置饼状图是否接受点击事件，默认为true
-        pc_reportform_shourupiechart.setTouchEnabled(true);
+        pieChart.setTouchEnabled(true);
         //设置图饼是否显示百分比
-        pc_reportform_shourupiechart.setUsePercentValues(true);
+        pieChart.setUsePercentValues(true);
         //是否显示圆盘中间文字
-        pc_reportform_shourupiechart.setDrawCenterText(true);
+        pieChart.setDrawCenterText(true);
         //设置圆盘中间的颜色
-        pc_reportform_shourupiechart.setHoleColor(Color.WHITE);
+        pieChart.setHoleColor(Color.WHITE);
         //设置圆盘中间文字
-        pc_reportform_shourupiechart.setCenterText(generateCenterSpannableText());
+        pieChart.setCenterText(generateCenterSpannableText());
         //设置中间圆盘的半径,值为所占饼图的百分比
-        pc_reportform_shourupiechart.setHoleRadius(60);
+        pieChart.setHoleRadius(60);
         //设置圆盘是否可以转动
-        pc_reportform_shourupiechart.setRotationEnabled(true);
-        pc_reportform_shourupiechart.setRotationAngle(90);
+        pieChart.setRotationEnabled(true);
+        pieChart.setRotationAngle(90);
         //设置动画
-        pc_reportform_shourupiechart.animateX(1000, Easing.EasingOption.EaseInOutQuad);
+        pieChart.animateX(1000, Easing.EasingOption.EaseInOutQuad);
         //将在下方显示的比例视图
         customizeLegend();
         //设置饼图右下角的文字描述
-        pc_reportform_shourupiechart.setDescription("");
+        pieChart.setDescription("");
         //文字描述的颜色
-        pc_reportform_shourupiechart.setDescriptionColor(Color.BLACK);
+        pieChart.setDescriptionColor(Color.BLACK);
         //设置饼图右下角的文字大小
-        pc_reportform_shourupiechart.setDescriptionTextSize(16);
+        pieChart.setDescriptionTextSize(16);
 
         //设置比例图(图例，即那种颜色代表那种消费类型)
-        Legend legend = pc_reportform_shourupiechart.getLegend();
+        Legend legend = pieChart.getLegend();
         //设置比例图显示在饼图的哪个位置
         legend.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
         //设置比例图的形状，默认是方形,可为方形、圆形、线性,这里我们设置为圆形
@@ -102,10 +100,10 @@ public class ReportFormIncome extends AddBasePage{
         //绑定数据,括号中的内容代表的饼状图将被分为几部分
         bindData(allShouRuNumber);
         // 设置一个选中区域监听
-        pc_reportform_shourupiechart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+        pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-                pc_reportform_shourupiechart.setDescription(shouruDataType[e.getXIndex()] + " " + (int) e.getVal() + "元");
+                pieChart.setDescription(shouruDataType[e.getXIndex()] + " " + (int) e.getVal() + "元");
                 Log.i("e.getXIndex()", e.getXIndex() + "");
             }
 
@@ -156,7 +154,7 @@ public class ReportFormIncome extends AddBasePage{
         pieData.setValueTextColor(Color.BLACK);
         //设置区域文字的字体
         pieData.setValueTypeface(Typeface.DEFAULT);
-        pc_reportform_shourupiechart.setData(pieData);
+        pieChart.setData(pieData);
     }
     
     private void initData() {
@@ -210,7 +208,7 @@ public class ReportFormIncome extends AddBasePage{
     }
 
     private void customizeLegend() {
-        Legend legend = pc_reportform_shourupiechart.getLegend();//设置比例图
+        Legend legend = pieChart.getLegend();//设置比例图
         legend.setEnabled(true);//图例显示
     }
 
