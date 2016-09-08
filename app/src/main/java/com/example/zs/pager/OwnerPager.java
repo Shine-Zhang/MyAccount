@@ -113,7 +113,7 @@ public class OwnerPager extends BasePager {
             //为oi_ownerpager_balance条目设置自定义的监听，当该条目被点击测会调用onItemClick()，然后跳转到MyBalance页面
             @Override
             public void onItemClick() {
-                mActivity.startActivity(new Intent(mActivity, LoginActivity.class));
+                Log.i(TAG,"登录");
             }
         });
     }
