@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.zs.addPage.ReportFormIncome;
+import com.example.zs.bean.PayouContentInfo;
 import com.example.zs.dao.PayoutCategoryDAO;
 import com.example.zs.myaccount.RportFormDatePickerActivity;
 import com.example.zs.view.CircleImageView;
@@ -80,6 +81,10 @@ public class ReportFormPager extends BasePager {
     private SharedPreferences reporFormsp;
 
     public ArrayList<Entry> valueList;
+    public ReportFormIncome reportFormincome;
+    
+    //从数据库拿到的支出数据
+    public ArrayList<PayouContentInfo> allPayoutCategory;
 
     public ReportFormPager(Activity activity) {
         super(activity);
@@ -89,6 +94,9 @@ public class ReportFormPager extends BasePager {
 
     @Override
     public View initView() {
+        //加载收入页面
+        reportFormincome = new ReportFormIncome(mActivity);
+
         reportformpager_content_view = View.inflate(mActivity, R.layout.reportformpager_content, null);
 
         //收入和支出对应的饼图
@@ -147,8 +155,7 @@ public class ReportFormPager extends BasePager {
                     case R.id.rb_reportform_income:
                         ll_reportform_zhichu.setVisibility(View.GONE);
                         ll_reportform_shouru.setVisibility(View.VISIBLE);
-                        ReportFormIncome reportFormincome = new ReportFormIncome(mActivity);
-                        //pc_reportform_shourupiechart.addView(reportFormincome.pieChart);
+                        ll_reportform_shouru.addView(reportFormincome.mView);
                         break;
                 }
             }
@@ -160,7 +167,50 @@ public class ReportFormPager extends BasePager {
     @Override
     public void initData() {
         //从数据库拿数据
-        //PayoutCategoryDAO
+        PayoutCategoryDAO payoutCategoryDAO =  new PayoutCategoryDAO(mActivity);
+        allPayoutCategory = payoutCategoryDAO.getPayoutCategoryFromDB();
+        //将支出类型一样的归为一类
+        for(int i = 0;i < allPayoutCategory.size();i ++){
+            if(allPayoutCategory.get(i).category.equals("一般")){
+
+            }else if(allPayoutCategory.get(i).category.equals("餐饮")){
+
+            }else if(allPayoutCategory.get(i).category.equals("交通")){
+
+            }else if(allPayoutCategory.get(i).category.equals("零食")){
+
+            }else if(allPayoutCategory.get(i).category.equals("水果")){
+
+            }else if(allPayoutCategory.get(i).category.equals("腐败聚会")){
+
+            }else if(allPayoutCategory.get(i).category.equals("酒水饮料")){
+
+            }else if(allPayoutCategory.get(i).category.equals("电影")){
+
+            }else if(allPayoutCategory.get(i).category.equals("衣服鞋包")){
+
+            }else if(allPayoutCategory.get(i).category.equals("生活用品")){
+
+            }else if(allPayoutCategory.get(i).category.equals("话费")){
+
+            }else if(allPayoutCategory.get(i).category.equals("房租")){
+
+            }else if(allPayoutCategory.get(i).category.equals("护肤彩妆")){
+
+            }else if(allPayoutCategory.get(i).category.equals("药品")){
+
+            }else if(allPayoutCategory.get(i).category.equals("旅行")){
+
+            }else if(allPayoutCategory.get(i).category.equals("礼物")){
+
+            }else if(allPayoutCategory.get(i).category.equals("运动")){
+
+            }else if(allPayoutCategory.get(i).category.equals("学习")){
+
+            }
+
+
+        }
     }
 
     private void initChart() {
