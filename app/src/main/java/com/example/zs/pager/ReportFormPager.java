@@ -168,7 +168,7 @@ public class ReportFormPager extends BasePager {
     public void initData() {
         //从数据库拿数据
         PayoutCategoryDAO payoutCategoryDAO =  new PayoutCategoryDAO(mActivity);
-        allPayoutCategory = payoutCategoryDAO.getPayoutCategoryFromDB();
+        //allPayoutCategory = payoutCategoryDAO.getPayoutCategoryFromDB();
         //将支出类型一样的归为一类
         for(int i = 0;i < allPayoutCategory.size();i ++){
             if(allPayoutCategory.get(i).category.equals("一般")){

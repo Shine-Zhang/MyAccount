@@ -184,7 +184,7 @@ public class IncomePage extends AddBasePage {
         public View getView(int i, View view, ViewGroup viewGroup) {
             //
             View inflate = View.inflate(activity, R.layout.page_addrecord_detail, null);
-            CircleImageView iv_addPage_catagoryIcon = (CircleImageView) inflate.findViewById(R.id.iv_addPage_catagoryIcon);
+            CircleImageView iv_addPage_catagoryIcon = (CircleImageView) inflate.findViewById(R.id.cv_addPage_recordIcon);
             TextView tv_addPage_catagoryContent = (TextView) inflate.findViewById(R.id.tv_addPage_catagoryContent);
             if(i<incomeCategoryToDB.size()){
                 iv_addPage_catagoryIcon.setImageResource(incomeCategoryToDB.get(i).getResourceID());
