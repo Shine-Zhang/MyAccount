@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 public class PayoutCategoryDAO {
     public Context ctx;
-    private  SQLiteDatabase db;
+    private SQLiteDatabase db;
     public PayoutCategoryDAO(Context ctx) {
         this.ctx = ctx;
         PayoutCategoryDB payoutCategory = new PayoutCategoryDB(ctx, "payoutCategory.db", null, 1);
