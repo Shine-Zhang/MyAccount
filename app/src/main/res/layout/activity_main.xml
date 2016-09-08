@@ -1,109 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.zs.myaccount.MainActivity"
-    android:orientation="vertical"
     android:background="#FFF"
     android:clipChildren="false">
 
-    <!--第一部分-->
+    <!--第一部分ViewPager-->
     <android.support.v4.view.ViewPager
         android:layout_width="match_parent"
-        android:layout_height="0px"
-        android:layout_weight="1"
-        android:id="@+id/vp_mainactivity"
-        android:clipChildren="false">
+        android:layout_height="wrap_content"
+        android:id="@+id/vp_mainactivity">
     </android.support.v4.view.ViewPager>
 
     <!--第二部分-->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="57dp"
-        android:clipChildren="false">
+        android:layout_height="55dp"
+        android:layout_alignParentBottom="true">
+        <!--第二部分的第1篇：Radiobutton均分，中间View占位-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="#B2B2B2"
-            android:layout_alignParentBottom="true">
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#B2B2B2"
-            >
-        </View>
-
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="bottom"
-            android:id="@+id/rg_mainactivity_bottom"
             android:background="#FFF"
-            >
-            <RadioButton
-                android:layout_width="0px"
+            android:layout_alignParentBottom="true"
+            android:clickable="false">
+            <!--自定义rectangle给RadioGroup设置边框，关联自定义drawable-rectangle.xml文件-->
+            <RadioGroup
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:button="@null"
-                android:drawableTop="@drawable/radiobutton_main_detail"
-                android:text="明细"
-                android:id="@+id/rb_mainactivity_detail"
-                android:paddingBottom="2dp"
-                />
-            <RadioButton
-                android:layout_width="0px"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:button="@null"
-                android:drawableTop="@drawable/radiobutton_main_wish"
-                android:text="愿望"
-                android:id="@+id/rb_mainactivity_wish"
-                android:paddingBottom="2dp"
-                />
-            <View
-                android:layout_width="0px"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="bottom"
+                android:id="@+id/rg_mainactivity_bottom"
+                android:background="@drawable/rectangle"
                 >
-            </View>
-            <RadioButton
-                android:layout_width="0px"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:button="@null"
-                android:drawableTop="@drawable/radiobutton_main_list"
-                android:text="报表"
-                android:id="@+id/rb_mainactivity_list"
-                android:paddingBottom="2dp"
-                />
-            <RadioButton
-                android:layout_width="0px"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:button="@null"
-                android:drawableTop="@drawable/radiobutton_main_mine"
-                android:text="我的"
-                android:id="@+id/rb_mainactivity_mine"
-                android:paddingBottom="2dp"
-                />
-        </RadioGroup>
+                <RadioButton
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:button="@null"
+                    android:drawableTop="@drawable/radiobutton_main_detail"
+                    android:text="明细"
+                    android:id="@+id/rb_mainactivity_detail"
+                    android:paddingBottom="2dp"
+                    android:background="#00000000"
+                    />
+                <RadioButton
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:button="@null"
+                    android:drawableTop="@drawable/radiobutton_main_wish"
+                    android:text="愿望"
+                    android:id="@+id/rb_mainactivity_wish"
+                    android:paddingBottom="2dp"
+                    android:background="#00000000"
+                    />
+                <!--这里要注意把view的点击事件禁用，否则会点击到ViewPager的内容-->
+                <View
+                    android:layout_width="0px"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:background="#00000000"
+                    android:clickable="false"
+                    >
+                </View>
+                <RadioButton
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:button="@null"
+                    android:drawableTop="@drawable/radiobutton_main_list"
+                    android:text="报表"
+                    android:id="@+id/rb_mainactivity_list"
+                    android:paddingBottom="2dp"
+                    android:background="#00000000"
+                    />
+                <RadioButton
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:button="@null"
+                    android:drawableTop="@drawable/radiobutton_main_mine"
+                    android:text="我的"
+                    android:id="@+id/rb_mainactivity_mine"
+                    android:paddingBottom="2dp"
+                    android:background="@android:color/transparent"
+                    />
+            </RadioGroup>
         </LinearLayout>
-        <ImageButton
-            android:id="@+id/ib_main_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="add"
-            android:src="@drawable/ic_plus_default"
-            android:layout_centerInParent="true"
-            android:paddingBottom="55dp"
-            android:background="#FFF"/>
     </RelativeLayout>
-
-</LinearLayout>
+            <!--第二部分第2篇：ImageButton；注意背景透明度设成0-->
+            <ImageButton
+                android:id="@+id/ib_main_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="add"
+                android:src="@drawable/ic_plus_default"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="16dp"
+                android:background="#00000000">
+            </ImageButton>
+</RelativeLayout>
