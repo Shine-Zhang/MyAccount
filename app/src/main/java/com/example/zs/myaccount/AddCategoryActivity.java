@@ -127,9 +127,9 @@ public class AddCategoryActivity extends AppCompatActivity {
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
             //
-            View inflate = View.inflate(AddCategoryActivity.this, R.layout.page_addrecord_detail, null);
-            CircleImageView iv_addPage_catagoryIcon = (CircleImageView) inflate.findViewById(R.id.iv_addPage_catagoryIcon);
-            iv_addPage_catagoryIcon.setImageResource(cateoryList.get(i).getResourceID());
+            View inflate = View.inflate(AddCategoryActivity.this, R.layout.page_addcategory_detail, null);
+            CircleImageView iv_addCategory_catagoryIcon = (CircleImageView) inflate.findViewById(R.id.iv_addCategory_catagoryIcon);
+            iv_addCategory_catagoryIcon.setImageResource(cateoryList.get(i).getResourceID());
             //最后一个为默认item，作用为跳转到addCategory页面
             return inflate;
         }

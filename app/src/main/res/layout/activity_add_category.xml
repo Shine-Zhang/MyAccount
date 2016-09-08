@@ -55,6 +55,7 @@
             android:id="@+id/cv_addCategory_choiceIcon"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:padding="5dp"
             android:layout_gravity="center"
             android:layout_marginLeft="17dp"
             android:background="#31C9F2"

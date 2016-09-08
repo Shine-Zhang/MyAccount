@@ -8,8 +8,8 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:padding="5dp"
-
-        android:src="@drawable/ic_yue_default"
+        android:background="@drawable/bg_addcategory"
+        android:src="@drawable/ic_yiban_default"
         android:layout_marginTop="10dp"
         android:layout_gravity="center"/>
     <TextView
