@@ -14,7 +14,7 @@ public class PayouContentInfo {
     public   String remarks;
     public  String photo;
 
-    public PayouContentInfo(int id,int resourceID,String category,  int year, int mouth,int day, String money, String remarks,String photo ) {
+    public PayouContentInfo(int id, int resourceID, String category, int year, int mouth, int day, String money, String remarks, String photo ) {
         this.id = id;
         this.category = category;
         this.day = day;
