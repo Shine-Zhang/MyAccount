@@ -3,11 +3,17 @@ package com.example.zs.pager;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.percent.PercentRelativeLayout;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,10 +24,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,12 +71,13 @@ public class WishPager extends BasePager {
     String[] titles = new String[]{"我的愿望1","我的愿望2","我的愿望3","我的愿望4","我的愿望5","我的愿望6"};
     String[] descriptions = new String[]{"备注1","备注2","备注3","备注4","备注5","备注6"};
     float[] wishfunds = new float[]{100,233,12,12,244,80};
-    int[] photoids = new int[]{R.drawable.ic_arrow_default,R.drawable.ic_completed_wish,R.drawable.ic_default_wish,
-            R.drawable.ic_detail_blue,R.drawable.ic_pen2_default,R.drawable.ic_yue_default};
+    int[] photoids = new int[]{0,R.drawable.ic_completed_wish,R.drawable.ic_default_wish,
+            R.drawable.ic_detail_blue,R.drawable.ic_guide_0,R.drawable.ic_yue_default};
     private List<TestData> testdatas;
     private MyOnGoingRecyclerViewAdapter myAdapter;
     private RecyclerView rcv_wishpager_wishes;
     private PopupWindow popupwindow_showwishdetail;
+    private PopupWindow popupwindow_showcompletedialog;
 
 
     /**
@@ -104,7 +114,7 @@ public class WishPager extends BasePager {
             LinearLayout ll_showwish_ongoingwishes = (LinearLayout) view_wishpager.findViewById(R.id.ll_showwish_ongoingwishes);
             LinearLayout ll_showwish_noongoingwishes = (LinearLayout) view_wishpager.findViewById(R.id.ll_showwish_noongoingwishes);
             TextView tv_showwish_wishfund = (TextView) view_wishpager.findViewById(R.id.tv_showwish_wishfund);
-            //愿望基金
+            //显示愿望基金
             tv_showwish_wishfund.setText(calculateWishFund());
 
             //点击“添加”，跳转到添加愿望的页面
@@ -112,6 +122,7 @@ public class WishPager extends BasePager {
             tv_showwish_addwish.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    //去添加愿望的页面添加愿望
                     toAddWish();
                 }
             });
@@ -159,6 +170,7 @@ public class WishPager extends BasePager {
             testdatas.add(new TestData(titles[i],descriptions[i],wishfunds[i],photoids[i]));
         }
 
+
         //初始化自定义的适配器
         myAdapter = new MyOnGoingRecyclerViewAdapter(testdatas);
         //为rcv_wishpager_wishes设置适配器
@@ -171,27 +183,204 @@ public class WishPager extends BasePager {
             @Override
             public void onItemClick(RecyclerView.ViewHolder vh) {
                 Log.i(TAG, "click"+vh.itemView+" "+vh.getItemViewType());
-                View viewParent = (View) vh.itemView.getParent();
+                //获取item所在的view
+                final View viewParent = (View) vh.itemView.getParent();
+                //获取item所在的位置
                 int adapterPosition = vh.getAdapterPosition();
-                String title = testdatas.get(adapterPosition).title.toString();
-                String description = testdatas.get(adapterPosition).description.toString();
-                DecimalFormat df = new DecimalFormat("###.00");
-                String wishfund = df.format(testdatas.get(adapterPosition).wishfund);
-                int photiid = testdatas.get(adapterPosition).photoid;
-                Log.i(TAG,"title="+title+"description="+description+"wishfund="+wishfund+"photoid="+photiid);
 
-                String[] data = new String[]{title,description,wishfund,photiid+""};
-                showWishDetail(data,viewParent);
+                //如果是RecyclerView的最后一条，即“已完成的愿望”
+                if(adapterPosition==testdatas.size()){
+                    //跳转到已完成的愿望页面
+                    mActivity.startActivity(new Intent(mActivity,CompleteWishActivity.class));
+                }else {
+                    //获取相应的item的具体信息
+                    //愿望标题
+                    String title = testdatas.get(adapterPosition).title.toString();
+                    //愿望备注
+                    String description = testdatas.get(adapterPosition).description.toString();
+                    //愿望资金
+                    DecimalFormat df = new DecimalFormat("###.00");
+                    String wishfund = df.format(testdatas.get(adapterPosition).wishfund);
+                    //愿望照片的id
+                    int photiid = testdatas.get(adapterPosition).photoid;
+                    Log.i(TAG,"title="+title+"description="+description+"wishfund="+wishfund+"photoid="+photiid);
+                    //Log.i(TAG,"Integer.parseInt(wishfund)="+Float.parseFloat(wishfund));
+
+                    //将item的信息封装到String[]数组里，方便传给下一个页面
+                    final String[] data = new String[]{title,description,wishfund,photiid+""};
+
+                    //寻找控件
+                    RelativeLayout rl_itemwish_top = (RelativeLayout) vh.itemView.findViewById(R.id.rl_itemwish_top);
+                    PercentRelativeLayout prl_itemwish_middle = (PercentRelativeLayout) vh.itemView.findViewById(R.id.prl_itemwish_middle);
+                    View view_itemview_line = vh.itemView.findViewById(R.id.view_itemview_line);
+                    ImageView iv_itemwish_delete = (ImageView) vh.itemView.findViewById(R.id.iv_itemwish_delete);
+                    TextView tv_itemwish_complete = (TextView) vh.itemView.findViewById(R.id.tv_itemwish_complete);
+
+                    //给相应控件设置点击事件
+                    rl_itemwish_top.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //编辑愿望详情
+                            showWishDetail(data,viewParent);
+                        }
+                    });
+                    prl_itemwish_middle.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //显示愿望详情
+                            showWishDetail(data,viewParent);
+                        }
+                    });
+                    view_itemview_line.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //显示愿望详情
+                            showWishDetail(data,viewParent);
+                        }
+                    });
+                    iv_itemwish_delete.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //提示用户是否删除愿望
+                            showConfirmDeleteDialog();
+                        }
+                    });
+                    tv_itemwish_complete.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if(true){
+                                //进度条已满，弹出完成页面
+                                showCompleteDialog(view);
+                                if(popupwindow_showcompletedialog.isShowing()){
+                                    //popupwindow显示时屏幕透明度变暗
+                                    ScreenUtils.backgroundAlpha(mActivity,0.4f);
+                                }else{
+                                    //popupwindow不显示时屏幕透明度恢复正常
+                                    ScreenUtils.backgroundAlpha(mActivity,1.0f);
+                                }
+                            }else{
+                                //提示愿望没完成
+                                showNoCompleteDialog(view);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    /**
+     * 当愿望没有完成时，点击“完成”提示愿望没完成
+     * @param view
+     */
+    private void showNoCompleteDialog(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity)
+                .setMessage("梦想还未实现，不能完成哟～～")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+        builder.show();
+    }
+
+    /**
+     * 显示完成愿望的弹框
+     * @param view
+     */
+    private void showCompleteDialog(View view) {
+        //初始化popupwindow
+        popupwindow_showcompletedialog = new PopupWindow();
+        //加载popupwindow的界面
+        View view_showcomplete = View.inflate(mActivity, R.layout.popupwindow_wish_complete, null);
+        ImageView iv_popupwindowwishcomplete_close = (ImageView) view_showcomplete.findViewById(R.id.iv_popupwindowwishcomplete_close);
+        Button bt_popupwindowwishcomplete_chcekcomplwish = (Button) view_showcomplete.findViewById(R.id.bt_popupwindowwishcomplete_chcekcomplwish);
+
+        //获得焦点
+        popupwindow_showcompletedialog.setFocusable(true);
+        popupwindow_showcompletedialog.setBackgroundDrawable(new BitmapDrawable());
+        //将popup_view部署到popupWindow上
+        popupwindow_showcompletedialog.setContentView(view_showcomplete);
+        //设置popupWindow的宽高（必须要设置）
+        popupwindow_showcompletedialog.setHeight(RelativeLayout.LayoutParams.WRAP_CONTENT);
+        popupwindow_showcompletedialog.setWidth(RelativeLayout.LayoutParams.WRAP_CONTENT);
+        //设置popupwindow显示的位置
+        popupwindow_showcompletedialog.showAtLocation(view,Gravity.CENTER,0,0);
+
+        //右上角的关闭。点击时关闭popupwindow
+        iv_popupwindowwishcomplete_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //popupwindow消失
+                popupwindow_showcompletedialog.dismiss();
             }
         });
 
+        //“查看已完成那愿望”按钮
+        bt_popupwindowwishcomplete_chcekcomplwish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //跳转到已完成愿望的页面
+                mActivity.startActivity(new Intent(mActivity,CompleteWishActivity.class));
+                popupwindow_showcompletedialog.dismiss();
+            }
+        });
+
+        //监听popupwindow，消失时使屏幕恢复原来的透明度
+        popupwindow_showcompletedialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                //恢复屏幕透明度
+                ScreenUtils.backgroundAlpha(mActivity,1.0f);
+            }
+        });
     }
 
+    /**
+     * 显示是否确认删除愿望的弹窗
+     */
+    private void showConfirmDeleteDialog() {
+        new AlertDialog.Builder(mActivity)
+                .setTitle("坚持梦想吧")
+                .setMessage("坚持一下更好哟～～")
+                .setPositiveButton("坚持", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                })
+                .setNegativeButton("放弃", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //删除愿望
+                        deleteWish();
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * 删除正在进行的愿望
+     */
+    private void deleteWish() {
+        //从数据库中删除
+        //刷新
+        //rcv_wishpager_wishes.notify();
+    }
+
+    /**
+     * 显示愿望详情的页面
+     * @param data
+     * @param view
+     */
     private void showWishDetail(final String[] data, View view) {
         //初始化popupwindow
         popupwindow_showwishdetail = new PopupWindow();
         //加载popupwindow的界面
         View view_wishdetail = View.inflate(mActivity, R.layout.popupwindow_wishdetail, null);
+
+        //找控件
         CircleImageView civ_popupwindowwishdetail_close = (CircleImageView) view_wishdetail.findViewById(R.id.civ_popupwindowwishdetail_close);
         TextView tv_popupwindowwishdetail_wishtitle = (TextView) view_wishdetail.findViewById(R.id.tv_popupwindowwishdetail_wishtitle);
         TextView tv__popupwindowwishdetail_progress = (TextView) view_wishdetail.findViewById(R.id.tv__popupwindowwishdetail_progress);
@@ -199,6 +388,7 @@ public class WishPager extends BasePager {
         RoundProgressBar rpb_popupwindowwishdetail_progress = (RoundProgressBar) view_wishdetail.findViewById(R.id.rpb_popupwindowwishdetail_progress);
         CircleImageView civ_popupwindowwishdetail_edit = (CircleImageView) view_wishdetail.findViewById(R.id.civ_popupwindowwishdetail_edit);
         CircleImageView civ_popupwindowwishdetail_pen = (CircleImageView) view_wishdetail.findViewById(R.id.civ_popupwindowwishdetail_pen);
+        ImageView iv_popupwindowwishdetail_photo = (ImageView) view_wishdetail.findViewById(R.id.iv_popupwindowwishdetail_photo);
 
         //愿望标题
         tv_popupwindowwishdetail_wishtitle.setText(data[0]);
@@ -211,13 +401,19 @@ public class WishPager extends BasePager {
         //显示编辑框
         civ_popupwindowwishdetail_edit.setVisibility(View.VISIBLE);
         civ_popupwindowwishdetail_pen.setVisibility(View.VISIBLE);
-
         //进度条最大值为设置的愿望资金
-        rpb_popupwindowwishdetail_progress.setMax(Integer.parseInt(data[2]));
+        rpb_popupwindowwishdetail_progress.setMax((int)Float.parseFloat(data[2]));
         //愿望进度 textview和圆形进度条
         tv__popupwindowwishdetail_progress.setText("12%");
         rpb_popupwindowwishdetail_progress.setProgress(12);
         rpb_popupwindowwishdetail_progress.getProgress();
+        //显示图片
+        if(Integer.parseInt(data[3])==0){
+            iv_popupwindowwishdetail_photo.setVisibility(View.GONE);
+        }else {
+            iv_popupwindowwishdetail_photo.setVisibility(View.VISIBLE);
+            iv_popupwindowwishdetail_photo.setImageResource(Integer.parseInt(data[3]));
+        }
 
         //获得焦点
         popupwindow_showwishdetail.setFocusable(true);
@@ -350,12 +546,13 @@ class TestData{
 class MyOnGoingRecyclerViewAdapter extends RecyclerView.Adapter<MyOnGoingRecyclerViewAdapter.MyViewHolder>{
 
     //item类型
-    public static final int ITEM_TYPE_HEADER = 0;
     public static final int ITEM_TYPE_CONTENT = 1;
     public static final int ITEM_TYPE_BOTTOM = 2;
     //FooterView
     private View mFooterView;
     public List<TestData> datas;
+
+    //测试数据
 
     //构造方法
     public MyOnGoingRecyclerViewAdapter(List<TestData> datas) {
@@ -414,10 +611,31 @@ class MyOnGoingRecyclerViewAdapter extends RecyclerView.Adapter<MyOnGoingRecycle
         if(getItemViewType(position) == ITEM_TYPE_CONTENT){
             if(viewHolder instanceof MyViewHolder) {
                 TestData testData = datas.get(position);
+                //愿望标题
                 viewHolder.tv_itemwish_title.setText(testData.title);
+                //愿望备注
                 viewHolder.tv_itemwish_description.setText(testData.description);
+                //愿望资金
                 viewHolder.tv_itemwish_amount.setText(testData.wishfund+"");
-                viewHolder.iv_itemwish_pic.setImageResource(testData.photoid);
+                //愿望图片
+                if(testData.photoid==0){
+                    viewHolder.iv_itemwish_pic.setImageResource(R.drawable.ic_default_wish);
+                }else {
+                    viewHolder.iv_itemwish_pic.setImageResource(testData.photoid);
+                }
+                //愿望进度文本
+                viewHolder.tv_itemwish_progresstip.setText("愿望进度100%");
+                //愿望进度条
+                viewHolder.pb_itemwish_progress.setMax((int) testData.wishfund);
+                viewHolder.pb_itemwish_progress.setProgress(45);
+                viewHolder.pb_itemwish_progress.getProgress();
+
+                //“完成字体颜色”，进度100%，为蓝色，否则为灰色。
+                if(viewHolder.tv_itemwish_progresstip.getText().equals("愿望进度100%")){
+                    viewHolder.tv_itemwish_complete.setTextColor(Color.rgb(31,185,236));
+                }else{
+                    viewHolder.tv_itemwish_complete.setTextColor(Color.GRAY);
+                }
                 return;
             }
             return;
@@ -447,6 +665,8 @@ class MyOnGoingRecyclerViewAdapter extends RecyclerView.Adapter<MyOnGoingRecycle
         public ImageView iv_itemwish_pic;
         public ImageView iv_itemwish_delete;
         public TextView tv_itemwish_complete;
+        public ProgressBar pb_itemwish_progress;
+        public TextView tv_itemwish_progresstip;
 
         public MyViewHolder(View view){
             super(view);
@@ -460,6 +680,8 @@ class MyOnGoingRecyclerViewAdapter extends RecyclerView.Adapter<MyOnGoingRecycle
             iv_itemwish_pic = (ImageView) view.findViewById(R.id.iv_itemwish_pic);
             iv_itemwish_delete = (ImageView) view.findViewById(R.id.iv_itemwish_delete);
             tv_itemwish_complete = (TextView) view.findViewById(R.id.tv_itemwish_complete);
+            pb_itemwish_progress = (ProgressBar) view.findViewById(R.id.pb_itemwish_progress);
+            tv_itemwish_progresstip =  (TextView) view.findViewById(R.id.tv_itemwish_progresstip);
         }
     }
 

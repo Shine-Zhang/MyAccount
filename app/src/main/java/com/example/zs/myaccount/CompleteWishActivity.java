@@ -76,9 +76,10 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
         /*测试数据，用于测试*/
         String[] titles = new String[]{"我的愿望1", "我的愿望2", "我的愿望3", "我的愿望4", "我的愿望5", "我的愿望6"};
         final String[] descriptions = new String[]{"备注1", "备注2", "备注3", "备注4","",""};
+        int[] photosid = new int[]{0,0,R.drawable.ic_guide_0,R.drawable.ic_guide_1,0,0};
         datas = new ArrayList<TestData>();
         for (int i = 0; i < 6; i++) {
-            datas.add(new TestData(titles[i], descriptions[i]));
+            datas.add(new TestData(titles[i], descriptions[i],photosid[i]));
         }
 
         //初始化自定义的适配器
@@ -94,9 +95,12 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
                 int adapterPosition = vh.getAdapterPosition();
                 String title = datas.get(adapterPosition).title.toString();
                 String description = datas.get(adapterPosition).description.toString();
+                String photoid = datas.get(adapterPosition).photoid+"";
                 Log.i(TAG,"title="+title+"description="+description);
-                String[] data = new String[]{title,description};
+                String[] data = new String[]{title,description,photoid};
                 showWishDetail(data,viewParent);
+
+
             }
         });
     }
@@ -137,7 +141,7 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
         boolean hasphoto = true;
         if(hasphoto){
             //显示图片
-            iv_popupwindowwishdetail_photo.setImageResource(R.drawable.ic_7_default);
+            iv_popupwindowwishdetail_photo.setImageResource(R.drawable.a);
         }else{
             //没有图片，隐藏ImageView控件
             iv_popupwindowwishdetail_photo.setVisibility(View.GONE);
