@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
@@ -40,6 +41,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //隐藏标题栏
         getSupportActionBar().hide();
+
+        /*//透明状态栏
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        //透明导航栏
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);*/
 
         //初始化主页面的控件,并抽成成员变量，方便调用
         //ViewPager
@@ -83,13 +89,13 @@ public class MainActivity extends AppCompatActivity {
                         pageList.get(0).initData();
                         break;
                     case R.id.rb_mainactivity_list:
-                        vp_mainactivity.setCurrentItem(3);
+                        vp_mainactivity.setCurrentItem(2);
                         pageList.get(0).initData();
                         break;
 
                     case R.id.rb_mainactivity_mine:
-                        vp_mainactivity.setCurrentItem(4);
-                        pageList.get(0).initData();
+                        vp_mainactivity.setCurrentItem(3);
+                        pageList.get(1).initData();
                         break;
                 }
             }
