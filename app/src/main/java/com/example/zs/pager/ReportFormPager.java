@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.zs.addPage.ReportFormIncome;
+import com.example.zs.dao.PayoutCategoryDAO;
 import com.example.zs.myaccount.RportFormDatePickerActivity;
 import com.example.zs.view.CircleImageView;
 import com.github.mikephil.charting.animation.Easing;
@@ -138,10 +140,15 @@ public class ReportFormPager extends BasePager {
                 switch (checkedId) {
                     //支出对应报表页面
                     case R.id.rb_reportform_expenditure:
+                        ll_reportform_shouru.setVisibility(View.GONE);
+                        ll_reportform_zhichu.setVisibility(View.VISIBLE);
                         break;
                     //收入对应报表页面
                     case R.id.rb_reportform_income:
-
+                        ll_reportform_zhichu.setVisibility(View.GONE);
+                        ll_reportform_shouru.setVisibility(View.VISIBLE);
+                        ReportFormIncome reportFormincome = new ReportFormIncome(mActivity);
+                        //pc_reportform_shourupiechart.addView(reportFormincome.pieChart);
                         break;
                 }
             }
@@ -153,7 +160,7 @@ public class ReportFormPager extends BasePager {
     @Override
     public void initData() {
         //从数据库拿数据
-
+        //PayoutCategoryDAO
     }
 
     private void initChart() {
