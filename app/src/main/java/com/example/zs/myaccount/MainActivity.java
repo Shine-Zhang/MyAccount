@@ -11,13 +11,10 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Switch;
-import android.widget.TextView;
 
-import com.example.zs.bean.PayouContentInfo;
+import com.example.zs.bean.payouContentInfo;
 import com.example.zs.pager.BasePager;
 import com.example.zs.pager.OwnerPager;
-import com.example.zs.pager.ReportFormPager;
 import com.example.zs.pager.WishPager;
 
 import java.util.ArrayList;
@@ -183,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
             String money = intent.getStringExtra("money");
             String marks = intent.getStringExtra("marks");
             String photo = intent.getStringExtra("photo");
-            PayouContentInfo payouContentInfo = new PayouContentInfo(id, resourceID, categoryName, year, mouth, day, money, marks, photo);
+            payouContentInfo payouContentInfo = new payouContentInfo(id, resourceID, categoryName, year, mouth, day, money, marks, photo);
             Log.i(tag,payouContentInfo.toString());
             //super无法执行到
             // return;

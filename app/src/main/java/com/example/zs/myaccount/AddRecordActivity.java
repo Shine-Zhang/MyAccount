@@ -255,7 +255,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 tv_addRecordActivity_inputNumber.setText(stringNumber);
                 break;
             case R.id.tv_addCategory_removeNumber:
-                stringNumber.deleteCharAt(stringNumber.length() - 1);
+                stringNumber.deleteCharAt(stringNumber.length()-1);
                 tv_addRecordActivity_inputNumber.setText(stringNumber);
                 break;
             case R.id.tv_addCategory_submit:

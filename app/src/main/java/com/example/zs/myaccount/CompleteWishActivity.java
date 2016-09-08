@@ -1,7 +1,9 @@
 package com.example.zs.myaccount;
 
 
+import android.database.ContentObserver;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +22,8 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.zs.bean.WishInfo;
+import com.example.zs.dao.CompleteWishDAO;
 import com.example.zs.utils.ScreenUtils;
 import com.example.zs.view.CircleImageView;
 import com.example.zs.view.RoundProgressBar;
@@ -30,10 +34,12 @@ import java.util.List;
 public class CompleteWishActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "CompleteWishActivity";
-    private List<TestData> datas;
     private RecyclerView rcv_completewishactivity_wishes;
     private RelativeLayout rl_completewishactivity_norecord;
     private PopupWindow popupwindow_showwishdetail;
+    private CompleteWishDAO completeWishDAO;
+    private int allCompleteWishNumber;
+    private List<WishInfo> allCompleteWishInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +53,10 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
         rl_completewishactivity_norecord = (RelativeLayout) findViewById(R.id.rl_completewishactivity_norecord);
         rcv_completewishactivity_wishes = (RecyclerView) findViewById(R.id.rcv_completewishactivity_wishes);
 
+        completeWishDAO = new CompleteWishDAO(this);
+        allCompleteWishNumber = completeWishDAO.getAllCompleteWishNumber();
+        Log.i("wwwwwww","allCompleteWishNumber="+allCompleteWishNumber );
+
         initView();
 
         initData();
@@ -54,7 +64,9 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void initView() {
-        if (hasOnGoingWishes()) {
+
+
+        if (allCompleteWishNumber!=0) {
             //有已完成愿望
             rl_completewishactivity_norecord.setVisibility(View.INVISIBLE);
             rcv_completewishactivity_wishes.setVisibility(View.VISIBLE);
@@ -73,39 +85,48 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void initData() {
-        /*测试数据，用于测试*/
-        String[] titles = new String[]{"我的愿望1", "我的愿望2", "我的愿望3", "我的愿望4", "我的愿望5", "我的愿望6"};
-        final String[] descriptions = new String[]{"备注1", "备注2", "备注3", "备注4","",""};
-        int[] photosid = new int[]{0,0,R.drawable.ic_guide_0,R.drawable.ic_guide_1,0,0};
-        datas = new ArrayList<TestData>();
-        for (int i = 0; i < 6; i++) {
-            datas.add(new TestData(titles[i], descriptions[i],photosid[i]+""));
-        }
 
-        //初始化自定义的适配器
-        MyCompleteWishRecyclerViewAdapter myAdapter = new MyCompleteWishRecyclerViewAdapter(datas);
-        //为rcv_wishpager_wishes设置适配器
-        rcv_completewishactivity_wishes.setAdapter(myAdapter);
-        //给拿到RecyclerView添加条目点击事件
-        rcv_completewishactivity_wishes.addOnItemTouchListener(new OnItemTouchListener(rcv_completewishactivity_wishes) {
-            @Override
-            public void onItemClick(RecyclerView.ViewHolder vh) {
-                Log.i(TAG, "click"+vh.itemView+" "+vh.getItemViewType());
-                View viewParent = (View) vh.itemView.getParent();
-                int adapterPosition = vh.getAdapterPosition();
-                String title = datas.get(adapterPosition).title.toString();
-                String description = datas.get(adapterPosition).description.toString();
-                String photoid = datas.get(adapterPosition).photoid+"";
-                Log.i(TAG,"title="+title+"description="+description);
-                String[] data = new String[]{title,description,photoid};
-                showWishDetail(data,viewParent);
-
-
-            }
+        //当数据库变化的时候重新更新内存中的数据,当数据库变化的时候通知内容观察者数据库变化了,然后在内容观察者中去更新最新的数据
+        Uri uri = Uri.parse("content://com.example.zs.dao.completewish.insertchange");
+        //notifyForDescendents:匹配规则,true:精确匹配  false:模糊匹配
+        getContentResolver().registerContentObserver(uri, true, new ContentObserver(null) {
+            public void onChange(boolean selfChange) {
+                //更新数据
+                allCompleteWishNumber = completeWishDAO.getAllCompleteWishNumber();
+                if(allCompleteWishNumber!=0) {
+                    allCompleteWishInfo = completeWishDAO.getAllCompleteWishInfo();
+                }
+            };
         });
+
+        Log.i("wwwwwww","allCompleteWishNumber="+allCompleteWishNumber );
+
+        if(allCompleteWishNumber!=0) {
+            //初始化自定义的适配器
+            MyCompleteWishRecyclerViewAdapter myAdapter = new MyCompleteWishRecyclerViewAdapter(allCompleteWishInfo);
+            //为rcv_wishpager_wishes设置适配器
+            rcv_completewishactivity_wishes.setAdapter(myAdapter);
+            //给拿到RecyclerView添加条目点击事件
+            rcv_completewishactivity_wishes.addOnItemTouchListener(new OnItemTouchListener(rcv_completewishactivity_wishes) {
+                @Override
+                public void onItemClick(RecyclerView.ViewHolder vh) {
+                    Log.i(TAG, "click" + vh.itemView + " " + vh.getItemViewType());
+                    View viewParent = (View) vh.itemView.getParent();
+                    int adapterPosition = vh.getAdapterPosition();
+                    String title = allCompleteWishInfo.get(adapterPosition).wishTitle;
+                    String description = allCompleteWishInfo.get(adapterPosition).wishDescription;
+                    String photouri = allCompleteWishInfo.get(adapterPosition).wishphotoUri;
+                    Log.i(TAG, "title=" + title + "description=" + description);
+
+                    WishInfo wishInfo = new WishInfo(title, description, photouri);
+                    showWishDetail(wishInfo, viewParent);
+
+                }
+            });
+        }
     }
 
-    private void showWishDetail(String[] data,View view) {
+    private void showWishDetail(WishInfo wishInfo,View view) {
         //初始化popupwindow
         popupwindow_showwishdetail = new PopupWindow();
         //加载popupwindow的界面
@@ -120,12 +141,12 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
         ImageView iv_popupwindowwishdetail_photo = (ImageView) view_wishdetail.findViewById(R.id.iv_popupwindowwishdetail_photo);
 
         //愿望标题
-        tv_popupwindowwishdetail_wishtitle.setText(data[0]);
+        tv_popupwindowwishdetail_wishtitle.setText(wishInfo.wishTitle);
         //愿望备注的显示
-        if(data[1].isEmpty()){
+        if(wishInfo.wishDescription.isEmpty()){
             tv__popupwindowwishdetail_wishdescription.setVisibility(View.INVISIBLE);
         }else{
-            tv__popupwindowwishdetail_wishdescription.setText(data[1]);
+            tv__popupwindowwishdetail_wishdescription.setText(wishInfo.wishDescription);
         }
         //隐藏编辑框，因为是已完成愿望，不可编辑
         civ_popupwindowwishdetail_edit.setVisibility(View.GONE);
@@ -138,10 +159,9 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
         rpb_popupwindowwishdetail_progress.getProgress();
 
         //显示图片  如果有图，显示图片，没有则隐藏控件
-        boolean hasphoto = true;
-        if(hasphoto){
+        if(!wishInfo.wishphotoUri.isEmpty()){
             //显示图片
-            iv_popupwindowwishdetail_photo.setImageResource(R.drawable.ic_guide_0);
+            iv_popupwindowwishdetail_photo.setImageURI(Uri.parse(wishInfo.wishphotoUri));
         }else{
             //没有图片，隐藏ImageView控件
             iv_popupwindowwishdetail_photo.setVisibility(View.GONE);
@@ -163,123 +183,103 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
     }
 
 
-    class TestData {
-        String title;
-        String description;
-        String photoid;
-
-        public TestData() {
-        }
-
-        public TestData(String title, String description,String photoid) {
-            this.title = title;
-            this.description = description;
-            this.photoid = photoid;
-        }
-    }
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.imgbt_completewishactivity_back:
                 //关掉已完成愿望列表页面
                 finish();
+                break;
             case R.id.civ_popupwindowwishdetail_close:
                 //关掉愿望详情页面
                 popupwindow_showwishdetail.dismiss();
+                break;
         }
 
     }
 
+}
+
+/**
+ * 该类为RecyclerView的Adapter
+ * RecyclerView与ListView类似，都需要Adapter
+ */
+class MyCompleteWishRecyclerViewAdapter extends RecyclerView.Adapter<MyCompleteWishRecyclerViewAdapter.MyViewHolder> {
     /**
-     * @return true表示有正在进行的愿望，false表示没有正在进行的愿望
+     * 这里创建一个数组，准备接收传过来的数据
      */
-    private boolean hasOnGoingWishes() {
-        return true;
+    public List<WishInfo> wishInfos = null;
+
+    //构造方法
+
+    /**
+     * 这里调用在创建MyAdapter实例的时候，可以将数据传过来
+     *
+     * @param wishInfos
+     */
+    public MyCompleteWishRecyclerViewAdapter(List<WishInfo> wishInfos) {
+        this.wishInfos = wishInfos;
     }
 
+    //创建新View，被LayoutManager所调用
+
     /**
-     * 该类为RecyclerView的Adapter
-     * RecyclerView与ListView类似，都需要Adapter
+     * 这里加载加载Item，并且创建ViewHolder对象，把加载的Item（View）传给viewholder
+     *
+     * @param viewGroup
+     * @param viewType
+     * @return
      */
-    class MyCompleteWishRecyclerViewAdapter extends RecyclerView.Adapter<MyCompleteWishRecyclerViewAdapter.MyViewHolder> {
-        /**
-         * 这里创建一个数组，准备接收传过来的数据
-         */
-        public List<TestData> datas = null;
+    @Override
+    public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_completewish, viewGroup, false);
+        MyViewHolder vh = new MyViewHolder(itemView);
+        return vh;
+    }
 
-        //构造方法
+    //将数据与界面进行绑定的操作
 
-        /**
-         * 这里调用在创建MyAdapter实例的时候，可以将数据传过来
-         *
-         * @param datas
-         */
-        public MyCompleteWishRecyclerViewAdapter(List<TestData> datas) {
-            this.datas = datas;
+    /**
+     * 这里给item中的子View绑定数据
+     *
+     * @param viewHolder
+     * @param position
+     */
+    @Override
+    public void onBindViewHolder(MyViewHolder viewHolder, int position) {
+        // 给ViewHolder设置元素
+        WishInfo wishInfo = wishInfos.get(position);
+        viewHolder.tv_itemcompletewish_title.setText(wishInfo.wishTitle);
+        viewHolder.tv_itemcompletewish_description.setText(wishInfo.wishDescription);
+    }
+
+    //获取数据的数量
+
+    /**
+     * 这里返回item数量
+     *
+     * @return
+     */
+    @Override
+    public int getItemCount() {
+        return wishInfos.size();
+    }
+
+    //自定义的ViewHolder，持有每个Item的的所有界面元素
+
+    /**
+     * ViewHolder类，注意要继承RecyclerView.ViewHolder
+     */
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView tv_itemcompletewish_title;
+        public TextView tv_itemcompletewish_description;
+
+        public MyViewHolder(View view) {
+            super(view);
+            tv_itemcompletewish_title = (TextView) view.findViewById(R.id.tv_itemcompletewish_title);
+            tv_itemcompletewish_description = (TextView) view.findViewById(R.id.tv_itemcompletewish_description);
         }
-
-        //创建新View，被LayoutManager所调用
-
-        /**
-         * 这里加载加载Item，并且创建ViewHolder对象，把加载的Item（View）传给viewholder
-         *
-         * @param viewGroup
-         * @param viewType
-         * @return
-         */
-        @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-            View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_completewish, viewGroup, false);
-            MyViewHolder vh = new MyViewHolder(itemView);
-            return vh;
-        }
-
-        //将数据与界面进行绑定的操作
-
-        /**
-         * 这里给item中的子View绑定数据
-         *
-         * @param viewHolder
-         * @param position
-         */
-        @Override
-        public void onBindViewHolder(MyViewHolder viewHolder, int position) {
-            // 给ViewHolder设置元素
-            TestData testData = datas.get(position);
-            viewHolder.tv_itemcompletewish_title.setText(testData.title);
-            viewHolder.tv_itemcompletewish_description.setText(testData.description);
-        }
-
-        //获取数据的数量
-
-        /**
-         * 这里返回item数量
-         *
-         * @return
-         */
-        @Override
-        public int getItemCount() {
-            return datas.size();
-        }
-
-        //自定义的ViewHolder，持有每个Item的的所有界面元素
-
-        /**
-         * ViewHolder类，注意要继承RecyclerView.ViewHolder
-         */
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-
-            public TextView tv_itemcompletewish_title;
-            public TextView tv_itemcompletewish_description;
-
-            public MyViewHolder(View view) {
-                super(view);
-                tv_itemcompletewish_title = (TextView) view.findViewById(R.id.tv_itemcompletewish_title);
-                tv_itemcompletewish_description = (TextView) view.findViewById(R.id.tv_itemcompletewish_description);
-            }
-        }
-
     }
 
 }
@@ -342,3 +342,7 @@ abstract class OnItemTouchListener implements RecyclerView.OnItemTouchListener {
         }
     }
 }
+
+
+
+
