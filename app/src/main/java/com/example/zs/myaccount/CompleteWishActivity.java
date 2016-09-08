@@ -79,7 +79,7 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
         int[] photosid = new int[]{0,0,R.drawable.ic_guide_0,R.drawable.ic_guide_1,0,0};
         datas = new ArrayList<TestData>();
         for (int i = 0; i < 6; i++) {
-            datas.add(new TestData(titles[i], descriptions[i],photosid[i]));
+            datas.add(new TestData(titles[i], descriptions[i],photosid[i]+""));
         }
 
         //初始化自定义的适配器
@@ -141,7 +141,7 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
         boolean hasphoto = true;
         if(hasphoto){
             //显示图片
-            iv_popupwindowwishdetail_photo.setImageResource(R.drawable.a);
+            iv_popupwindowwishdetail_photo.setImageResource(R.drawable.ic_guide_0);
         }else{
             //没有图片，隐藏ImageView控件
             iv_popupwindowwishdetail_photo.setVisibility(View.GONE);
@@ -166,13 +166,15 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
     class TestData {
         String title;
         String description;
+        String photoid;
 
         public TestData() {
         }
 
-        public TestData(String title, String description) {
+        public TestData(String title, String description,String photoid) {
             this.title = title;
             this.description = description;
+            this.photoid = photoid;
         }
     }
 
