@@ -2,6 +2,8 @@ package com.example.zs.addPage;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -68,6 +70,8 @@ public class IncomePage extends AddBasePage {
         //girdview区滑动监听事件实现
         slideGridView();
         //设置gridviewItem监听事件
+        //去掉默认的点击背景色
+        gridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -183,15 +187,13 @@ public class IncomePage extends AddBasePage {
             CircleImageView iv_addPage_catagoryIcon = (CircleImageView) inflate.findViewById(R.id.iv_addPage_catagoryIcon);
             TextView tv_addPage_catagoryContent = (TextView) inflate.findViewById(R.id.tv_addPage_catagoryContent);
             if(i<incomeCategoryToDB.size()){
-               /* iv_addPage_catagoryIcon.setImageResource(icons[i]);
-                tv_addPage_catagoryContent.setText(contents[i]+"");*/
-                //Log.i(TAG,incomeCategoryToDB.get(i).getResourceID()+"getResourceID");
                 iv_addPage_catagoryIcon.setImageResource(incomeCategoryToDB.get(i).getResourceID());
                 tv_addPage_catagoryContent.setText(incomeCategoryToDB.get(i).getCategoryName());
 
             }else
                 //最后一个为默认item，作用为跳转到addCategory页面
                 if(i==incomeCategoryToDB.size()){
+                    iv_addPage_catagoryIcon.setBackgroundColor(Color.WHITE);
                     iv_addPage_catagoryIcon.setImageResource(R.drawable.ic_jia_default);
                     tv_addPage_catagoryContent.setText("添加");
                 }

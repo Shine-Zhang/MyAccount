@@ -2,6 +2,8 @@ package com.example.zs.addPage;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -57,11 +59,6 @@ public class PayOutPage extends AddBasePage {
         Log.i(TAG,"initView");
         initData();
         addRecordActivity = (AddRecordActivity) activity;
-        icons = new int[]{R.drawable.ic_2_yellow,R.drawable.ic_3_yellow,R.drawable.ic_default_wish,
-                R.drawable.ic_4_yellow,R.drawable.ic_5_yellow,R.drawable.ic_default_wish,
-                R.drawable.ic_default_wish,R.drawable.ic_default_wish,R.drawable.ic_default_wish};
-        contents = new String[]{"一般","一般","一般","一般","一般","一般","一般","一般",
-                "一般","一般","一般","一般","一般","一般","一般","一般"};
        // GridView gridView = new GridView(activity);
         View inflate = View.inflate(activity, R.layout.gridview_layout, null);
         gridView = (GridView) inflate.findViewById(R.id.gv_addRecord_gridView);
@@ -76,6 +73,8 @@ public class PayOutPage extends AddBasePage {
         //girdview区滑动监听事件实现
         slideGridView();
         //设置gridviewItem监听事件
+        //去掉默认的点击背景色
+        gridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -85,6 +84,7 @@ public class PayOutPage extends AddBasePage {
                     //跳转到addCategory页面
                     activity.startActivityForResult(new Intent(activity, AddCategoryActivity.class),100);
                 }else {
+
                     selectResourceID = payoutCategoryToDB.get(i).getResourceID();
                     selectCategoryName = payoutCategoryToDB.get(i).getCategoryName();
                 }
@@ -191,15 +191,13 @@ public class PayOutPage extends AddBasePage {
             CircleImageView iv_addPage_catagoryIcon = (CircleImageView) inflate.findViewById(R.id.iv_addPage_catagoryIcon);
             TextView tv_addPage_catagoryContent = (TextView) inflate.findViewById(R.id.tv_addPage_catagoryContent);
             if(i<payoutCategoryToDB.size()){
-               /* iv_addPage_catagoryIcon.setImageResource(icons[i]);
-                tv_addPage_catagoryContent.setText(contents[i]+"");*/
-                //Log.i(TAG,payoutCategoryToDB.get(i).getResourceID()+"getResourceID");
                 iv_addPage_catagoryIcon.setImageResource(payoutCategoryToDB.get(i).getResourceID());
                 tv_addPage_catagoryContent.setText(payoutCategoryToDB.get(i).getCategoryName());
 
             }else
             //最后一个为默认item，作用为跳转到addCategory页面
             if(i==payoutCategoryToDB.size()){
+                iv_addPage_catagoryIcon.setBackgroundColor(Color.WHITE);
                 iv_addPage_catagoryIcon.setImageResource(R.drawable.ic_jia_default);
                 tv_addPage_catagoryContent.setText("添加");
             }
