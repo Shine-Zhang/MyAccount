@@ -16,12 +16,12 @@ import java.util.List;
  * 对未完成愿望的数据表的操作
  * @author 韦宇
  */
-public class OnGoingWishDAO {
+public class OnGoingWishDao {
 
     Context context;
     private final SQLiteDatabase readableDatabase;
 
-    public OnGoingWishDAO(Context context) {
+    public OnGoingWishDao(Context context) {
         this.context = context;
         WishDB wishDBHelper = new WishDB(context, "wish.db",null, 1);
         readableDatabase = wishDBHelper.getReadableDatabase();
