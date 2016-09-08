@@ -152,15 +152,25 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"/>
                 <ImageView
-                    android:id="@+id/iv_addRecordActivity_remark"
+                    android:id="@+id/iv_addRecordActivity_remarkIcon"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:src="@drawable/ic_pen2_default"
+                    android:layout_toRightOf="@+id/iv_addRecordActivity_photo"/>
+                <TextView
+                    android:id="@+id/tv_addRecordActivity_remarkShow"
+                    android:layout_width="300dp"
+                    android:layout_height="30dp"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    android:layout_centerVertical="true"
                     android:src="@drawable/ic_pen2_default"
                     android:layout_toRightOf="@+id/iv_addRecordActivity_photo"/>
                 <TextView
                     android:id="@+id/tv_addRecordActivity_inputNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
                     android:text="0"
                     android:textSize="25sp"

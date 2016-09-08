@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.zs.addPage.AddBasePage;
 import com.example.zs.addPage.IncomePage;
@@ -72,6 +73,11 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private EditText et_addCategory_markContent;
     private InputMethodManager inputMethodManager;
     private boolean isJumpActivity;
+    private int idFromOther;
+    private String photo;
+    private String remarkContent="";
+    private TextView tv_addRecordActivity_remarkShow;
+    private ImageView iv_addRecordActivity_remarkIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +92,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         ll_addRecordActivity_keyboard = (LinearLayout) findViewById(R.id.ll_addRecordActivity_keyboard);
         rl_addRecordActivity_remarklayout = (RelativeLayout) findViewById(R.id.rl_addRecordActivity_remarklayout);
         rl_addRecordActivity_photolayout = (RelativeLayout) findViewById(R.id.rl_addRecordActivity_photolayout);
-
+        et_addCategory_markContent = (EditText) findViewById(R.id.et_addCategory_markContent);
         //关闭当前页面按钮
         iv_addRecordActivity_finish.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,7 +102,9 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
             }
         });
         //键盘位置的点击事件实现
-        stringNumber= new StringBuffer();
+        if (!isJumpActivity){
+            stringNumber= new StringBuffer();
+        }
         keyBoard();
         //默认为支出page
         rg_addRecordActivity_singleChoice.check(R.id.btn_addRecordActivity_payout);
@@ -137,15 +145,27 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private void getInfoFromActivity() {
         Intent intent = getIntent();
         if(intent!=null){
-            isJumpActivity = true;
-            boolean isIncome = intent.getBooleanExtra("isIncome", false);
-            int id = intent.getIntExtra("id", 0);
-            getResourceID= intent.getIntExtra("resourceID", R.drawable.ic_yiban_default);
-            getCategoryName = intent.getStringExtra("categoryName");
-
-
+            String money = intent.getStringExtra("money");
+            if (money!=null){
+                isJumpActivity = true;
+                isIncomePage = intent.getBooleanExtra("isIncome", false);
+                idFromOther = intent.getIntExtra("id", 0);
+                getResourceID= intent.getIntExtra("resourceID", R.drawable.ic_yiban_default);
+                getCategoryName = intent.getStringExtra("categoryName");
+                year = intent.getIntExtra("year", 0);
+                month = intent.getIntExtra("month", 0);
+                day = intent.getIntExtra("day", 0);
+                remarkContent = intent.getStringExtra("remarks");
+                if (remarkContent!=null){
+                    rl_addRecordActivity_photolayout.setVisibility(View.GONE);
+                    rl_addRecordActivity_remarklayout.setVisibility(View.VISIBLE);
+                    et_addCategory_markContent.setText(remarkContent);
+                }
+                stringNumber = new StringBuffer(money);
+                photo = intent.getStringExtra("photo");
+                tv_addRecordActivity_inputNumber.setText(stringNumber);
+            }
         }
-
     }
 
     private void keyBoard() {
@@ -161,13 +181,13 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         TextView viewById8 = (TextView) findViewById(R.id.tv_addCategory_8);
         TextView viewById9 = (TextView) findViewById(R.id.tv_addCategory_9);
         TextView viewById10 = (TextView) findViewById(R.id.tv_addCategory_10);
+        tv_addRecordActivity_remarkShow = (TextView) findViewById(R.id.tv_addRecordActivity_remarkShow);
         tv_addRecordActivity_inputNumber = (TextView) findViewById(R.id.tv_addRecordActivity_inputNumber);
         ImageView tv_addCategory_removeNumber = (ImageView) findViewById(R.id.tv_addCategory_removeNumber);
         TextView tv_addCategory_submit = (TextView) findViewById(R.id.tv_addCategory_submit);
-        ImageView iv_addRecordActivity_remark = (ImageView) findViewById(R.id.iv_addRecordActivity_remark);
+        iv_addRecordActivity_remarkIcon = (ImageView) findViewById(R.id.iv_addRecordActivity_remarkIcon);
 
         Button btn_addCategory_markConfirm = (Button) findViewById(R.id.btn_addCategory_markConfirm);
-        et_addCategory_markContent = (EditText) findViewById(R.id.et_addCategory_markContent);
         //设置点击事件
         viewById0.setOnClickListener(this);
         viewById1.setOnClickListener(this);
@@ -182,13 +202,14 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         viewById10.setOnClickListener(this);
         tv_addCategory_removeNumber.setOnClickListener(this);
         tv_addCategory_submit.setOnClickListener(this);
-        iv_addRecordActivity_remark.setOnClickListener(this);
+        tv_addRecordActivity_remarkShow.setOnClickListener(this);
+        iv_addRecordActivity_remarkIcon.setOnClickListener(this);
         btn_addCategory_markConfirm.setOnClickListener(this);
     }
     @Override
     public void onClick(View view) {
         Log.i(TAG,"onClick"+view.getId());
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.tv_addCategory_0:
                 stringNumber.append(0);
                 tv_addRecordActivity_inputNumber.setText(stringNumber);
@@ -234,44 +255,15 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 tv_addRecordActivity_inputNumber.setText(stringNumber);
                 break;
             case R.id.tv_addCategory_removeNumber:
-                stringNumber.deleteCharAt(stringNumber.length()-1);
+                stringNumber.deleteCharAt(stringNumber.length() - 1);
                 tv_addRecordActivity_inputNumber.setText(stringNumber);
                 break;
             case R.id.tv_addCategory_submit:
-                //保存数据数据库中
-                if (!isIncomePage){
-                    savePayoutInfoToDB();
-                    //传回数据给mainactivity
-                    Intent intent = new Intent();
-                    intent.putExtra("id",idNumberPay);
-                    intent.putExtra("resourceID",payOutPage.selectResourceID);
-                    intent.putExtra("categoryName",payOutPage.selectCategoryName);
-                    intent.putExtra("year",year);
-                    intent.putExtra("mouth",month);
-                    intent.putExtra("day",day);
-                    intent.putExtra("money",stringNumber.toString());
-                    intent.putExtra("marks","this is mark");
-                    intent.putExtra("photo","this is photo");
-                    setResult(555,intent);
-                }else {
-                    saveIncomeInfoToDB();
-                    //传回数据给mainactivity
-                    Intent intent = new Intent();
-                    intent.putExtra("id",idNumberIn);
-                    intent.putExtra("resourceID",payOutPage.selectResourceID);
-                    intent.putExtra("categoryName",payOutPage.selectCategoryName);
-                    intent.putExtra("year",year);
-                    intent.putExtra("mouth",month);
-                    intent.putExtra("day",day);
-                    intent.putExtra("money",stringNumber.toString());
-                    intent.putExtra("marks","this is mark");
-                    intent.putExtra("photo","this is photo");
-                    setResult(444,intent);
-                }
-                saveIdIfo();
-                finish();
+
+                //remarkContent = et_addCategory_markContent.getText().toString();
+                commitAndsave();
                 break;
-            case R.id.iv_addRecordActivity_remark:
+            case R.id.iv_addRecordActivity_remarkIcon:
                 //照相区隐藏，显示备注区
                 rl_addRecordActivity_photolayout.setVisibility(View.GONE);
                 rl_addRecordActivity_remarklayout.setVisibility(View.VISIBLE);
@@ -281,17 +273,52 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 //获取焦点。并弹出软键盘
                 //et_addCategory_markContent.setFocusable(true);
                 et_addCategory_markContent.requestFocus();
-                inputMethodManager.showSoftInput(et_addCategory_markContent,0);
+                inputMethodManager.showSoftInput(et_addCategory_markContent, 0);
 
                 break;
             case R.id.btn_addCategory_markConfirm:
                 //照相区显示，备注区隐藏
                 rl_addRecordActivity_remarklayout.setVisibility(View.GONE);
                 rl_addRecordActivity_photolayout.setVisibility(View.VISIBLE);
+                Log.i(TAG,"submit");
+                iv_addRecordActivity_remarkIcon.setVisibility(View.GONE);
+                tv_addRecordActivity_remarkShow.setVisibility(View.VISIBLE);
+                remarkContent = et_addCategory_markContent.getText().toString();
+                tv_addRecordActivity_remarkShow.setText(remarkContent);
                 //隐藏键盘
-                inputMethodManager.hideSoftInputFromWindow(et_addCategory_markContent.getWindowToken(),0);
+                inputMethodManager.hideSoftInputFromWindow(et_addCategory_markContent.getWindowToken(), 0);
                 break;
-
+            case R.id.tv_addRecordActivity_remarkShow:
+                Log.i(TAG,"remarkShow");
+                rl_addRecordActivity_remarklayout.setVisibility(View.GONE);
+                rl_addRecordActivity_photolayout.setVisibility(View.VISIBLE);
+                break;
+        }
+        }
+    private void commitAndsave() {
+        //保存数据数据库中
+        if (!isJumpActivity){
+            //传回数据给mainactivity
+            Intent intent = new Intent();
+            intent.putExtra("id",idFromOther);
+            intent.putExtra("year",year);
+            intent.putExtra("mouth",month);
+            intent.putExtra("day",day);
+            intent.putExtra("money",stringNumber.toString());
+            intent.putExtra("marks",remarkContent);
+            intent.putExtra("photo","this is photo");
+            if (!isIncomePage){
+                savePayoutInfoToDB();
+                intent.putExtra("resourceID",payOutPage.selectResourceID);
+                intent.putExtra("categoryName",payOutPage.selectCategoryName);
+                setResult(555,intent);
+            }else {
+                saveIncomeInfoToDB();
+                //传回数据给mainactivity
+                intent.putExtra("resourceID",incomePage.selectResourceID);
+                intent.putExtra("categoryName",incomePage.selectCategoryName);
+                setResult(444,intent);
+            }
         }
     }
 
@@ -301,22 +328,30 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void saveIncomeInfoToDB() {
-
-        IncomeContentInfo incomeContentInfo = new IncomeContentInfo(idNumberPay,payOutPage.selectResourceID, payOutPage.selectCategoryName,
-                year, month, day, stringNumber.toString(), "this is mark", "this is photo");
-        idNumberIn++;
-        incomeContentDAO.addIncomeContentToDB(incomeContentInfo);
+        if (!stringNumber.toString().isEmpty()) {
+            IncomeContentInfo incomeContentInfo = new IncomeContentInfo(idNumberPay, payOutPage.selectResourceID, payOutPage.selectCategoryName,
+                    year, month, day, stringNumber.toString(), remarkContent, "this is photo");
+            idNumberIn++;
+            incomeContentDAO.addIncomeContentToDB(incomeContentInfo);
+            finish();
+        }else {
+            Toast.makeText(this,"输入金额不能为空",Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
      * 保存数据到数据库中，供主页面显示
      */
     private void savePayoutInfoToDB() {
-
-        PayouContentInfo payouContentInfo = new PayouContentInfo(idNumberPay,payOutPage.selectResourceID, payOutPage.selectCategoryName,
-                year, month, day, stringNumber.toString(), "this is mark", "this is photo");
-        idNumberPay++;
-        payOutContentDAO.addPayoutContentToDB(payouContentInfo);
+        if (!stringNumber.toString().isEmpty()){
+            PayouContentInfo payouContentInfo = new PayouContentInfo(idNumberPay,payOutPage.selectResourceID, payOutPage.selectCategoryName,
+                    year, month, day, stringNumber.toString(), remarkContent, "this is photo");
+            idNumberPay++;
+            payOutContentDAO.addPayoutContentToDB(payouContentInfo);
+            finish();
+        }else {
+            Toast.makeText(this,"输入金额不能为空",Toast.LENGTH_SHORT).show();
+        }
 
     }
 

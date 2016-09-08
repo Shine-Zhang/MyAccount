@@ -25,7 +25,7 @@ public class PayOutContentDB extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("create table payouContent (id Integer,resourceID Integer,year Integer," +
-                 "mouth Integer,day Integer,category var(5),money Integer,remarks var(20),photo var(20));");
+                 "month Integer,day Integer,category var(5),money Integer,remarks var(20),photo var(20));");
 
     }
 
