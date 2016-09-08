@@ -97,7 +97,7 @@
             android:layout_width="match_parent"
             android:layout_height="2px"
             android:background="#90909090"
-            android:layout_above="@+id/rl_addRecordActivity_remarks"/>
+            android:layout_above="@+id/rl_addRecordActivity_remarksLine"/>
         <RelativeLayout
             android:id="@+id/rl_addRecordActivity_remarks"
             android:layout_width="match_parent"
@@ -115,20 +115,23 @@
                     android:id="@+id/tv_addCategory_markTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     android:text="备注"
+                    android:layout_alignParentLeft="true"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:layout_centerVertical="true"
                     android:textSize="10sp"/>
                 <EditText
                     android:id="@+id/et_addCategory_markContent"
-                    android:layout_width="wrap_content"
+                    android:layout_width="300dp"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
+                    android:layout_centerVertical="true"
+                    android:background="@null"
                     android:layout_toRightOf="@+id/tv_addCategory_markTitle"
                     />
                 <Button
+                    android:id="@+id/btn_addCategory_markConfirm"
                     android:layout_width="60dp"
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
@@ -137,6 +140,7 @@
                     android:layout_alignParentRight="true"/>
             </RelativeLayout>
             <RelativeLayout
+                android:id="@+id/rl_addRecordActivity_photolayout"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 >
@@ -148,15 +152,25 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"/>
                 <ImageView
-                    android:id="@+id/iv_addRecordActivity_remark"
+                    android:id="@+id/iv_addRecordActivity_remarkIcon"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:src="@drawable/ic_pen2_default"
+                    android:layout_toRightOf="@+id/iv_addRecordActivity_photo"/>
+                <TextView
+                    android:id="@+id/tv_addRecordActivity_remarkShow"
+                    android:layout_width="300dp"
+                    android:layout_height="30dp"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    android:layout_centerVertical="true"
                     android:src="@drawable/ic_pen2_default"
                     android:layout_toRightOf="@+id/iv_addRecordActivity_photo"/>
                 <TextView
                     android:id="@+id/tv_addRecordActivity_inputNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
                     android:text="0"
                     android:textSize="25sp"

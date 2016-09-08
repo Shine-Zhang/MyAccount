@@ -8,11 +8,11 @@
     android:clipChildren="false">
 
     <!--第一部分ViewPager-->
-    <android.support.v4.view.ViewPager
+    <com.example.zs.view.NoSrcollPager
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/vp_mainactivity">
-    </android.support.v4.view.ViewPager>
+    </com.example.zs.view.NoSrcollPager>
 
     <!--第二部分-->
     <RelativeLayout

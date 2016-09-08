@@ -54,7 +54,7 @@ public class PayOutContentDAO {
         ContentValues contentValues = new ContentValues();
         contentValues.put("resourceID",payouContentInfo.resourceID);
         contentValues.put("year",payouContentInfo.year);
-        contentValues.put("mouth",payouContentInfo.mouth);
+        contentValues.put("month",payouContentInfo.mouth);
         contentValues.put("day",payouContentInfo.day);
         contentValues.put("category",payouContentInfo.category);
         contentValues.put("money",payouContentInfo.money);
@@ -73,7 +73,7 @@ public class PayOutContentDAO {
         contentValues.put("id",payouContentInfo.id);
         contentValues.put("resourceID",payouContentInfo.resourceID);
         contentValues.put("year",payouContentInfo.year);
-        contentValues.put("mouth",payouContentInfo.mouth);
+        contentValues.put("month",payouContentInfo.mouth);
         contentValues.put("day",payouContentInfo.day);
         contentValues.put("category",payouContentInfo.category);
         contentValues.put("money",payouContentInfo.money);
@@ -87,7 +87,7 @@ public class PayOutContentDAO {
     }
     public  int getMoneySum(){
         int sum=0;
-        Cursor cursor = db.rawQuery("select money from payouContent;", null);
+        Cursor cursor = db.rawQuery("select money from payouContent ;", null);
         while (cursor.moveToNext()){
             String s = cursor.getString(0);
             int i = Integer.parseInt(s);
@@ -95,4 +95,5 @@ public class PayOutContentDAO {
         }
         return sum;
     }
+
 }

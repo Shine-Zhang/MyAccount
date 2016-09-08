@@ -55,7 +55,7 @@ public class IncomeContentDAO {
         contentValues.put("id",incomeContentInfo.id);
         contentValues.put("resourceID",incomeContentInfo.resourceID);
         contentValues.put("year",incomeContentInfo.year);
-        contentValues.put("mouth",incomeContentInfo.mouth);
+        contentValues.put("month",incomeContentInfo.mouth);
         contentValues.put("day",incomeContentInfo.day);
         contentValues.put("category",incomeContentInfo.category);
         contentValues.put("money",incomeContentInfo.money);
@@ -73,7 +73,7 @@ public class IncomeContentDAO {
         ContentValues contentValues = new ContentValues();
         contentValues.put("resourceID",incomeContentInfo.resourceID);
         contentValues.put("year",incomeContentInfo.year);
-        contentValues.put("mouth",incomeContentInfo.mouth);
+        contentValues.put("month",incomeContentInfo.mouth);
         contentValues.put("day",incomeContentInfo.day);
         contentValues.put("category",incomeContentInfo.category);
         contentValues.put("money",incomeContentInfo.money);

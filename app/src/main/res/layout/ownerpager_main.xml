@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorBackgroud">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -27,124 +28,135 @@
             android:paddingBottom="5dp"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:background="@drawable/rectangle"
+            android:background="@drawable/rectangle_back"
             android:text="去登录"/>
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
-        <com.example.zs.view.OwnerItem
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            app:ownerItemIcon="@drawable/ic_yue_default"
-            app:ownerItemTitle="我的余额"
-            android:background="#FFF"
-            android:id="@+id/oi_ownerpager_balance"
-            ></com.example.zs.view.OwnerItem>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_ownerpager_mybalance"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="50dp"
-            android:textSize="16sp"
-            android:textColor="#20C9F5"
-            android:text="0.00" />
-    </RelativeLayout>
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <com.example.zs.view.OwnerItem
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            app:ownerItemIcon="@drawable/ic_share_default"
-            android:layout_marginTop="10dp"
-            app:ownerItemTitle="分享APP"
-            android:background="#FFF"
-            android:id="@+id/oi_ownerpager_share"
-            ></com.example.zs.view.OwnerItem>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@drawable/abc_list_pressed_holo_light"
-            android:layout_marginLeft="80dp"/>
-        <ProgressBar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/pb_ownerpager_downloadapk"
-            android:visibility="gone"
-            android:layout_gravity="center"
-            />
-    </FrameLayout>
-    <com.example.zs.view.OwnerItem
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        app:ownerItemIcon="@drawable/ic_chushihua_default"
-        app:ownerItemTitle="初始化"
-        android:background="#FFF"
-        android:id="@+id/oi_ownerpager_initialize"
-        ></com.example.zs.view.OwnerItem>
-    <com.example.zs.view.OwnerItem
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        app:ownerItemIcon="@drawable/ic_yijian_default"
-        android:layout_marginTop="10dp"
-        app:ownerItemTitle="意见反馈"
-        android:background="#FFF"
-        android:id="@+id/oi_ownerpager_feedback"
-        ></com.example.zs.view.OwnerItem>
-
-    <com.example.zs.view.OwnerItem
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        app:ownerItemIcon="@drawable/ic_upgrade_default"
-        app:ownerItemTitle="检查更新"
-        android:background="#FFF"
-        android:id="@+id/oi_ownerpager_update"
-        ></com.example.zs.view.OwnerItem>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/abc_list_pressed_holo_light"
-        android:layout_marginLeft="80dp"/>
-    <com.example.zs.view.OwnerItem
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        app:ownerItemIcon="@drawable/ic_wenti_default"
-        android:layout_marginTop="10dp"
-        app:ownerItemTitle="常见问题"
-        android:background="#FFF"
-        android:id="@+id/oi_ownerpager_commonQuestion"
-        ></com.example.zs.view.OwnerItem>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/abc_list_pressed_holo_light"
-        android:layout_marginLeft="80dp"/>
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <com.example.zs.view.OwnerItem
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            app:ownerItemIcon="@drawable/ic_guanyu_default"
-            app:ownerItemTitle="关于我们"
-            android:background="#FFF"
-            android:id="@+id/oi_ownerpager_aboutUs"
-            ></com.example.zs.view.OwnerItem>
-        <TextView
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_ownerpager_version"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="50dp"
-            android:textSize="16sp"
-            android:text="v0.0" />
-    </RelativeLayout>
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+                <com.example.zs.view.OwnerItem
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    app:ownerItemIcon="@drawable/ic_yue_default"
+                    app:ownerItemTitle="我的余额"
+                    android:background="#FFF"
+                    android:id="@+id/oi_ownerpager_balance"
+                    ></com.example.zs.view.OwnerItem>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_ownerpager_mybalance"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="50dp"
+                    android:textSize="16sp"
+                    android:textColor="#20C9F5"
+                    android:text="0.00" />
+            </RelativeLayout>
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <com.example.zs.view.OwnerItem
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    app:ownerItemIcon="@drawable/ic_share_default"
+                    android:layout_marginTop="10dp"
+                    app:ownerItemTitle="分享APP"
+                    android:background="#FFF"
+                    android:id="@+id/oi_ownerpager_share"
+                    ></com.example.zs.view.OwnerItem>
+                <ProgressBar
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/pb_ownerpager_downloadapk"
+                    android:visibility="gone"
+                    android:layout_gravity="center"
+                    />
+            </FrameLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/abc_list_pressed_holo_light"
+                android:layout_marginLeft="80dp"/>
+            <com.example.zs.view.OwnerItem
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                app:ownerItemIcon="@drawable/ic_chushihua_default"
+                app:ownerItemTitle="初始化"
+                android:background="#FFF"
+                android:id="@+id/oi_ownerpager_initialize"
+                ></com.example.zs.view.OwnerItem>
+            <com.example.zs.view.OwnerItem
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                app:ownerItemIcon="@drawable/ic_yijian_default"
+                android:layout_marginTop="10dp"
+                app:ownerItemTitle="意见反馈"
+                android:background="#FFF"
+                android:id="@+id/oi_ownerpager_feedback"
+                ></com.example.zs.view.OwnerItem>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/abc_list_pressed_holo_light"
+                android:layout_marginLeft="80dp"/>
+
+            <com.example.zs.view.OwnerItem
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                app:ownerItemIcon="@drawable/ic_upgrade_default"
+                app:ownerItemTitle="检查更新"
+                android:background="#FFF"
+                android:id="@+id/oi_ownerpager_update"
+                ></com.example.zs.view.OwnerItem>
+            <com.example.zs.view.OwnerItem
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                app:ownerItemIcon="@drawable/ic_wenti_default"
+                android:layout_marginTop="10dp"
+                app:ownerItemTitle="常见问题"
+                android:background="#FFF"
+                android:id="@+id/oi_ownerpager_commonQuestion"
+                ></com.example.zs.view.OwnerItem>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/abc_list_pressed_holo_light"
+                android:layout_marginLeft="80dp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.example.zs.view.OwnerItem
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    app:ownerItemIcon="@drawable/ic_guanyu_default"
+                    app:ownerItemTitle="关于我们"
+                    android:background="#FFF"
+                    android:id="@+id/oi_ownerpager_aboutUs"
+                    ></com.example.zs.view.OwnerItem>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_ownerpager_version"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="50dp"
+                    android:textSize="16sp"
+                    android:text="v0.0" />
+            </RelativeLayout>
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

@@ -41,7 +41,7 @@ public class WishDBTest extends AndroidTestCase{
         int allOnGoingWishNumber = dao.getAllOnGoingWishNumber();
         assertTrue(allOnGoingWishNumber==4);
     }
-    
+
     public void testgetAllOnGoingWishInfo(){
         OnGoingWishDAO dao = new OnGoingWishDAO(getContext());
         List<WishInfo> allOnGoingWishInfo = dao.getAllOnGoingWishInfo();
