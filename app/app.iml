@@ -88,6 +88,8 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.4.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/8.1.0/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental-classes" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental-runtime-classes" />
@@ -109,6 +111,7 @@
     <orderEntry type="library" exported="" name="support-annotations-23.4.0" level="project" />
     <orderEntry type="library" exported="" name="fastjson" level="project" />
     <orderEntry type="library" exported="" name="MPAndroidChart-v2.2.5" level="project" />
+    <orderEntry type="library" exported="" name="play-services-appindexing-8.1.0" level="project" />
     <orderEntry type="library" exported="" name="ShareSDK-Wechat-2.7.7" level="project" />
     <orderEntry type="library" exported="" name="ShareSDK-Renren-2.7.7" level="project" />
     <orderEntry type="library" exported="" name="percent-23.4.0" level="project" />
@@ -126,6 +129,7 @@
     <orderEntry type="library" exported="" name="ShareSDK-Wechat-Moments-2.7.7" level="project" />
     <orderEntry type="library" exported="" name="avoscloud-sdk-v3.14.5" level="project" />
     <orderEntry type="library" exported="" name="cardview-v7-23.4.0" level="project" />
+    <orderEntry type="library" exported="" name="play-services-basement-8.1.0" level="project" />
     <orderEntry type="library" exported="" name="okio-1.6.0-leancloud" level="project" />
     <orderEntry type="library" exported="" name="avoscloud-feedback-v3.14.5" level="project" />
     <orderEntry type="library" exported="" name="ShareSDK-Core-2.7.7" level="project" />
