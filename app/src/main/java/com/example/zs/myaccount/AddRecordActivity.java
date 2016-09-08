@@ -1,7 +1,6 @@
 package com.example.zs.myaccount;
 
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
@@ -13,8 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -25,13 +22,11 @@ import com.example.zs.addPage.IncomePage;
 import com.example.zs.addPage.PayOutPage;
 import com.example.zs.application.MyAplication;
 import com.example.zs.bean.IncomeContentInfo;
-import com.example.zs.bean.PayouContentInfo;
-import com.example.zs.bean.UserAddCategoryInfo;
+import com.example.zs.bean.payouContentInfo;
 import com.example.zs.dao.IncomeContentDAO;
 import com.example.zs.dao.PayOutContentDAO;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -264,7 +259,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
      */
     private void savePayoutInfoToDB() {
 
-        PayouContentInfo payouContentInfo = new PayouContentInfo(idNumberPay,payOutPage.selectResourceID, payOutPage.selectCategoryName,
+        payouContentInfo payouContentInfo = new payouContentInfo(idNumberPay,payOutPage.selectResourceID, payOutPage.selectCategoryName,
                 year, month, day, stringNumber.toString(), "this is mark", "this is photo");
         idNumberPay++;
         payOutContentDAO.addPayoutContentToDB(payouContentInfo);

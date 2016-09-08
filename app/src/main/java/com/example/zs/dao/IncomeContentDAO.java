@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.zs.bean.IncomeContentInfo;
-import com.example.zs.bean.PayouContentInfo;
 import com.example.zs.dataBase.PayOutContentDB;
 
 import java.util.ArrayList;
