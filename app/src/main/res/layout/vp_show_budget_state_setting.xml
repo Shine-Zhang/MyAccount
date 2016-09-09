@@ -112,16 +112,18 @@
         <android.inputmethodservice.KeyboardView
             android:id="@+id/keyboard_view"
             android:layout_width="match_parent"
+            android:shadowColor="#fff"
+            android:shadowRadius="0.0"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:background="@android:color/transparent"
-            android:keyBackground="@drawable/btn_keyboard_key"
-            android:keyTextColor="#e6e6e6"
+        android:keyBackground="@drawable/btn_keyboard_key"
+            android:keyTextColor="#444444"
             android:visibility="gone" />
     </RelativeLayout>
 
 
-
+    <!--android:keyBackground="@drawable/btn_keyboard_key"-->
 </LinearLayout>
