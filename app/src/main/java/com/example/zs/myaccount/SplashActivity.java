@@ -51,7 +51,7 @@ public class SplashActivity extends Activity {
         alphaAnimation.setDuration(5000);
 
         animationSet.addAnimation(alphaAnimation);
-        rl_splashactivity_bg.setAnimation(animationSet);
+      rl_splashactivity_bg.setAnimation(animationSet);
 
         //开启动画
         animationSet.start();
