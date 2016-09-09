@@ -8,11 +8,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.example.zs.bean.payouContentInfo;
+import com.example.zs.bean.PayoutContentInfo;
 import com.example.zs.pager.BasePager;
 import com.example.zs.pager.OwnerPager;
 import com.example.zs.pager.WishPager;
@@ -163,12 +162,26 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public void add(View v){
-        startActivityForResult(new Intent(MainActivity.this,AddRecordActivity.class),310);
+        //test
+        /*Intent intent = new Intent(this,AddRecordActivity.class);
+        intent.putExtra("isIncome",false);
+        intent.putExtra("id",1);
+        intent.putExtra("year",2016);
+        intent.putExtra("month",1);
+        intent.putExtra("day",1);
+        intent.putExtra("money","350");
+        intent.putExtra("remarks","备注测试");
+        intent.putExtra("photo","this is photo");
+        intent.putExtra("resourceID",2130837665);
+        intent.putExtra("categoryName","红包");
+        startActivityForResult(intent,110);*/
+        startActivity(new Intent(MainActivity.this,AddRecordActivity.class));
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        Log.i(tag,resultCode+"--");
+        Log.i(tag,resultCode+"--"+requestCode);
+        Log.i(tag,"000");
         //确认健返回
         if(resultCode==555&&intent!=null){
             int id = intent.getIntExtra("id", 0);
@@ -180,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
             String money = intent.getStringExtra("money");
             String marks = intent.getStringExtra("marks");
             String photo = intent.getStringExtra("photo");
-            payouContentInfo payouContentInfo = new payouContentInfo(id, resourceID, categoryName, year, mouth, day, money, marks, photo);
+            PayoutContentInfo payouContentInfo = new PayoutContentInfo(id, resourceID, categoryName, year, mouth, day, money, marks, photo);
             Log.i(tag,payouContentInfo.toString());
             //super无法执行到
             // return;

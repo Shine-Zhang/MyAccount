@@ -45,10 +45,10 @@ public class ReportFormIncome extends AddBasePage{
     public  float licaiPercent;
     public PieChart pieChart;
 
-    public ReportFormIncome(Activity activity) {
-        super(activity);
-        initData();
+    public ReportFormIncome(Activity activity, boolean isJump) {
+        super(activity, isJump);
     }
+
 
     @Override
     public View initView() {

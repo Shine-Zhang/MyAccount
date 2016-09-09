@@ -6,9 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.example.zs.bean.PayouContentInfo;
 import com.example.zs.bean.UserAddCategoryInfo;
-import com.example.zs.dataBase.AllCategoryDB;
 import com.example.zs.dataBase.PayoutCategoryDB;
 
 import java.util.ArrayList;
@@ -49,5 +47,6 @@ public class PayoutCategoryDAO {
         }
         return userAddCategoryInfos;
     }
+
 
 }

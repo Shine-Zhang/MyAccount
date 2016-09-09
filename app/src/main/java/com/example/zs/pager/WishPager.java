@@ -39,7 +39,8 @@ import android.widget.Toast;
 
 import com.example.zs.bean.WishInfo;
 import com.example.zs.dao.CompleteWishDAO;
-import com.example.zs.dao.OnGoingWishDAO;
+import com.example.zs.dao.OnGoingWishDao;
+import com.example.zs.dao.OnGoingWishDao;
 import com.example.zs.myaccount.AddWishActivity;
 import com.example.zs.myaccount.CompleteWishActivity;
 import com.example.zs.myaccount.MainActivity;
@@ -79,7 +80,7 @@ public class WishPager extends BasePager {
     private List<WishInfo> allOnGoingWishInfo;
     private int allCompleteWishNumber;
     private Float availableWishFund;
-    private OnGoingWishDAO onGoingWishDAO;
+    private OnGoingWishDao onGoingWishDAO;
     private String totalWishFund;
     private CompleteWishDAO completeWishDAO;
 
@@ -96,7 +97,7 @@ public class WishPager extends BasePager {
     public View initView() {
         //获取数据库中愿望的数目
         //未完成愿望的数目和详细信息
-        onGoingWishDAO = new OnGoingWishDAO(mActivity);
+        onGoingWishDAO = new OnGoingWishDao(mActivity);
         //allOnGoingWishNumber = onGoingWishDAO.getAllOnGoingWishNumber();
         allOnGoingWishNumber = onGoingWishDAO.getAllOnGoingWishNumber();
         if(allOnGoingWishNumber!=0) {

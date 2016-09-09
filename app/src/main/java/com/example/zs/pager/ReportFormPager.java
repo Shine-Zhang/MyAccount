@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.zs.addPage.ReportFormIncome;
-import com.example.zs.bean.PayouContentInfo;
+import com.example.zs.bean.PayoutContentInfo;
 import com.example.zs.dao.PayOutContentDAO;
 import com.example.zs.dao.PayoutCategoryDAO;
 import com.example.zs.myaccount.RportFormDatePickerActivity;
@@ -105,7 +105,7 @@ public class ReportFormPager extends BasePager {
     public ReportFormIncome reportFormincome;
     
     //从数据库拿到的支出数据
-    public ArrayList<PayouContentInfo> allPayoutCategory;
+    public ArrayList<PayoutContentInfo  > allPayoutCategory;
     //这个数决定了圆饼被分为几部分
     public  int allNumber;
     //总的消费金额
@@ -178,7 +178,7 @@ public class ReportFormPager extends BasePager {
                     //收入对应报表页面
                     case R.id.rb_reportform_income:
                         //加载收入页面
-                        reportFormincome = new ReportFormIncome(mActivity);
+                        reportFormincome = new ReportFormIncome(mActivity,false);
                         ll_reportform_zhichu.setVisibility(View.GONE);
                         ll_reportform_shouru.setVisibility(View.VISIBLE);
                         fl_reportform_shouru.addView(reportFormincome.pieChart);

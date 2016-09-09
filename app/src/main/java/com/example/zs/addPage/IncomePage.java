@@ -44,9 +44,10 @@ public class IncomePage extends AddBasePage {
     public  String selectCategoryName;
     public  int selectResourceID;
 
-    public IncomePage(Activity activity) {
-        super(activity);
+    public IncomePage(Activity activity, boolean isJump) {
+        super(activity, isJump);
     }
+
 
     @Override
     public View initView() {
