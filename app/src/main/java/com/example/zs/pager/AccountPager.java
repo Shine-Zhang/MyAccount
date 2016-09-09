@@ -105,7 +105,7 @@ public class AccountPager extends BasePager implements
             groupItems.clear();
         }
 
-        Log.i("haha","************进入initData***********");
+      /*  Log.i("haha","************进入initData***********");
         //手动写的测试数据
         AccountChildItemBean itemBean1 = new AccountChildItemBean(9,1,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1200",true);
         AccountChildItemBean itemBean2 = new AccountChildItemBean(9,1,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1300",false);
@@ -143,7 +143,8 @@ public class AccountPager extends BasePager implements
         groupItems.add(groupItemBean1);
         groupItems.add(groupItemBean2);
         groupItems.add(groupItemBean3);
-        Log.i("haha","************初始化数据完毕***********");
+        Log.i("haha","************初始化数据完毕***********");*/
+
         adapter = new MyexpandableListAdapter(mActivity);
         expandableListView.setAdapter(adapter);
 

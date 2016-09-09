@@ -6,9 +6,12 @@ import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.Keyboard.Key;
 import android.inputmethodservice.KeyboardView;
 import android.inputmethodservice.KeyboardView.OnKeyboardActionListener;
+import android.os.Build;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.example.zs.myaccount.R;
@@ -78,6 +81,10 @@ public class KeyboardUtil {
 		public void onKey(int primaryCode, int[] keyCodes) {
 			Editable editable = ed.getText();
 			int start = ed.getSelectionStart();
+			if(!TextUtils.isEmpty(editable.toString())){
+				 ed.setSelection(editable.toString().length());
+				start = editable.toString().length();
+			}
 			//String tmp =Character.toString((char) primaryCode);
 			char tmp = (char) primaryCode;
 			if(tmp>='0'&&tmp<='9'||tmp=='.'){
@@ -115,6 +122,16 @@ public class KeyboardUtil {
 					}
 				} else {
 
+
+					InputMethodManager inputMethodManager = (InputMethodManager) act.getSystemService(act.INPUT_METHOD_SERVICE);
+//et_addCategory_markContent为edittext
+//弹出
+//					ed.requestFocus();
+//					inputMethodManager.showSoftInput(ed, 0);
+//隐藏
+					inputMethodManager.hideSoftInputFromWindow(ed.getWindowToken(), 0);
+
+
 					if ("0".equals(ed.getText().toString())) {
 						ed.setText(Character.toString((char) primaryCode));
 					}
@@ -150,9 +167,7 @@ public class KeyboardUtil {
 	}
 
     public void showKeyboard() {
-		if(!TextUtils.isEmpty(ed.getText().toString())){
-			ed.setText("");
-		}
+
         int visibility = keyboardView.getVisibility();
         if (visibility == View.GONE || visibility == View.INVISIBLE) {
             keyboardView.setVisibility(View.VISIBLE);

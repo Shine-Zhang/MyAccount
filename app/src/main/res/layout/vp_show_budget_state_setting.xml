@@ -77,25 +77,34 @@
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/rank"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="天"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <EditText
             android:id="@+id/et_show_budeget_sta_set_deadline"
             android:paddingRight="5dp"
-            android:text="1天"
+            android:text="1"
             android:focusable="false"
             android:clickable="false"
             android:textColor="#21BCEE"
             android:background="@drawable/abc_textfield_search_activated_mtrl_alpha"
-            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@id/rank"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
+            android:id="@+id/rank_tag"
            android:layout_centerVertical="true"
             android:text="每月第"
             android:layout_toLeftOf="@id/et_show_budeget_sta_set_deadline"
             android:layout_width="wrap_content"
-
             android:layout_height="wrap_content" />
+
+
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView

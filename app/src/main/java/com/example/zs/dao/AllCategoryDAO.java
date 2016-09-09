@@ -28,6 +28,7 @@ public class AllCategoryDAO {
         AllCategoryDB initCategory = new AllCategoryDB(ctx, "allCategory.db", null, 1);
         db = initCategory.getReadableDatabase();
     }
+
     //查询接口
     public ArrayList<MyAllCatoryInfo> getCateoryList(){
         ArrayList<MyAllCatoryInfo> myAllCatoryInfos = new ArrayList<>();
