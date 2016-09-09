@@ -2,15 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginTop="10dp">
     <com.example.zs.view.CircleImageView
-        android:id="@+id/iv_addPage_catagoryIcon"
+        android:id="@+id/cv_addPage_recordIcon"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:padding="5dp"
         android:background="@drawable/bg_addcategory"
         android:src="@drawable/ic_yiban_default"
-        android:layout_marginTop="10dp"
         android:layout_gravity="center"/>
     <TextView
         android:id="@+id/tv_addPage_catagoryContent"

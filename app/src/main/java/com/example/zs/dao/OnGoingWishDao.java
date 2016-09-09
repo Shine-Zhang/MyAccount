@@ -1,9 +1,11 @@
 package com.example.zs.dao;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 
 import com.example.zs.bean.WishInfo;
 import com.example.zs.dataBase.WishDB;
@@ -29,6 +31,14 @@ public class OnGoingWishDao {
 
     //往数据库添加数据
     public long addOnGoingWishInfo(WishInfo wishInfo){
+
+        //通知内容观察者数据库变化了
+        ContentResolver contentResolver = context.getContentResolver();
+        //因为是我们自己的数据发生变化了,所以我们要自定义一个uri进行操作
+        Uri uri = Uri.parse("content://com.example.zs.dao.ongoingwish.changed");
+        //通知内容观察者数据发生变化了
+        contentResolver.notifyChange(uri, null);
+
         ContentValues values = new ContentValues();
         values.put("wishTitle",wishInfo.wishTitle);
         values.put("wishDescription",wishInfo.wishDescription);
@@ -41,8 +51,8 @@ public class OnGoingWishDao {
     }
 
     //从数据库中删除选中的愿望信息
-    public int deleteOnGoingWishInfo(String wishid){
-        return readableDatabase.delete("ongoingwish","wishid = ?",new String[]{wishid});
+    public int deleteOnGoingWishInfo(int wishid){
+        return readableDatabase.delete("ongoingwish","wishid = ?",new String[]{wishid+""});
     }
 
     //修改愿望信息

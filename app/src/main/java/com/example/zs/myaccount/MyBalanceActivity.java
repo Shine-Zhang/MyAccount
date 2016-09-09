@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.zs.application.MyAplication;
-import com.example.zs.bean.PayouContentInfo;
+import com.example.zs.bean.PayoutContentInfo;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class MyBalanceActivity extends AppCompatActivity {
     private TextView tv_mybalanceactivity_choiceDate;
     private ListView lv_mybalanceactivity_recordlist;
 
-    List<PayouContentInfo> recordlist;//用于存放消费信息的集合
+    List<PayoutContentInfo> recordlist;//用于存放消费信息的集合
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -85,15 +85,8 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:id="@+id/fl_reportform_shouru"
-                android:layout_height="wrap_content"
-
+                android:layout_height="380dp"
                 android:layout_gravity="center_horizontal">
-                <com.github.mikephil.charting.charts.PieChart
-                    android:layout_width="match_parent"
-                    android:layout_height="380dp"
-                    android:layout_marginTop="10dp"
-                    android:id="@+id/pc_reportform_shourupiechart">
-                </com.github.mikephil.charting.charts.PieChart>
             </FrameLayout>
         </LinearLayout>
     </FrameLayout>

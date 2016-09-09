@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#fff">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageButton
+            android:id="@+id/ib_show_budeget_sta_back"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/ic_arrow_default"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+        <TextView
+            android:id="@+id/tv_show_budget_state_activity_word_tip"
+            android:layout_marginTop="20dp"
+            android:textSize="25sp"
+            android:textColor="#5000"
+            android:text="月预算"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_show_budget_state_activity_num_tip"
+            android:layout_below="@id/tv_show_budget_state_activity_word_tip"
+            android:textSize="18sp"
+            android:textColor="#6e6e6e"
+            android:textStyle="bold"
+            android:text="1000.00"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageButton
+            android:id="@+id/ib_show_budeget_sta_setting"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/ic_setting_default"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+    </RelativeLayout>
+
+    <!--中间动画部分-->
+    <com.example.zs.view.DynamicWave
+        android:id="@+id/dynamicWave_show_budget_activity_mywave"
+        android:layout_centerInParent="true"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:background="@drawable/account_pager_budget_state"
+        android:paddingBottom="20dp"
+        >
+    </com.example.zs.view.DynamicWave>
+    <LinearLayout
+        android:gravity="center"
+        android:paddingBottom="20dp"
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_gravity="center_horizontal"
+            android:text="结余"
+            android:textSize="18sp"
+            android:textColor="#5000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:id="@+id/tv_show_budget_state_activity"
+            android:text="1765.00"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="75dp"
+        android:layout_marginLeft="60dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_marginBottom="5dp"
+            android:textSize="15sp"
+            android:textColor="#5000"
+            android:text="9月收入"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="800.00"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="75dp"
+        android:layout_marginRight="60dp"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_marginBottom="5dp"
+            android:textSize="15sp"
+            android:textColor="#5000"
+            android:text="距离结算日"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</RelativeLayout>

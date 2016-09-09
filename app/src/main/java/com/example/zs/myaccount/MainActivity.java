@@ -8,12 +8,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Switch;
-import android.widget.TextView;
 
-import com.example.zs.bean.PayouContentInfo;
+import com.example.zs.bean.PayoutContentInfo;
+import com.example.zs.pager.AccountPager;
 import com.example.zs.pager.BasePager;
 import com.example.zs.pager.OwnerPager;
 import com.example.zs.pager.ReportFormPager;
@@ -41,6 +41,11 @@ public class MainActivity extends AppCompatActivity {
         //隐藏标题栏
         getSupportActionBar().hide();
 
+        /*//透明状态栏
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        //透明导航栏
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);*/
+
         //初始化主页面的控件,并抽成成员变量，方便调用
         //ViewPager
         vp_mainactivity = (ViewPager) findViewById(R.id.vp_mainactivity);
@@ -56,10 +61,10 @@ public class MainActivity extends AppCompatActivity {
         rg_mainactivity_bottom.check(R.id.rb_mainactivity_detail);
 
         //将每个page页面加入pageList
-        //pageList.add(new 帅神页面);
+        pageList.add(new AccountPager(this));
         pageList.add(new WishPager(this));
         //pageList.add(new 57页面);
-        //pageList.add(new ReportFormPager(this));
+        pageList.add(new ReportFormPager(this));
         pageList.add(new OwnerPager(this));
 
         //新建Adapter用于每个RadioButton点击显示不同页面
@@ -74,28 +79,29 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.rb_mainactivity_detail:
                         vp_mainactivity.setCurrentItem(0);
-                        //pageList.get(0).initData();
+                        pageList.get(0).initData();
                         break;
 
                     case R.id.rb_mainactivity_wish:
                         Log.i(tag,"00");
                         vp_mainactivity.setCurrentItem(1);
-                        pageList.get(0).initData();
+                        pageList.get(1).initData();
                         break;
                     case R.id.rb_mainactivity_list:
-                        vp_mainactivity.setCurrentItem(3);
-                        pageList.get(0).initData();
+                        vp_mainactivity.setCurrentItem(2);
+                        pageList.get(1).initData();
                         break;
 
                     case R.id.rb_mainactivity_mine:
-                        vp_mainactivity.setCurrentItem(4);
-                        pageList.get(0).initData();
+                        vp_mainactivity.setCurrentItem(3);
+                        pageList.get(1).initData();
                         break;
                 }
             }
         });
 
-        //vp_mainactivity.setCurrentItem(0);
+        vp_mainactivity.setCurrentItem(0);
+        pageList.get(0).initData();
         Log.i(tag,"wennm");
     }
 
@@ -136,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     public void test(){
 
 
@@ -161,12 +166,26 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public void add(View v){
-        startActivityForResult(new Intent(MainActivity.this,AddRecordActivity.class),310);
+        //test
+        /*Intent intent = new Intent(this,AddRecordActivity.class);
+        intent.putExtra("isIncome",false);
+        intent.putExtra("id",1);
+        intent.putExtra("year",2016);
+        intent.putExtra("month",1);
+        intent.putExtra("day",1);
+        intent.putExtra("money","350");
+        intent.putExtra("remarks","备注测试");
+        intent.putExtra("photo","this is photo");
+        intent.putExtra("resourceID",2130837665);
+        intent.putExtra("categoryName","红包");
+        startActivityForResult(intent,110);*/
+        startActivity(new Intent(MainActivity.this,AddRecordActivity.class));
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        Log.i(tag,resultCode+"--");
+        Log.i(tag,resultCode+"--"+requestCode);
+        Log.i(tag,"000");
         //确认健返回
         if(resultCode==555&&intent!=null){
             int id = intent.getIntExtra("id", 0);
@@ -178,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
             String money = intent.getStringExtra("money");
             String marks = intent.getStringExtra("marks");
             String photo = intent.getStringExtra("photo");
-            PayouContentInfo payouContentInfo = new PayouContentInfo(id, resourceID, categoryName, year, mouth, day, money, marks, photo);
+            PayoutContentInfo payouContentInfo = new PayoutContentInfo(id, resourceID, categoryName, year, mouth, day, money, marks, photo);
             Log.i(tag,payouContentInfo.toString());
             //super无法执行到
             // return;

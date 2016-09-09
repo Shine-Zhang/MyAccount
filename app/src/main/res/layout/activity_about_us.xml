@@ -52,6 +52,7 @@
         android:layout_height="0px"
         android:layout_weight="1"
         android:orientation="vertical"
+        android:background="#FFF"
         >
         <LinearLayout
             android:layout_width="match_parent"
@@ -61,20 +62,24 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ic_ywjz_logo">
+                android:src="@drawable/ic_about_us"
+                >
+                <!--android:src="@drawable/ic_ywjz_logo">-->
             </ImageView>
         </LinearLayout>
         //第三部分
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="#FFF"
+            >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30sp"
                 android:layout_gravity="center"
                 android:gravity="bottom"
-                android:text="客服QQ：455430017"
+                android:text="客服MM：719031583"
                 android:textColor="#474747"
                 android:textSize="@dimen/activity_horizontal_margin" />
 
@@ -94,7 +99,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="xh_simba@foxmail.com"
+                    android:text="wuautumn@foxmail.com"
                     android:textSize="@dimen/activity_horizontal_margin"
                     android:textColor="#377CB7"
                     />
