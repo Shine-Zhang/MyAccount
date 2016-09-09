@@ -14,8 +14,33 @@ public class WishInfo {
     public String wishDescription;        //愿望备注
     public String wishFund;                //愿望资金
     public String wishphotoUri;           //愿望照片Uri
+    public int process;
 
     public WishInfo() {
+    }
+
+    public WishInfo(String wishTitle, String wishDescription, String wishphotoUri) {
+        this.wishTitle = wishTitle;
+        this.wishDescription = wishDescription;
+        this.wishphotoUri = wishphotoUri;
+    }
+
+    public WishInfo(int wishYear, int wishMonth, int wishDay, String wishTitle, String wishDescription, String wishphotoUri) {
+        this.wishYear = wishYear;
+        this.wishMonth = wishMonth;
+        this.wishDay = wishDay;
+        this.wishTitle = wishTitle;
+        this.wishDescription = wishDescription;
+        this.wishphotoUri = wishphotoUri;
+    }
+
+    public WishInfo(int wishid, String wishTitle, String wishDescription, String wishFund, String wishphotoUri, int process) {
+        this.wishid = wishid;
+        this.wishTitle = wishTitle;
+        this.wishDescription = wishDescription;
+        this.wishFund = wishFund;
+        this.wishphotoUri = wishphotoUri;
+        this.process = process;
     }
 
     public WishInfo(int wishYear, int wishMonth, int wishDay, String wishTitle, String wishDescription, String wishFund, String wishphotoUri) {
@@ -101,6 +126,14 @@ public class WishInfo {
 
     public void setWishphotoUri(String wishphotoUri) {
         this.wishphotoUri = wishphotoUri;
+    }
+
+    public int getProcess() {
+        return process;
+    }
+
+    public void setProcess(int process) {
+        this.process = process;
     }
 
     @Override

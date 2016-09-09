@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.zs.myaccount.QuestionActivity">
+    tools:context="com.example.zs.myaccount.AnswerActivity_09">
 
     //第一部分
     <LinearLayout
@@ -23,7 +23,7 @@
             android:layout_gravity="center"
             android:id="@+id/ib_questionactivity_back"
             android:background="@drawable/ic_arrow_default"
-            android:onClick="Back_FromQuestionActivity"/>
+            android:onClick="Back_FromAnsweActivity"/>
         <View
             android:layout_width="0px"
             android:layout_weight="0.5"
@@ -34,15 +34,14 @@
             android:layout_weight="15"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="常见问题"
+            android:text="9. 如何添加自己需要的账目"
             android:textSize="@dimen/activity_horizontal_margin"
-            android:textColor="#000"/>
+            android:textColor="#333"/>
     </LinearLayout>
     //第二部分
-    <ListView
+    <WebView
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/lv_questionactivity">
-
-    </ListView>
+        android:layout_height="wrap_content"
+        android:id="@+id/wv_answeractivity_09">
+    </WebView>
 </LinearLayout>
