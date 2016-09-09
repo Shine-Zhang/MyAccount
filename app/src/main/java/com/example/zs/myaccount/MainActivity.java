@@ -12,7 +12,7 @@ import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.example.zs.bean.PayouContentInfo;
+import com.example.zs.bean.PayoutContentInfo;
 import com.example.zs.pager.AccountPager;
 import com.example.zs.pager.BasePager;
 import com.example.zs.pager.OwnerPager;

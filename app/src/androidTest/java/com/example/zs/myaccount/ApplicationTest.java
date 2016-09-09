@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.example.zs.bean.MyAllCatoryInfo;
 import com.example.zs.bean.PayoutContentInfo;
-import com.example.zs.bean.PayoutContentInfo;
 import com.example.zs.dao.AllCategoryDAO;
 import com.example.zs.dao.PayOutContentDAO;
 import com.example.zs.dao.PayoutCategoryDAO;
