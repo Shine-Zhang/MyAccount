@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Environment;
@@ -34,9 +36,11 @@ import com.example.zs.bean.WishInfo;
 import com.example.zs.dao.OnGoingWishDAO;
 import com.example.zs.pager.WishPager;
 import com.example.zs.utils.ScreenUtils;
+import com.example.zs.utils.ShowPopupWindowUtils;
 import com.example.zs.view.CircleImageView;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -44,6 +48,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import static com.example.zs.application.MyAplication.setWishInfo;
 
 public class AddWishActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -101,7 +107,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
             String title = bundle.getString("title","");
             String description = bundle.getString("description","");
             String wishfund = bundle.getString("wishfund","");
-            String photoid = bundle.getString("photoid","");
+            String photoUri = bundle.getString("photoUri","");
             wishid = bundle.getInt("wishid");
             position = bundle.getInt("position");
 
@@ -110,18 +116,18 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
             et_addwishactivity_description.setText(description);
             et_addwishactivity_wishfund.setText(wishfund);
 
-            Log.i("wwwwwwwww","addwish  photoid="+photoid);
-            if(photoid.isEmpty() || photoid.equals("0") || photoid.equals("null")){
+            Log.i("wwwwwwwww","addwish  photoid="+photoUri);
+            if(photoUri.isEmpty() || photoUri.equals("0") || photoUri.equals("null")){
                 iv_addwishactivity_photo.setVisibility(View.VISIBLE);
                 civ_addwishactivity_image.setImageResource(R.drawable.blankrect);
             }else {
                 iv_addwishactivity_photo.setVisibility(View.INVISIBLE);
-                civ_addwishactivity_image.setImageURI(Uri.parse(photoid));
+                civ_addwishactivity_image.setImageURI(Uri.parse(photoUri));
             }
-            if(!title.isEmpty() && !wishfund.isEmpty()){
-                bt_addwishactivity_addwish.setClickable(true);
-                bt_addwishactivity_addwish.setBackgroundColor(Color.rgb(31,185,236));
-            }
+            bt_addwishactivity_addwish.setClickable(true);
+            bt_addwishactivity_addwish.setBackgroundColor(Color.rgb(31,185,236));
+            bt_addwishactivity_addwish.setOnClickListener(AddWishActivity.this);
+
         }
 
         //给civ_addwishactivity_image设置点击事件
@@ -133,7 +139,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
                 //判断用户是否已经选择图片
                 if(iv_addwishactivity_photo.getVisibility()==View.INVISIBLE){
                     //显示图片详情
-                    showPhoto(view,photoUri);
+                    showPhoto(view, photoUri);
                 }else{
                     civ_addwishactivity_image.setImageResource(R.drawable.blankrect);
                     iv_addwishactivity_photo.setVisibility(View.VISIBLE);
@@ -205,6 +211,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
 
             }
         });
+
         //et_addwishactivity_wishfund的焦点变化事件，获取焦点时弹出popupwindow
         et_addwishactivity_wishfund.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -251,7 +258,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
                 popupwindow_getphoto.dismiss();
                 break;
             case R.id.bt_addwishactivity_addwish:
-                addWish();
+                addWish(view);
                 //关闭当前页面，刷新数据库
                 finish();
                 break;
@@ -283,8 +290,9 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
 
     /**
      * 添加愿望，放入数据库
+     * @param view
      */
-    private void addWish() {
+    private void addWish(View view) {
 
         //将输入的信息保存到数据库中
         //获取当前的日期
@@ -299,13 +307,13 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
         String wishtitle = et_addwishactivity_mywish.getText().toString();
         String wishfundString = et_addwishactivity_wishfund.getText().toString();
         String wishfund = "";
-        if(wishfundString.matches("[1-9]\\d{1,7}")){
+        if(wishfundString.matches("[1-9]\\d{1,6}")){
             //输入的愿望资金为整数，则存入数据库时自动添加两位小数
             wishfund = wishfundString+".00";
-        }else if(wishfundString.matches("[1-9]\\d{1,7}\\.\\d")){
+        }else if(wishfundString.matches("[1-9]\\d{1,6}\\.\\d")){
             //输入的愿望为一位小数时
             wishfund = wishfundString+"0";
-        }else {
+        }else if(wishfundString.matches("[1-9]\\d{1,6}\\.\\d{2}")){
             wishfund = wishfundString;
         }
         String wishdescription = et_addwishactivity_description.getText().toString();
@@ -319,9 +327,20 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
             //如果是从愿望详情页过来的
             //删除之前的数据，再新增
             onGoingWishDAO.deleteOnGoingWishInfo(wishid);
-            //刷新页面，即当前的Item挪到当前最后一个Item的后面
-            //WishPager.editWishmoveRvItem(position);
+            WishInfo info = new WishInfo(wishid,year,month,day,wishtitle,wishdescription,wishfund,photouri);
+            setWishInfo(info);
+        }else {
+            WishInfo info = new WishInfo(-1,year,month,day,wishtitle,wishdescription,wishfund,photouri);
+            setWishInfo(info);
         }
+
+
+        //传一个参数过去给MainActivity ,从MainActivity取出来给pager用。
+        Intent intent = new Intent(AddWishActivity.this,MainActivity.class);
+        intent.putExtra("page",1);
+        startActivity(intent);
+
+
 
     }
 
@@ -346,34 +365,6 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
         //设置popupwindow显示的位置
         popupwindow_showkeyboard.showAtLocation(view,Gravity.BOTTOM,0,0);
 
-        Button bt_popupwindowkekeyboard_0 = (Button) view_showkeyboard.findViewById(R.id.bt_popupwindowkekeyboard_0);
-        Button bt_popupwindowkekeyboard_1 = (Button) view_showkeyboard.findViewById(R.id.bt_popupwindowkekeyboard_1);
-        Button bt_popupwindowkekeyboard_2 = (Button) view_showkeyboard.findViewById(R.id.bt_popupwindowkekeyboard_2);
-        Button bt_popupwindowkekeyboard_3 = (Button) view_showkeyboard.findViewById(R.id.bt_popupwindowkekeyboard_3);
-        Button bt_popupwindowkekeyboard_4 = (Button) view_showkeyboard.findViewById(R.id.bt_popupwindowkekeyboard_4);
-        Button bt_popupwindowkekeyboard_5 = (Button) view_showkeyboard.findViewById(R.id.bt_popupwindowkekeyboard_5);
-        Button bt_popupwindowkekeyboard_6 = (Button) view_showkeyboard.findViewById(R.id.bt_popupwindowkekeyboard_6);
-        Button bt_popupwindowkekeyboard_7 = (Button) view_showkeyboard.findViewById(R.id.bt_popupwindowkekeyboard_7);
-        Button bt_popupwindowkekeyboard_8 = (Button) view_showkeyboard.findViewById(R.id.bt_popupwindowkekeyboard_8);
-        Button bt_popupwindowkekeyboard_9 = (Button) view_showkeyboard.findViewById(R.id.bt_popupwindowkekeyboard_9);
-        Button bt_popupwindowkekeyboard_dot = (Button) view_showkeyboard.findViewById(R.id.bt_popupwindowkekeyboard_dot);
-        TextView tv_popupwindowkekeyboard_delete = (TextView) view_showkeyboard.findViewById(R.id.tv_bt_popupwindowkekeyboard_delete);
-        Button bt_popupwindowkekeyboard_confirm = (Button) view_showkeyboard.findViewById(R.id.bt_bt_popupwindowkekeyboard_confirm);
-
-        //给键盘上的button添加点击事件
-        bt_popupwindowkekeyboard_0.setOnClickListener(AddWishActivity.this);
-        bt_popupwindowkekeyboard_1.setOnClickListener(AddWishActivity.this);
-        bt_popupwindowkekeyboard_2.setOnClickListener(AddWishActivity.this);
-        bt_popupwindowkekeyboard_3.setOnClickListener(AddWishActivity.this);
-        bt_popupwindowkekeyboard_4.setOnClickListener(AddWishActivity.this);
-        bt_popupwindowkekeyboard_5.setOnClickListener(AddWishActivity.this);
-        bt_popupwindowkekeyboard_6.setOnClickListener(AddWishActivity.this);
-        bt_popupwindowkekeyboard_7.setOnClickListener(AddWishActivity.this);
-        bt_popupwindowkekeyboard_8.setOnClickListener(AddWishActivity.this);
-        bt_popupwindowkekeyboard_9.setOnClickListener(AddWishActivity.this);
-        bt_popupwindowkekeyboard_dot.setOnClickListener(AddWishActivity.this);
-        tv_popupwindowkekeyboard_delete.setOnClickListener(AddWishActivity.this);
-        bt_popupwindowkekeyboard_confirm.setOnClickListener(AddWishActivity.this);
 
         //给popupwindow_showkeyboard设置监听
         popupwindow_showkeyboard.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -477,10 +468,22 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
      * 该函数用于调用系统的相机，并将拍好的照片传回来
      */
     private void toCamera() {
-        //启动相机
+
+        String path = Environment.getExternalStorageDirectory() + "/MyAccount/";
+        String fileName;
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        new DateFormat();
+        fileName= DateFormat.format("yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA))+".jpg";
+        photoUri =  Uri.fromFile(new File(path + fileName));
+        Log.i("wwwwwwww","使用相机前  uri="+photoUri);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // 参数常量为自定义的requestcode, 在取返回结果时有用
+        intent.putExtra(MediaStore.EXTRA_OUTPUT,photoUri);
         startActivityForResult(intent, PHOTO_REQUEST_CAREMA);
+
+
     }
 
     /**
@@ -492,6 +495,8 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.i("wwwwwwwwwwwwwww","onActivityResult requestCode="+requestCode+"  resultCode="+resultCode+"   data="+data);
         //去图库获取到的数据
         if(requestCode==PHOTO_REQUEST_GALLERY){
             if(resultCode==RESULT_OK){
@@ -505,6 +510,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
                     Log.i("wwwwwwww","调用图库  uri="+photoUri);
                     civ_addwishactivity_image.setImageURI(photoUri);
                     iv_addwishactivity_photo.setVisibility(View.INVISIBLE);
+
                 }else{
                     return;
                 }
@@ -513,41 +519,8 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
         //照相
         if(requestCode==PHOTO_REQUEST_CAREMA){
             if(resultCode==RESULT_OK){
-                if(data!=null){
-                    new DateFormat();
-                    String name= DateFormat.format("yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA))+".jpg";
-                    Bundle bundle = data.getExtras();
-                    //获取相机返回的数据，并转换为图片格式
-                    Bitmap bitmap = (Bitmap)bundle.get("data");
-                    FileOutputStream fileOutputStream = null;
-                    File file = new File(Environment.getExternalStorageDirectory()+"/MyAccount");
-                    file.mkdirs();
-                    String filename=file.getPath()+"/"+name;
-                    Log.i("wwwwwwwwwwww","filemane="+filename);
-                    try {
-                        fileOutputStream = new FileOutputStream(filename);
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }finally{
-                        try {
-                            if(fileOutputStream!=null)
-                                fileOutputStream.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    //显示图片
-                    photoUri = Uri.parse(filename);
-                    Log.i("wwwwwwww","相机  photoUri="+photoUri);
-                    //显示图片
-                    civ_addwishactivity_image.setImageURI(photoUri);
-                    iv_addwishactivity_photo.setVisibility(View.INVISIBLE);
-                    //civ_addwishactivity_image.setImageBitmap(bitmap);
-
-                }else {
-                    return;
-                }
+                civ_addwishactivity_image.setImageURI(photoUri);
+                iv_addwishactivity_photo.setVisibility(View.INVISIBLE);
             }
         }
     }

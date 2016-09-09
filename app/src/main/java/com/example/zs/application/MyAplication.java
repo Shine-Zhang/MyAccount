@@ -3,6 +3,8 @@ package com.example.zs.application;
 import android.app.Application;
 import android.content.SharedPreferences;
 
+import com.example.zs.bean.WishInfo;
+
 /**
  * Created by wuqi on 2016/9/4 0004.
  * 用于创建应用时的初始化一些供全局使用的参数
@@ -11,6 +13,7 @@ import android.content.SharedPreferences;
 public class MyAplication extends Application{
 
     public static SharedPreferences sp;
+    public static WishInfo wishInfo;
 
     /**
      * 应用创建时调用oncreate（）
@@ -69,5 +72,18 @@ public class MyAplication extends Application{
     public static int getIntFromSp(String name){
         return   sp.getInt(name,0);
     }
+
+
+    public static void setWishInfo(WishInfo info){
+        wishInfo = info;
+    }
+
+    public static WishInfo getWishInfo(){
+        return wishInfo;
+    }
+
+
+
+
 
 }

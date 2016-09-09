@@ -91,6 +91,8 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
         //notifyForDescendents:匹配规则,true:精确匹配  false:模糊匹配
         getContentResolver().registerContentObserver(uri, true, new ContentObserver(null) {
             public void onChange(boolean selfChange) {
+                Log.i("wwwwwww","registerContentObserver======"+selfChange );
+
                 //更新数据
                 allCompleteWishNumber = completeWishDAO.getAllCompleteWishNumber();
                 if(allCompleteWishNumber!=0) {

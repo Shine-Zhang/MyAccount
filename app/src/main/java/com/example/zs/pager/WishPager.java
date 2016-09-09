@@ -35,6 +35,7 @@ import com.example.zs.myaccount.AddWishActivity;
 import com.example.zs.myaccount.CompleteWishActivity;
 import com.example.zs.myaccount.R;
 import com.example.zs.utils.ScreenUtils;
+import com.example.zs.utils.ShowPopupWindowUtils;
 import com.example.zs.view.CircleImageView;
 import com.example.zs.view.RoundProgressBar;
 
@@ -62,7 +63,7 @@ public class WishPager extends BasePager {
 
     private MyOnGoingRecyclerViewAdapter myAdapter;
     private RecyclerView rcv_wishpager_wishes;
-    private PopupWindow popupwindow_showwishdetail;
+    //private PopupWindow popupwindow_showwishdetail;
     private PopupWindow popupwindow_showcompletedialog;
     private int allOnGoingWishNumber;
     private List<WishInfo> allOnGoingWishInfo;
@@ -71,6 +72,8 @@ public class WishPager extends BasePager {
     private OnGoingWishDAO onGoingWishDAO;
     private String totalWishFund;
     private CompleteWishDAO completeWishDAO;
+    private LinearLayout ll_showwish_ongoingwishes;
+    private LinearLayout ll_showwish_noongoingwishes;
 
 
     /**
@@ -79,10 +82,18 @@ public class WishPager extends BasePager {
      */
     public WishPager(Activity activity){
         super(activity);
-
     }
     @Override
     public View initView() {
+
+        //拿到传过来的数据
+        Intent intent = mActivity.getIntent();
+        boolean wishhaschange = intent.getBooleanExtra("wishhaschange", false);
+
+        /*if(wishhaschange){
+
+        }*/
+
         //获取数据库中愿望的数目
         //未完成愿望的数目和详细信息
         onGoingWishDAO = new OnGoingWishDAO(mActivity);
@@ -114,8 +125,8 @@ public class WishPager extends BasePager {
             //用户愿望条目不为0 ，显示愿望列表页
             //加载布局文件wishpager_showwish.xml
             view_wishpager = View.inflate(mActivity, R.layout.wishpager_showwish, null);
-            LinearLayout ll_showwish_ongoingwishes = (LinearLayout) view_wishpager.findViewById(R.id.ll_showwish_ongoingwishes);
-            LinearLayout ll_showwish_noongoingwishes = (LinearLayout) view_wishpager.findViewById(R.id.ll_showwish_noongoingwishes);
+            ll_showwish_ongoingwishes = (LinearLayout) view_wishpager.findViewById(R.id.ll_showwish_ongoingwishes);
+            ll_showwish_noongoingwishes = (LinearLayout) view_wishpager.findViewById(R.id.ll_showwish_noongoingwishes);
             TextView tv_showwish_wishfund = (TextView) view_wishpager.findViewById(R.id.tv_showwish_wishfund);
             //显示总的愿望基金
             tv_showwish_wishfund.setText(totalWishFund);
@@ -175,6 +186,7 @@ public class WishPager extends BasePager {
         //notifyForDescendents:匹配规则,true:精确匹配  false:模糊匹配
         mActivity.getContentResolver().registerContentObserver(uri, true, new ContentObserver(null) {
             public void onChange(boolean selfChange) {
+                Log.i("wwwwwwwwww","wishpager onchange ----"+selfChange);
                 //更新数据
                 allOnGoingWishNumber = onGoingWishDAO.getAllOnGoingWishNumber();
                 if(allOnGoingWishNumber!=0) {
@@ -186,6 +198,8 @@ public class WishPager extends BasePager {
 
         if(allOnGoingWishNumber!=0){
             allOnGoingWishInfo = onGoingWishDAO.getAllOnGoingWishInfo();
+            Log.i("wwwwwwww"," initdata() allOnGoingWishInfo="+allOnGoingWishInfo.toString());
+
 
             availableWishFund = Float.valueOf(totalWishFund);
             Log.i("wwwwwwww"," initdata() availableWishFund="+availableWishFund);
@@ -281,21 +295,23 @@ public class WishPager extends BasePager {
                         @Override
                         public void onClick(View view) {
                             //显示愿望详情
-                            showWishDetail(info,viewParent,adapterPosition);
+                            ShowPopupWindowUtils.showWishDetail(mActivity,info,viewParent,adapterPosition);
                         }
                     });
                     prl_itemwish_middle.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             //显示愿望详情
-                            showWishDetail(info,viewParent, adapterPosition);
+                            ShowPopupWindowUtils.showWishDetail(mActivity,info,viewParent,adapterPosition);
                         }
                     });
                     view_itemview_line.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             //显示愿望详情
-                            showWishDetail(info,viewParent, adapterPosition);
+                            //showWishDetail(info,viewParent, adapterPosition);
+                            ShowPopupWindowUtils.showWishDetail(mActivity,info,viewParent,adapterPosition);
+
                         }
                     });
                     iv_itemwish_delete.setOnClickListener(new View.OnClickListener() {
@@ -308,15 +324,19 @@ public class WishPager extends BasePager {
                     tv_itemwish_complete.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            //如何知道进度条。。。。
                             if(process==100){
-                                //从未完成愿望列表中删除此愿望，加入到已完成愿望的列表中
-                                onGoingWishDAO.deleteOnGoingWishInfo(wishid);
-                                myAdapter.notifyItemRemoved(adapterPosition);
-                                completeWishDAO.addCompleteWishInfo(compinfo);
-
                                 //进度条已满，弹出完成页面
                                 showCompleteDialog(view);
+
+                                //从未完成愿望列表中删除此愿望，加入到已完成愿望的列表中
+                                if(allOnGoingWishNumber==1){
+                                    ll_showwish_ongoingwishes.setVisibility(View.INVISIBLE);
+                                    ll_showwish_noongoingwishes.setVisibility(View.VISIBLE);
+                                }
+                                myAdapter.notifyDataSetChanged();
+                                onGoingWishDAO.deleteOnGoingWishInfo(wishid);
+                                completeWishDAO.addCompleteWishInfo(compinfo);
+
                                 if(popupwindow_showcompletedialog.isShowing()){
                                     //popupwindow显示时屏幕透明度变暗
                                     ScreenUtils.backgroundAlpha(mActivity,0.4f);
@@ -388,6 +408,7 @@ public class WishPager extends BasePager {
             @Override
             public void onClick(View view) {
                 //跳转到已完成愿望的页面
+                popupwindow_showcompletedialog.dismiss();
                 mActivity.startActivity(new Intent(mActivity,CompleteWishActivity.class));
                 popupwindow_showcompletedialog.dismiss();
             }
@@ -439,99 +460,6 @@ public class WishPager extends BasePager {
         onGoingWishDAO.deleteOnGoingWishInfo(wishid);
         //刷新
         myAdapter.notifyItemRemoved(position);
-    }
-
-    /**
-     * 显示愿望详情的页面
-     * @param info
-     * @param view
-     * @param adapterPosition
-     */
-    private void showWishDetail(final WishInfo info, View view, final int adapterPosition) {
-        //初始化popupwindow
-        popupwindow_showwishdetail = new PopupWindow();
-        //加载popupwindow的界面
-        View view_wishdetail = View.inflate(mActivity, R.layout.popupwindow_wishdetail, null);
-
-        //找控件
-        LinearLayout ll_popupwindowwishdetail_detailtop = (LinearLayout) view_wishdetail.findViewById(R.id.ll_popupwindowwishdetail_detailtop);
-        LinearLayout ll_popupwindowwishdetail_detailbottom = (LinearLayout) view_wishdetail.findViewById(R.id.ll_popupwindowwishdetail_detailbottom);
-        TextView tv_popupwindowwishdetail_title = (TextView) view_wishdetail.findViewById(R.id.tv_popupwindowwishdetail_title);
-        CircleImageView civ_popupwindowwishdetail_close = (CircleImageView) view_wishdetail.findViewById(R.id.civ_popupwindowwishdetail_close);
-        TextView tv_popupwindowwishdetail_wishtitle = (TextView) view_wishdetail.findViewById(R.id.tv_popupwindowwishdetail_wishtitle);
-        TextView tv_popupwindowwishdetail_progress = (TextView) view_wishdetail.findViewById(R.id.tv_popupwindowwishdetail_progress);
-        TextView tv_popupwindowwishdetail_wishdescription = (TextView) view_wishdetail.findViewById(R.id.tv_popupwindowwishdetail_wishdescription);
-        RoundProgressBar rpb_popupwindowwishdetail_progress = (RoundProgressBar) view_wishdetail.findViewById(R.id.rpb_popupwindowwishdetail_progress);
-        CircleImageView civ_popupwindowwishdetail_edit = (CircleImageView) view_wishdetail.findViewById(R.id.civ_popupwindowwishdetail_edit);
-        CircleImageView civ_popupwindowwishdetail_pen = (CircleImageView) view_wishdetail.findViewById(R.id.civ_popupwindowwishdetail_pen);
-        ImageView iv_popupwindowwishdetail_photo = (ImageView) view_wishdetail.findViewById(R.id.iv_popupwindowwishdetail_photo);
-
-        Log.i("wwwwwwwww","wishdetail():"+info.toString());
-        //愿望标题
-        tv_popupwindowwishdetail_wishtitle.setText(info.wishTitle);
-        //愿望备注的显示
-        if(info.wishDescription.isEmpty()){
-            tv_popupwindowwishdetail_wishdescription.setVisibility(View.INVISIBLE);
-        }else{
-            tv_popupwindowwishdetail_wishdescription.setText(info.wishDescription);
-        }
-        //显示编辑框
-        civ_popupwindowwishdetail_edit.setVisibility(View.VISIBLE);
-        civ_popupwindowwishdetail_pen.setVisibility(View.VISIBLE);
-        //进度条最大值为设置的愿望资金
-        rpb_popupwindowwishdetail_progress.setMax(info.process);
-        //愿望进度 textview和圆形进度条
-        tv_popupwindowwishdetail_progress.setText(info.process+"%");
-        Log.i("wwwwwwww","wishdetail setmax max = "+info.wishFund);
-        rpb_popupwindowwishdetail_progress.setMax(100);
-        rpb_popupwindowwishdetail_progress.setProgress(info.process);
-        rpb_popupwindowwishdetail_progress.getProgress();
-        //显示图片
-        if(info.wishphotoUri.isEmpty() || info.wishphotoUri.equals("0") || info.wishphotoUri.equals("null")){
-            iv_popupwindowwishdetail_photo.setVisibility(View.GONE);
-        }else {
-            iv_popupwindowwishdetail_photo.setVisibility(View.VISIBLE);
-            iv_popupwindowwishdetail_photo.setImageURI(Uri.parse(info.wishphotoUri));
-        }
-
-        //获得焦点
-        popupwindow_showwishdetail.setFocusable(true);
-        popupwindow_showwishdetail.setBackgroundDrawable(new BitmapDrawable());
-        //将popup_view部署到popupWindow上
-        popupwindow_showwishdetail.setContentView(view_wishdetail);
-        //设置popupWindow的宽高（必须要设置）
-        popupwindow_showwishdetail.setHeight(ScreenUtils.getScreenHeight(mActivity)- ScreenUtils.getStatusBarHeight(mActivity));
-        popupwindow_showwishdetail.setWidth(RelativeLayout.LayoutParams.MATCH_PARENT);
-        //设置popupwindow显示的位置
-        popupwindow_showwishdetail.showAtLocation(view, Gravity.BOTTOM,0,0);
-
-        //给关闭添加点击事件，关闭popupwindow
-        civ_popupwindowwishdetail_close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //关闭愿望详情页
-                popupwindow_showwishdetail.dismiss();
-            }
-        });
-
-        //点击编辑，携带数据跳转到添加愿望按钮
-        civ_popupwindowwishdetail_edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mActivity,AddWishActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("from",FROMEDIT);
-                bundle.putString("title", info.wishTitle);
-                bundle.putString("description", info.wishDescription);
-                bundle.putString("wishfund", info.wishFund);
-                bundle.putString("photoid", info.wishphotoUri);
-                bundle.putInt("wishid",info.wishid);
-                bundle.putInt("position",adapterPosition);
-                intent.putExtras(bundle);
-                mActivity.startActivity(intent);
-            }
-        });
-
     }
 
 
@@ -594,16 +522,6 @@ public class WishPager extends BasePager {
         View footer = LayoutInflater.from(mActivity).inflate(R.layout.item_wish_footer, view, false);
         myAdapter.setFooterView(footer);
     }
-
-    /**
-     * 该方法是将当前愿望位置移到愿望列表的最后一个
-     * 实质上是将当前位置的愿望从数据中删除，再将数据库里新增的愿望添加到最后一个愿望后面
-     * 为了达到移动的动画效果，姑且认为是将愿望移动。
-     * @param fromPos   需要移动的愿望的位置
-     */
-  /*  public static void editWishmoveRvItem(int fromPos){
-        myAdapter.notifyItemMoved(fromPos,allOnGoingWishNumber-1);
-    }*/
 
 }
 
@@ -814,4 +732,6 @@ abstract class OnItemTouchListener implements RecyclerView.OnItemTouchListener {
             }
         }
     }
+
+
 }
