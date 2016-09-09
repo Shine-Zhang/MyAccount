@@ -22,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.zs.application.MyAplication;
+import com.example.zs.view.CircleImageView;
+import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,7 @@ public class GuideActivity extends Activity {
     private List<ImageView> imageViewList;
     private Button bt_guideactivity_enter;
     private ImageButton ib_guideactivity_enter;
+    private CirclePageIndicator indicator_guide;
 
 
     @Override
@@ -90,6 +93,12 @@ public class GuideActivity extends Activity {
             enterguide.commit();*/
             MyAplication.saveBooleanToSp("enterguide", true);
         }
+
+
+        //运用ViewPagerIndicator实现页面指示器功能
+        indicator_guide = (CirclePageIndicator) findViewById(R.id.indicator_guide);
+        indicator_guide.setViewPager(vp_guide);
+
     }
 
     class MyGuidePageAdaper extends PagerAdapter{
@@ -129,4 +138,5 @@ public class GuideActivity extends Activity {
         finish();
 
     }
+
 }

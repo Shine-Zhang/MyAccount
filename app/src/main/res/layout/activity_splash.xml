@@ -11,10 +11,12 @@
     android:background="#FFFFFF">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:src="@drawable/ic_3_yellow"
         android:id="@+id/rl_splashactivity_bg"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/tv_splashactivity_date"
         ></ImageView>
 
     <TextView
@@ -25,13 +27,15 @@
         android:textColor="#0F00FF"
         android:textSize="12dp"
         >
+
+
     </TextView>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_splashactivity_date"
-        android:text="又是咸鱼翻身的一天"
+        android:text="用双手成就自己的梦想"
         android:textColor="#0F00FF"
         android:gravity="center"
         ></TextView>>
