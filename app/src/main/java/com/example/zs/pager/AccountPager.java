@@ -4,6 +4,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,7 +23,9 @@ import android.widget.Toast;
 
 import com.example.zs.bean.AccountChildItemBean;
 import com.example.zs.bean.AccountGroupItemBean;
+import com.example.zs.myaccount.MainActivity;
 import com.example.zs.myaccount.R;
+import com.example.zs.myaccount.ShowBudgetStateAcivity;
 import com.example.zs.utils.DensityUtil;
 import com.example.zs.view.PinnedHeaderExpandableListView;
 import com.example.zs.view.StickyLayout;
@@ -42,10 +45,6 @@ public class AccountPager extends BasePager implements
         PinnedHeaderExpandableListView.OnHeaderUpdateListener, StickyLayout.OnGiveUpTouchEventListener{
 
     @ViewInject(R.id.lv_accountpager_showaccounts)
-    private ListView mLvShowAccounts;
-
-    private  String[] testDataSource = new String[]{"徐凤年","邓太阿","轩辕青锋","南宫仆射","姜娰","洛阳","孙寅","苟有方","陈芝报",
-                                                        "楼荒","与新郎","宫半阙","李淳罡"};
 
     private PinnedHeaderExpandableListView expandableListView;
     private StickyLayout stickyLayout;
@@ -67,7 +66,29 @@ public class AccountPager extends BasePager implements
     @Override
     public View initView() {
         mrootView = View.inflate(mActivity,R.layout.account_pager_layout,null);
-        return null;
+        expandableListView = (PinnedHeaderExpandableListView) mrootView.findViewById(R.id.expandablelist);
+        stickyLayout = (StickyLayout) mrootView.findViewById(R.id.sticky_layout);
+        stickyLayout.setPinnedHeaderExpandableListView(expandableListView);
+
+        View footView = View.inflate(mActivity,R.layout.account_pager_footview,null);
+        expandableListView.initFootView(footView);
+
+        accountPagerBudgetSta = (RelativeLayout) mrootView.findViewById(R.id.rl_account_pager_budget_state);
+        accountPagerBudgetSta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mActivity, ShowBudgetStateAcivity.class);
+                float currentHight = DensityUtil.dip2px(mActivity,150);
+                intent.putExtra("currentHight",0.5f);
+                Log.i("haha","&&&&&&&&&&&&&&&&&&&&:"+currentHight);
+                mActivity.startActivity(intent);
+            }
+        });
+
+        childItems = new  ArrayList<ArrayList<AccountChildItemBean>> ();
+        groupItems = new ArrayList<>();
+        return mrootView;
+
     }
 
 
@@ -76,7 +97,15 @@ public class AccountPager extends BasePager implements
      */
     @Override
     public void initData() {
+        if(childItems!=null){
+            childItems.clear();
+        }
 
+        if(groupItems!=null){
+            groupItems.clear();
+        }
+
+        Log.i("haha","************进入initData***********");
         //手动写的测试数据
         AccountChildItemBean itemBean1 = new AccountChildItemBean(9,1,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1200",true);
         AccountChildItemBean itemBean2 = new AccountChildItemBean(9,1,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1300",false);
@@ -110,11 +139,26 @@ public class AccountPager extends BasePager implements
         AccountGroupItemBean groupItemBean1 = new AccountGroupItemBean(1,100000,200);
         AccountGroupItemBean groupItemBean2 = new AccountGroupItemBean(2,200000,300);
         AccountGroupItemBean groupItemBean3 = new AccountGroupItemBean(3,300000,400);
+
         groupItems.add(groupItemBean1);
         groupItems.add(groupItemBean2);
         groupItems.add(groupItemBean3);
-
+        Log.i("haha","************初始化数据完毕***********");
+        adapter = new MyexpandableListAdapter(mActivity);
         expandableListView.setAdapter(adapter);
+
+
+        // 展开所有group
+/*        for (int i = 0, count = expandableListView.getCount(); i < count; i++) {
+            Log.i("haha","************展开所有数据完毕***********"+i);
+            expandableListView.expandGroup(i);
+        }*/
+        expandableListView.expandGroup(0);
+        expandableListView.setOnHeaderUpdateListener(this);
+        expandableListView.setOnChildClickListener(this);
+        expandableListView.setOnGroupClickListener(this);
+        stickyLayout.setOnGiveUpTouchEventListener(this);
+
 
     }
 

@@ -3,7 +3,7 @@ package com.example.zs.bean;
 /**
  * Created by wuqi on 2016/9/7 0007.
  */
-public class payouContentInfo {
+public class PayouContentInfo {
     public int id;
     public int resourceID;
     public int year;
@@ -14,7 +14,7 @@ public class payouContentInfo {
     public   String remarks;
     public  String photo;
 
-    public payouContentInfo(int id, int resourceID, String category, int year, int mouth, int day, String money, String remarks, String photo ) {
+    public PayouContentInfo(int id, int resourceID, String category, int year, int mouth, int day, String money, String remarks, String photo ) {
         this.id = id;
         this.category = category;
         this.day = day;
