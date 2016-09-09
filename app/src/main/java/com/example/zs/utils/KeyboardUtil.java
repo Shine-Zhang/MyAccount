@@ -80,8 +80,10 @@ public class KeyboardUtil {
 			int start = ed.getSelectionStart();
 			//String tmp =Character.toString((char) primaryCode);
 			char tmp = (char) primaryCode;
-			if(tmp>='0'&&tmp<='9'&&!stringFilter(ed.getText().toString()+ tmp)) {
-				return;
+			if(tmp>='0'&&tmp<='9'||tmp=='.'){
+				if (!stringFilter(ed.getText().toString() + tmp)) {
+					return;
+				}
 			}
 				if (primaryCode == Keyboard.KEYCODE_CANCEL) {// 完成
 					hideKeyboard();
