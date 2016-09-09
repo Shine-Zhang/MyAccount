@@ -3,7 +3,6 @@ package com.example.zs.pager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -13,20 +12,23 @@ import android.os.Message;
 import android.util.Log;
 import android.app.Activity;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.zs.application.MyAplication;
 import com.example.zs.myaccount.AboutUsActivity;
 import com.example.zs.myaccount.FeedbackActivity;
-import com.example.zs.myaccount.InitializeActivity;
 import com.example.zs.myaccount.LoginActivity;
 import com.example.zs.myaccount.MainActivity;
 import com.example.zs.myaccount.MyBalanceActivity;
+import com.example.zs.myaccount.MyInfoActivity;
 import com.example.zs.myaccount.QuestionActivity;
 import com.example.zs.myaccount.R;
-import com.example.zs.myaccount.ShareAppActivity;
 import com.example.zs.utils.MyHttpUtils;
+import com.example.zs.view.CircleImageView;
 import com.example.zs.view.OwnerItem;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -71,6 +73,8 @@ public class OwnerPager extends BasePager {
     private int CURRENT_VERSION;
     private String downloadurl;
     private ProgressBar pb_ownerpager_downloadapk;
+    private RelativeLayout rl_ownerpager_unlogin;
+    private RelativeLayout rl_ownerpager_logined;
 
     public OwnerPager(Activity activity) {
         super(activity);
@@ -82,7 +86,8 @@ public class OwnerPager extends BasePager {
         //填充OwnerPager页面
         View OwnerPagerView = View.inflate(mActivity, R.layout.ownerpager_main,null);
         //找出OwnerPagerView中的所有控件
-        oi_ownerpager_login = (OwnerItem) OwnerPagerView.findViewById(R.id.oi_ownerpager_login);
+        rl_ownerpager_unlogin = (RelativeLayout) OwnerPagerView.findViewById(R.id.rl_ownerpager_unlogin);
+        rl_ownerpager_logined = (RelativeLayout) OwnerPagerView.findViewById(R.id.rl_ownerpager_logined);
         oi_ownerpager_balance = (OwnerItem) OwnerPagerView.findViewById(R.id.oi_ownerpager_balance);
         oi_ownerpager_share = (OwnerItem) OwnerPagerView.findViewById(R.id.oi_ownerpager_share);
         oi_ownerpager_feedback = (OwnerItem) OwnerPagerView.findViewById(R.id.oi_ownerpager_feedback);
@@ -92,9 +97,36 @@ public class OwnerPager extends BasePager {
         oi_ownerpager_aboutUs = (OwnerItem) OwnerPagerView.findViewById(R.id.oi_ownerpager_aboutUs);
 
         TextView tv_ownerpager_version = (TextView) OwnerPagerView.findViewById(R.id.tv_ownerpager_version);
+        TextView iv_ownerpager_username = (TextView) OwnerPagerView.findViewById(R.id.iv_ownerpager_username);
         pb_ownerpager_downloadapk = (ProgressBar) OwnerPagerView.findViewById(R.id.pb_ownerpager_downloadapk);
+        CircleImageView iv_ownerpager_unlogin = (CircleImageView) OwnerPagerView.findViewById(R.id.iv_ownerpager_unlogin);
+        CircleImageView iv_ownerpager_loginIcon = (CircleImageView) OwnerPagerView.findViewById(R.id.iv_ownerpager_loginIcon);
 
-        tv_ownerpager_version.setText("v"+getVersionName());
+        //接收由LoginActivity回传的数据
+        Intent intent = mActivity.getIntent();
+        String usernameStr = intent.getStringExtra("usernameStr");
+        Log.i(TAG,"usernameStr="+usernameStr);
+
+        String username = MyAplication.getCurUsernameFromSp("username");
+        Uri photoUri = Uri.parse(MyAplication.getCurUsernameFromSp("photoUri"));
+        Log.i(TAG,"photoUri ="+photoUri);
+        if(username!=null){
+            //当保存当前用户的username，不为空，直接用于回显
+            rl_ownerpager_logined.setVisibility(View.VISIBLE);
+            rl_ownerpager_unlogin.setVisibility(View.GONE);
+            iv_ownerpager_username.setText(username);
+            iv_ownerpager_loginIcon.setImageURI(photoUri);
+            initLogined();
+        }
+        if (usernameStr!=null){
+            //有用户名，说明登录成功，修改显示的布局
+            rl_ownerpager_logined.setVisibility(View.VISIBLE);
+            rl_ownerpager_unlogin.setVisibility(View.GONE);
+            //并将用户名保存到临时文件中，用于回显
+            MyAplication.saveCurUsernaemToSp("username",usernameStr);
+            iv_ownerpager_username.setText(usernameStr);
+            initLogined();
+        }
 
 
         initLogin();        //登录
@@ -112,14 +144,28 @@ public class OwnerPager extends BasePager {
     //初始化 登录 条目，添加点击事件
     private void initLogin() {
         Log.i(TAG,"initLogin coming!");
-        oi_ownerpager_login.setMyOwnerItemOnClickListener(new OwnerItem.MyOwnerItemOnClickListener() {
-            //为oi_ownerpager_balance条目设置自定义的监听，当该条目被点击测会调用onItemClick()，然后跳转到MyBalance页面
+        rl_ownerpager_unlogin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick() {
-                Log.i(TAG,"登录");
+            public void onClick(View view) {
+                Log.i(TAG,"去登录");
+                mActivity.startActivity(new Intent(mActivity, LoginActivity.class));
             }
         });
     }
+
+    //初始化 已登录 条目，添加点击事件
+    private void initLogined() {
+        Log.i(TAG,"initLogined coming!");
+        rl_ownerpager_logined.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG,"点击修改用户信息");
+                mActivity.startActivity(new Intent(mActivity,MyInfoActivity.class));
+            }
+        });
+    }
+
+
 
     //初始化 我的余额 条目，添加点击事件
     private void initMyBalance() {
@@ -449,7 +495,8 @@ public class OwnerPager extends BasePager {
     //递归删除文件及文件夹
     private static void delete(File file) {
         //如果是文件，则直接删除
-        if (file.isFile()) {
+        if (file.isFile() && !file.getName().equals("config.xml")) {
+            Log.i(TAG,"文件名："+file.getName());
             file.delete();
             return;
         }
@@ -465,11 +512,10 @@ public class OwnerPager extends BasePager {
             for (int i = 0; i < childFiles.length; i++) {
                 delete(childFiles[i]);
             }
-            //最后将文件夹删除
-            file.delete();
         }
     }
 
+    //ShareSDK的分享方法
     private void showShare() {
         ShareSDK.initSDK(mActivity);
         OnekeyShare oks = new OnekeyShare();
