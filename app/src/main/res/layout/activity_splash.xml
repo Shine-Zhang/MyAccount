@@ -4,11 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.zs.myaccount.SplashActivity"
-    android:background="#FFFFFF">
+    android:background="#FFF">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:src="@drawable/ic_splash_bg"
         android:background="@drawable/ic_splash_bg"
         android:id="@+id/rl_splashactivity_bg"
         />
@@ -17,22 +18,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tv_splashactivity_date"
-        android:layout_centerInParent="true"
-        android:textColor="#FFFF"
-        android:textSize="16dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        android:textColor="#FFF"
+        android:textSize="20sp"
         >
-
-
     </TextView>
 
-    <TextView
+    <!--<TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_splashactivity_date"
-        android:text="用双手成就自己的梦想"
-        android:textColor="#FFFF"
+        android:text="啦啦啦德玛西亚"
+        android:textColor="#FFF"
         android:gravity="center"
-        android:textSize="16dp"
-        ></TextView>>
+        android:textStyle="bold"
+        android:textSize="30sp"
+        ></TextView>-->
 
 </RelativeLayout>
