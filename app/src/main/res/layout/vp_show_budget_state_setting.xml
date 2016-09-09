@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="#EBEDF3"
+    android:layout_height="match_parent">
+    <RelativeLayout
+
+        android:background="#fff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageButton
+            android:layout_margin="10dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/ib_show_budeget_sta_setting_back"
+            android:background="@drawable/ic_arrow_default"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+        <TextView
+            android:layout_marginLeft="30dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/ib_show_budeget_sta_setting_back"
+            android:text="设置预算"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/bt_show_budget_sta_finish"
+            android:paddingLeft="20dp"
+            android:layout_alignParentRight="true"
+            android:background="@android:color/transparent"
+            android:text="完成"
+            android:textColor="#21BCEE"
+            android:textSize="20sp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rl_show_budget_sta_set_budget"
+        android:padding="10dp"
+        android:background="#fff"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:gravity="center_vertical"
+            android:text="月预算"
+            android:textSize="15sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/et_show_budeget_sta_setbudget"
+            android:paddingRight="5dp"
+            android:text="3000"
+
+            android:focusable="false"
+            android:clickable="false"
+            android:textColor="#21BCEE"
+            android:background="@drawable/abc_textfield_search_activated_mtrl_alpha"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_show_budeget_sta_set_deadline"
+        android:padding="10dp"
+        android:background="#fff"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:gravity="center_vertical"
+            android:text="结算日"
+            android:textSize="15sp"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/et_show_budeget_sta_set_deadline"
+            android:paddingRight="5dp"
+            android:text="1天"
+            android:focusable="false"
+            android:clickable="false"
+            android:textColor="#21BCEE"
+            android:background="@drawable/abc_textfield_search_activated_mtrl_alpha"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+           android:layout_centerVertical="true"
+            android:text="每月第"
+            android:layout_toLeftOf="@id/et_show_budeget_sta_set_deadline"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rv_show_budget_sta_recyclerview"
+        android:visibility="gone"
+        android:layout_centerInParent="true">
+    </android.support.v7.widget.RecyclerView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        <android.inputmethodservice.KeyboardView
+            android:id="@+id/keyboard_view"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:background="@android:color/transparent"
+            android:keyBackground="@drawable/btn_keyboard_key"
+            android:keyTextColor="#e6e6e6"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+
+
+</LinearLayout>

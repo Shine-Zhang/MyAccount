@@ -8,10 +8,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.example.zs.bean.PayoutContentInfo;
+import com.example.zs.bean.PayouContentInfo;
+import com.example.zs.pager.AccountPager;
 import com.example.zs.pager.BasePager;
 import com.example.zs.pager.OwnerPager;
 import com.example.zs.pager.WishPager;
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         rg_mainactivity_bottom.check(R.id.rb_mainactivity_detail);
 
         //将每个page页面加入pageList
-        //pageList.add(new 帅神页面);
+        pageList.add(new AccountPager(this));
         pageList.add(new WishPager(this));
         //pageList.add(new 57页面);
         //pageList.add(new ReportFormPager(this));
@@ -76,17 +78,17 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.rb_mainactivity_detail:
                         vp_mainactivity.setCurrentItem(0);
-                        //pageList.get(0).initData();
+                        pageList.get(0).initData();
                         break;
 
                     case R.id.rb_mainactivity_wish:
                         Log.i(tag,"00");
                         vp_mainactivity.setCurrentItem(1);
-                        pageList.get(0).initData();
+                        pageList.get(1).initData();
                         break;
                     case R.id.rb_mainactivity_list:
                         vp_mainactivity.setCurrentItem(2);
-                        pageList.get(0).initData();
+                        pageList.get(1).initData();
                         break;
 
                     case R.id.rb_mainactivity_mine:
@@ -97,7 +99,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //vp_mainactivity.setCurrentItem(0);
+        vp_mainactivity.setCurrentItem(0);
+        pageList.get(0).initData();
         Log.i(tag,"wennm");
     }
 

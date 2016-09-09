@@ -40,7 +40,6 @@ import android.widget.Toast;
 import com.example.zs.bean.WishInfo;
 import com.example.zs.dao.CompleteWishDAO;
 import com.example.zs.dao.OnGoingWishDao;
-import com.example.zs.dao.OnGoingWishDao;
 import com.example.zs.myaccount.AddWishActivity;
 import com.example.zs.myaccount.CompleteWishActivity;
 import com.example.zs.myaccount.MainActivity;

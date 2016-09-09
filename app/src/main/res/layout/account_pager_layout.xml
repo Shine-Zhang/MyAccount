@@ -1,0 +1,161 @@
+﻿<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="#fff"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <!--最上面的显示布局-->
+    <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+     <TextView
+         android:id="@+id/tv_account_pager_month_income_tip"
+         android:text="9月收入"
+         android:gravity="bottom"
+         android:textSize="12sp"
+         android:paddingLeft="20dp"
+         android:layout_width="wrap_content"
+         android:layout_height="93dp" />
+        <TextView
+            android:id="@+id/account_pager_total_income"
+            android:layout_below="@id/tv_account_pager_month_income_tip"
+            android:layout_width="wrap_content"
+            android:textSize="12sp"
+            android:text="0.00"
+            android:paddingLeft="20dp"
+            android:layout_height="20dp" />
+        <RelativeLayout
+            android:id="@+id/rl_account_pager_budget_state"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:layout_width="160dp"
+            android:background="@drawable/ic_cat_default"
+            android:layout_height="110dp">
+        <TextView
+            android:layout_marginTop="32dp"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:text="月预算"
+            android:textSize="12sp"
+            android:textColor="#fff"
+            android:id="@+id/tv_account_pager_tip"
+            android:layout_width="55dp"
+            android:layout_height="20dp" />
+            <TextView
+                android:gravity="center"
+                android:id="@+id/tv_account_pager_buget"
+                android:layout_below="@id/tv_account_pager_tip"
+                android:layout_centerHorizontal="true"
+                android:text="1000000"
+                android:textSize="12sp"
+                android:textColor="#fff"
+                android:layout_width="55dp"
+                android:layout_height="20dp" />
+            <View
+                android:layout_marginTop="19dp"
+                android:id="@+id/view_account_pager_v1"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/tv_account_pager_buget"
+                android:layout_width="1dp"
+                android:background="#e6e6e6"
+                android:layout_height="21dp"/>
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/rl_account_pager_tag"
+            android:layout_alignParentRight="true"
+            android:layout_width="65dp"
+            android:layout_height="93dp">
+            <ImageButton
+                android:id="@+id/ib_account_pager_camera"
+                android:layout_centerInParent="true"
+                android:layout_width="25dp"
+                android:background="@drawable/ic_camera_default"
+                android:layout_height="25dp" />
+            <TextView
+                android:id="@+id/tv_account_pager_month_cost_tip"
+                android:textSize="12sp"
+                android:paddingLeft="5dp"
+                android:layout_alignParentBottom="true"
+                android:text="9月支出"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+        <TextView
+            android:layout_below="@id/tv_account_pager_month_income_tip"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="18dp"
+            android:text="0.00"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <!--
+        中间的事件轴
+     android:groupIndicator="@null" 取消默认图片
+     android:childIndicatorLeft 设置孩子左边间距
+     android:dividerHeight 这个高度一定要设置，不然显示不出来分割线，估计默认为0 吧
+     android:childDivider="@drawable/child_bg" 这个直接引color,或者图片会导致整个孩子背景都为这个颜色
+    -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="500dp"
+            android:background="@drawable/ic_booklist_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp" />
+    <com.example.zs.view.StickyLayout
+		android:id="@+id/sticky_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+		android:layout_marginTop="0dp"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/sticky_header"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:gravity="center"
+            android:orientation="vertical" >
+            <View
+                android:layout_width="1dp"
+                android:background="#e6e6e6"
+                android:layout_height="match_parent"/>
+
+<!--            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_launcher" />-->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sticky_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <com.example.zs.view.PinnedHeaderExpandableListView
+                android:id="@+id/expandablelist"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:cacheColorHint="@null"
+                android:childDivider="@null"
+                android:childIndicatorLeft="0dp"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:groupIndicator="@null"
+                android:scrollbarAlwaysDrawHorizontalTrack="false" >
+            </com.example.zs.view.PinnedHeaderExpandableListView>
+        </LinearLayout>
+    </com.example.zs.view.StickyLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>
