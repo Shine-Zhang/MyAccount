@@ -29,7 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.zs.bean.WishInfo;
-import com.example.zs.dao.OnGoingWishDAO;
+import com.example.zs.dao.OnGoingWishDao;
 import com.example.zs.utils.ScreenUtils;
 import com.example.zs.view.CircleImageView;
 
@@ -64,7 +64,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
     private File photoStorageDir;
     private Uri photoUri;
     private int wishid;
-    private OnGoingWishDAO onGoingWishDAO;
+    private OnGoingWishDao onGoingWishDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +74,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
 
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        onGoingWishDAO = new OnGoingWishDAO(this);
+        onGoingWishDAO = new OnGoingWishDao(this);
 
         wishFundString = new StringBuffer();
 
