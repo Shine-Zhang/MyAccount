@@ -137,7 +137,7 @@ public class PayOutPage extends AddBasePage {
                         Log.i(TAG, "ACTION_MOVE" + Math.abs(endY - startY));
                         if (Math.abs(endY - startY) > 100) {
                             //动画隐藏掉键盘
-                           keyAnimationInVisble();
+                          // keyAnimationInVisble();
                         }
                         break;
                     case MotionEvent.ACTION_UP:
