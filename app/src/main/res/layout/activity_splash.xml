@@ -19,13 +19,19 @@
         android:layout_above="@+id/tv_splashactivity_date"
         ></ImageView>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_splash_bg"
+        />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tv_splashactivity_date"
         android:layout_centerInParent="true"
-        android:textColor="#0F00FF"
-        android:textSize="12dp"
+        android:textColor="#FFFF"
+        android:textSize="16dp"
         >
 
 
@@ -36,8 +42,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_splashactivity_date"
         android:text="用双手成就自己的梦想"
-        android:textColor="#0F00FF"
+        android:textColor="#FFFF"
         android:gravity="center"
+        android:textSize="16dp"
         ></TextView>>
 
 </RelativeLayout>
