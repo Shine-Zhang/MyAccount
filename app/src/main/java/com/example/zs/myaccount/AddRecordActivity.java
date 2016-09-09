@@ -30,7 +30,7 @@ import com.example.zs.addPage.IncomePage;
 import com.example.zs.addPage.PayOutPage;
 import com.example.zs.application.MyAplication;
 import com.example.zs.bean.IncomeContentInfo;
-import com.example.zs.bean.PayouContentInfo;
+import com.example.zs.bean.PayoutContentInfo;
 import com.example.zs.bean.UserAddCategoryInfo;
 import com.example.zs.dao.IncomeContentDAO;
 import com.example.zs.dao.PayOutContentDAO;
@@ -78,6 +78,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private String remarkContent="";
     private TextView tv_addRecordActivity_remarkShow;
     private ImageView iv_addRecordActivity_remarkIcon;
+    private TextView tv_addRecordActivity_jumpRemark;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,17 +125,20 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         vp_addRecordActivity_content = (ViewPager) findViewById(R.id.vp_addRecordActivity_content);
         //
         addBasePageInfos = new ArrayList<AddBasePage>();
-        //默认page为支出page
-        payOutPage = new PayOutPage(this);
-        incomePage = new IncomePage(this);
-        addBasePageInfos.add(payOutPage);
-        addBasePageInfos.add(incomePage);
-        //得到跳转前页面携带的数据
-        getInfoFromActivity();
-        //显示日期
-        setDate(isJumpActivity);
         payOutContentDAO = new PayOutContentDAO(this);
         incomeContentDAO = new IncomeContentDAO(this);
+        //得到跳转前页面携带的数据
+        getInfoFromActivity();
+        //默认page为支出page
+        payOutPage = new PayOutPage(this,isJumpActivity);
+        incomePage = new IncomePage(this,isJumpActivity);
+        //点亮对应的item
+        setPageItemEnable(isJumpActivity,getCategoryName);
+        addBasePageInfos.add(payOutPage);
+        addBasePageInfos.add(incomePage);
+
+        //显示日期
+        setDate(isJumpActivity);
         vp_addRecordActivity_content.setAdapter(new MyViewPagerAdapter());
 
         //获取表的id值
@@ -148,6 +152,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
             String money = intent.getStringExtra("money");
             if (money!=null){
                 isJumpActivity = true;
+                setDate(isJumpActivity);
                 isIncomePage = intent.getBooleanExtra("isIncome", false);
                 idFromOther = intent.getIntExtra("id", 0);
                 getResourceID= intent.getIntExtra("resourceID", R.drawable.ic_yiban_default);
@@ -157,13 +162,26 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 day = intent.getIntExtra("day", 0);
                 remarkContent = intent.getStringExtra("remarks");
                 if (remarkContent!=null){
-                    rl_addRecordActivity_photolayout.setVisibility(View.GONE);
-                    rl_addRecordActivity_remarklayout.setVisibility(View.VISIBLE);
-                    et_addCategory_markContent.setText(remarkContent);
+                    Log.i(TAG,"remarkContent="+remarkContent);
+                    iv_addRecordActivity_remarkIcon.setVisibility(View.GONE);
+                    tv_addRecordActivity_jumpRemark.setVisibility(View.VISIBLE);
+                    tv_addRecordActivity_jumpRemark.setText(remarkContent);
                 }
                 stringNumber = new StringBuffer(money);
                 photo = intent.getStringExtra("photo");
                 tv_addRecordActivity_inputNumber.setText(stringNumber);
+                btn_addRecordActivity_time.setText(month+"月"+day+"日");
+            }
+        }
+    }
+
+    private void setPageItemEnable(boolean flag,String getCategoryName) {
+        if (flag){
+            int resourceIDFromName =  payOutContentDAO.getResourceIDFromName(getCategoryName);
+            if (isIncomePage) {
+                //incomePage.setItemEnable(resourceIDFromName);
+            } else {
+                payOutPage.setItemEnable(resourceIDFromName,getCategoryName);
             }
         }
     }
@@ -181,6 +199,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         TextView viewById8 = (TextView) findViewById(R.id.tv_addCategory_8);
         TextView viewById9 = (TextView) findViewById(R.id.tv_addCategory_9);
         TextView viewById10 = (TextView) findViewById(R.id.tv_addCategory_10);
+        tv_addRecordActivity_jumpRemark = (TextView) findViewById(R.id.tv_addRecordActivity_jumpRemark);
         tv_addRecordActivity_remarkShow = (TextView) findViewById(R.id.tv_addRecordActivity_remarkShow);
         tv_addRecordActivity_inputNumber = (TextView) findViewById(R.id.tv_addRecordActivity_inputNumber);
         ImageView tv_addCategory_removeNumber = (ImageView) findViewById(R.id.tv_addCategory_removeNumber);
@@ -202,6 +221,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         viewById10.setOnClickListener(this);
         tv_addCategory_removeNumber.setOnClickListener(this);
         tv_addCategory_submit.setOnClickListener(this);
+        tv_addRecordActivity_jumpRemark.setOnClickListener(this);
         tv_addRecordActivity_remarkShow.setOnClickListener(this);
         iv_addRecordActivity_remarkIcon.setOnClickListener(this);
         btn_addCategory_markConfirm.setOnClickListener(this);
@@ -259,7 +279,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 tv_addRecordActivity_inputNumber.setText(stringNumber);
                 break;
             case R.id.tv_addCategory_submit:
-
+                Log.i(TAG,"sub");
                 //remarkContent = et_addCategory_markContent.getText().toString();
                 commitAndsave();
                 break;
@@ -276,15 +296,36 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 inputMethodManager.showSoftInput(et_addCategory_markContent, 0);
 
                 break;
+            case R.id.tv_addRecordActivity_jumpRemark:
+                //照相区隐藏，显示备注区
+                rl_addRecordActivity_photolayout.setVisibility(View.GONE);
+                rl_addRecordActivity_remarklayout.setVisibility(View.VISIBLE);
+                et_addCategory_markContent.setText(remarkContent);
+                //弹出键盘
+                inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+
+                //获取焦点。并弹出软键盘
+                //et_addCategory_markContent.setFocusable(true);
+                et_addCategory_markContent.requestFocus();
+                inputMethodManager.showSoftInput(et_addCategory_markContent, 0);
+
+                break;
             case R.id.btn_addCategory_markConfirm:
                 //照相区显示，备注区隐藏
+                remarkContent = et_addCategory_markContent.getText().toString();
                 rl_addRecordActivity_remarklayout.setVisibility(View.GONE);
                 rl_addRecordActivity_photolayout.setVisibility(View.VISIBLE);
                 Log.i(TAG,"submit");
-                iv_addRecordActivity_remarkIcon.setVisibility(View.GONE);
-                tv_addRecordActivity_remarkShow.setVisibility(View.VISIBLE);
-                remarkContent = et_addCategory_markContent.getText().toString();
-                tv_addRecordActivity_remarkShow.setText(remarkContent);
+                if (!remarkContent.isEmpty()){
+                    //照相区备注图标消失，显示备注的内容
+                    iv_addRecordActivity_remarkIcon.setVisibility(View.GONE);
+                    tv_addRecordActivity_jumpRemark.setVisibility(View.VISIBLE);
+                    tv_addRecordActivity_jumpRemark.setText(remarkContent);
+                }else {
+                    tv_addRecordActivity_jumpRemark.setVisibility(View.GONE);
+                    iv_addRecordActivity_remarkIcon.setVisibility(View.VISIBLE);
+                }
+
                 //隐藏键盘
                 inputMethodManager.hideSoftInputFromWindow(et_addCategory_markContent.getWindowToken(), 0);
                 break;
@@ -297,7 +338,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         }
     private void commitAndsave() {
         //保存数据数据库中
-        if (!isJumpActivity){
+        if (isJumpActivity){
             //传回数据给mainactivity
             Intent intent = new Intent();
             intent.putExtra("id",idFromOther);
@@ -312,12 +353,14 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 intent.putExtra("resourceID",payOutPage.selectResourceID);
                 intent.putExtra("categoryName",payOutPage.selectCategoryName);
                 setResult(555,intent);
+                finish();
             }else {
                 saveIncomeInfoToDB();
                 //传回数据给mainactivity
                 intent.putExtra("resourceID",incomePage.selectResourceID);
                 intent.putExtra("categoryName",incomePage.selectCategoryName);
                 setResult(444,intent);
+                finish();
             }
         }
     }
@@ -328,31 +371,40 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void saveIncomeInfoToDB() {
-        if (!stringNumber.toString().isEmpty()) {
-            IncomeContentInfo incomeContentInfo = new IncomeContentInfo(idNumberPay, payOutPage.selectResourceID, payOutPage.selectCategoryName,
-                    year, month, day, stringNumber.toString(), remarkContent, "this is photo");
-            idNumberIn++;
-            incomeContentDAO.addIncomeContentToDB(incomeContentInfo);
-            finish();
-        }else {
-            Toast.makeText(this,"输入金额不能为空",Toast.LENGTH_SHORT).show();
-        }
+        IncomeContentInfo incomeContentInfo = new IncomeContentInfo(idNumberPay, payOutPage.selectResourceID, payOutPage.selectCategoryName,
+                year, month, day, stringNumber.toString(), remarkContent, "this is photo");
+            if (!stringNumber.toString().isEmpty()) {
+                if (!isJumpActivity){
+                    idNumberIn++;
+                    incomeContentDAO.addIncomeContentToDB(incomeContentInfo);
+                    finish();
+                }else {
+                    incomeContentDAO.updataIncomeContentDB(idFromOther,incomeContentInfo);
+                }
+            }else {
+                Toast.makeText(this,"输入金额不能为空",Toast.LENGTH_SHORT).show();
+            }
     }
 
     /**
      * 保存数据到数据库中，供主页面显示
      */
     private void savePayoutInfoToDB() {
-        if (!stringNumber.toString().isEmpty()){
-            PayouContentInfo payouContentInfo = new PayouContentInfo(idNumberPay,payOutPage.selectResourceID, payOutPage.selectCategoryName,
-                    year, month, day, stringNumber.toString(), remarkContent, "this is photo");
-            idNumberPay++;
-            payOutContentDAO.addPayoutContentToDB(payouContentInfo);
-            finish();
-        }else {
-            Toast.makeText(this,"输入金额不能为空",Toast.LENGTH_SHORT).show();
-        }
-
+        Log.i(TAG,"savePayoutInfoToDB");
+        PayoutContentInfo payouContentInfo = new PayoutContentInfo(idNumberPay,payOutPage.selectResourceID, payOutPage.selectCategoryName,
+                year, month, day, stringNumber.toString(), remarkContent, "this is photo");
+                 if (!stringNumber.toString().isEmpty()){
+                     if (!isJumpActivity){
+                         idNumberPay++;
+                         payOutContentDAO.addPayoutContentToDB(payouContentInfo);
+                         finish();
+                     }else {
+                         //根据id保存数据
+                         payOutContentDAO.updataPayoutContentDB(idFromOther,payouContentInfo);
+                     }
+             }else {
+                     Toast.makeText(this, "输入金额不能为空", Toast.LENGTH_SHORT).show();
+                 }
     }
 
     @Override
@@ -377,10 +429,10 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
 
 
     public void setDate(boolean b) {
+        datePicker = new DatePicker(this);
         if (!b){
             //从+号加入此activity
             //得到当日的日期
-            datePicker = new DatePicker(this);
             year = datePicker.getYear();
             month = datePicker.getMonth();
             day = datePicker.getDayOfMonth();

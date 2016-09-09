@@ -63,7 +63,7 @@ public class WishPager extends BasePager {
 
     private MyOnGoingRecyclerViewAdapter myAdapter;
     private RecyclerView rcv_wishpager_wishes;
-    //private PopupWindow popupwindow_showwishdetail;
+    private PopupWindow popupwindow_showwishdetail;
     private PopupWindow popupwindow_showcompletedialog;
     private int allOnGoingWishNumber;
     private List<WishInfo> allOnGoingWishInfo;
@@ -82,6 +82,7 @@ public class WishPager extends BasePager {
      */
     public WishPager(Activity activity){
         super(activity);
+
     }
     @Override
     public View initView() {
@@ -732,6 +733,4 @@ abstract class OnItemTouchListener implements RecyclerView.OnItemTouchListener {
             }
         }
     }
-
-
 }

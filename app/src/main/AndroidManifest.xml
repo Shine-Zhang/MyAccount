@@ -31,8 +31,6 @@
         <activity android:name=".MyBalanceActivity" />
         <activity android:name=".ChoiceDateActivity" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".ShareAppActivity" />
-        <activity android:name=".InitializeActivity" />
         <activity android:name=".FeedbackActivity" />
         <activity android:name=".QuestionActivity" />
         <activity android:name=".AboutUsActivity" />
@@ -47,6 +45,9 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.avos.avoscloud.feedback.ThreadActivity" >
         </activity>
         <activity
             android:name="com.mob.tools.MobUIShell"
@@ -88,6 +89,10 @@
         <activity android:name=".AnswerActivity_08" />
         <activity android:name=".AnswerActivity_09" />
         <activity android:name=".AnswerActivity_10"></activity>
+        <activity android:name=".ShowBudgetStateAcivity"></activity>
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".MyInfoActivity" />
+        <activity android:name=".ModifyUsernameActivity"></activity>
     </application>
 
 </manifest>

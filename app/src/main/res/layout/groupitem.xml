@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <View
+        android:layout_gravity="center"
+        android:layout_width="1dp"
+        android:background="#E6E6E6"
+        android:layout_height="70dp"/>
+    <RelativeLayout
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:background="@android:color/transparent"
+        android:id="@+id/rl_account_pager_item_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <TextView
+        android:gravity="center"
+        android:textColor="#fff"
+        android:id="@+id/iv_account_pager_item_img_describe"
+        android:layout_centerInParent="true"
+        android:text="1号"
+        android:textSize="10sp"
+        android:background="@drawable/account_pager_group_icon"
+        android:layout_width="25dp"
+        android:layout_height="25dp" />
+
+
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/iv_account_pager_item_img_describe"
+            android:text="支出"
+            android:textSize="10sp"
+            android:id="@+id/tv_account_pager_word_income_describe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/tv_account_pager_word_income_describe"
+            android:text="16903.00"
+            android:textSize="10sp"
+            android:id="@+id/tv_account_pager_outcome_how_much"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/iv_account_pager_item_img_describe"
+            android:text="2000.00"
+            android:textSize="10sp"
+            android:id="@+id/tv_account_pager_income_how_much"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/tv_account_pager_income_how_much"
+            android:text="收入"
+            android:textSize="10sp"
+            android:id="@+id/tv_account_pager_word_outcome_describe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+    </FrameLayout>

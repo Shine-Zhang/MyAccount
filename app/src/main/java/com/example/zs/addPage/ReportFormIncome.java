@@ -28,32 +28,31 @@ import java.util.ArrayList;
 /**
  * Created by zhangxudong on 2016/9/8 0008.
  */
-public class ReportFormIncome extends AddBasePage{
+public class ReportFormIncome {
+    public Activity activity;
     //饼状图各部分代表的内容
     public String[] shouruDataType = new String[]{"工资","兼职","零花钱","红包","理财收益"};
     //各个收入类型代表的颜色
     public int[] shouruColors = new int[]{IncomeColors.salaryColor,IncomeColors.jianzhiColor,IncomeColors.linhuaqianColor,
-                                            IncomeColors.hongbaoColor,IncomeColors.licaiColor};
+            IncomeColors.hongbaoColor,IncomeColors.licaiColor};
     public  ArrayList<Entry> shouruValueList;
     public  ArrayList<IncomeContentInfo> allIncomeContentFromDB;
     public  int allShouRuNumber;
     public  int allShouRuAccount;
-    public  float gongzhiPercent;
-    public  float jianzhiPercent;
-    public  float linghuaqianPercent;
-    public  float hongbaoPercent;
-    public  float licaiPercent;
     public PieChart pieChart;
+    public int[] shourLeixing;
+    private IncomeNumAndAccount incomeNumAndAccount;
 
     public ReportFormIncome(Activity activity) {
-        super(activity);
+        this.activity = activity;
+        initView();
         initData();
+        initChart();
     }
 
-    @Override
+
     public View initView() {
         pieChart = new PieChart(activity);
-        initChart();
         return pieChart;
     }
 
@@ -61,7 +60,7 @@ public class ReportFormIncome extends AddBasePage{
         //设置饼状图是否接受点击事件，默认为true
         pieChart.setTouchEnabled(true);
         //设置图饼是否显示百分比
-        pieChart.setUsePercentValues(true);
+        pieChart.setUsePercentValues(false);
         //是否显示圆盘中间文字
         pieChart.setDrawCenterText(true);
         //设置圆盘中间的颜色
@@ -103,7 +102,7 @@ public class ReportFormIncome extends AddBasePage{
         pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-                pieChart.setDescription(shouruDataType[e.getXIndex()] + " " + (int) e.getVal() + "元");
+                //pieChart.setDescription(shouruDataType[e.getXIndex()] + " " + (int) e.getVal() + "元");
                 Log.i("e.getXIndex()", e.getXIndex() + "");
             }
 
@@ -116,16 +115,54 @@ public class ReportFormIncome extends AddBasePage{
 
     public void bindData(int count){
         ArrayList<String> shouruNameList = new ArrayList<String>();
-        for (int i = 0; i < count; i++) {
-            shouruNameList.add(shouruDataType[i]);
+        for (int i = 0; i < 5; i++) {
+            if(shourLeixing[i] == 1){
+                switch (shouruDataType[i]){
+                    case "工资":
+                        shouruNameList.add(shouruDataType[i]);
+                        break;
+                    case "兼职":
+                        shouruNameList.add(shouruDataType[i]);
+                        break;
+                    case "零花钱":
+                        shouruNameList.add(shouruDataType[i]);
+                        break;
+                    case "红包":
+                        shouruNameList.add(shouruDataType[i]);
+                        break;
+                    case "理财收益":
+                        shouruNameList.add(shouruDataType[i]);
+                        break;
+                }
+            }else {
+                continue;
+            }
         }
 
         shouruValueList = new ArrayList<Entry>();
-        shouruValueList.add(new Entry(gongzhiPercent * 100,0));
-        shouruValueList.add(new Entry(jianzhiPercent * 100,1));
-        shouruValueList.add(new Entry(linghuaqianPercent * 100,2));
-        shouruValueList.add(new Entry(hongbaoPercent * 100,3));
-        shouruValueList.add(new Entry(licaiPercent * 100,4));
+        for(int i = 0;i < 5; i ++){
+            if(shourLeixing[i] == 1){
+                switch (shouruDataType[i]){
+                    case "工资":
+                        shouruValueList.add(new Entry(incomeNumAndAccount.salaryAccount,0));
+                        break;
+                    case "兼职":
+                        shouruValueList.add(new Entry(incomeNumAndAccount.jianzhiAccount,1));
+                        break;
+                    case "零花钱":
+                        shouruValueList.add(new Entry(incomeNumAndAccount.lihuaqianAccount,2));
+                        break;
+                    case "红包":
+                        shouruValueList.add(new Entry(incomeNumAndAccount.hongbaoAccount,3));
+                        break;
+                    case "理财收益":
+                        shouruValueList.add(new Entry(incomeNumAndAccount.licaiAccount,4));
+                        break;
+                }
+            }else {
+                continue;
+            }
+        }
 
         //显示在比例图上
         PieDataSet dataSet = new PieDataSet(shouruValueList, "");
@@ -138,11 +175,30 @@ public class ReportFormIncome extends AddBasePage{
 
         //设置各个区域的颜色
         ArrayList<Integer> shouruColor = new ArrayList<>();
-        shouruColor.add(shouruColors[0]);
-        shouruColor.add(shouruColors[1]);
-        shouruColor.add(shouruColors[2]);
-        shouruColor.add(shouruColors[3]);
-        shouruColor.add(shouruColors[4]);
+        for(int i = 0;i < 5; i ++){
+            if(shourLeixing[i] == 1){
+                switch (shouruDataType[i]){
+                    case "工资":
+                        shouruColor.add(shouruColors[0]);
+                        break;
+                    case "兼职":
+                        shouruColor.add(shouruColors[1]);
+                        break;
+                    case "零花钱":
+                        shouruColor.add(shouruColors[2]);
+                        break;
+                    case "红包":
+                        shouruColor.add(shouruColors[3]);
+                        break;
+                    case "理财收益":
+                        shouruColor.add(shouruColors[4]);
+                        break;
+                }
+            }else {
+                continue;
+            }
+        }
+
         dataSet.setColors(shouruColor);
 
         PieData pieData = new PieData(shouruNameList, dataSet);
@@ -156,9 +212,9 @@ public class ReportFormIncome extends AddBasePage{
         pieData.setValueTypeface(Typeface.DEFAULT);
         pieChart.setData(pieData);
     }
-    
+
     private void initData() {
-        IncomeNumAndAccount incomeNumAndAccount = new IncomeNumAndAccount();
+        incomeNumAndAccount = new IncomeNumAndAccount();
         IncomeContentDAO incomeContentDAO = new IncomeContentDAO(activity);
         //从数据库获取收入数据
         allIncomeContentFromDB = incomeContentDAO.getAllIncomeContentFromDB();
@@ -195,16 +251,9 @@ public class ReportFormIncome extends AddBasePage{
                 + incomeNumAndAccount.lihuaqianAccount + incomeNumAndAccount.jianzhiAccount
                 + incomeNumAndAccount.salaryAccount;
 
-        //工资对应的收入
-        gongzhiPercent = incomeNumAndAccount.salaryAccount / allShouRuAccount;
-        //兼职
-        jianzhiPercent = incomeNumAndAccount.jianzhiAccount / allShouRuAccount;
-        //零花钱
-        linghuaqianPercent = incomeNumAndAccount.linhuaqianNumber / allShouRuAccount;
-        //红包
-        hongbaoPercent = incomeNumAndAccount.hongbaoAccount / allShouRuAccount;
-        //理财收益
-        licaiPercent = incomeNumAndAccount.licaiAccount / allShouRuAccount;
+
+        shourLeixing = new int[]{incomeNumAndAccount.salaryNumber, incomeNumAndAccount.jianzhiNumber,
+                incomeNumAndAccount.lihuaqianAccount, incomeNumAndAccount.hongbaoNumber, incomeNumAndAccount.licaiNumber};
     }
 
     private void customizeLegend() {
@@ -243,13 +292,13 @@ class IncomeNumAndAccount{
     //零花钱
     int linhuaqianNumber = 0;
     int lihuaqianAccount = 0;
-    
+
     //红包
     int hongbaoNumber = 0;
     int hongbaoAccount = 0;
-    
+
     //理财收益
     int licaiNumber = 0;
     int licaiAccount = 0;
-    
+
 }

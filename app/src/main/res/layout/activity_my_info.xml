@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.zs.myaccount.MyInfoActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#FFF"
+        android:paddingLeft="20dp">
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="fitCenter"
+            android:id="@+id/iv_myinfoactivity_back"
+            android:layout_centerVertical="true"
+            android:background="@drawable/ic_arrow_default"
+            android:onClick="back"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/iv_myinfoactivity_back"
+            android:layout_centerVertical="true"
+            android:text="我的个人资料"
+            android:textSize="20sp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:background="#FFF"
+        android:onClick="modTouxiang">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="头像"
+            android:textSize="16dp"
+            android:layout_marginLeft="20dp"/>
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:id="@+id/iv_myinfoactivity_arrow"
+            android:src="@drawable/ic_item_arrow"
+            android:layout_marginRight="15dip"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true">
+            <com.example.zs.view.CircleImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/civ_myinfoactivity_img"
+                android:layout_marginRight="35dip"
+                android:layout_centerVertical="true"/>
+            <com.example.zs.view.CircleImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/iv_myinfoactivity_touxiang"
+                android:src="@drawable/ic_touxiang1_yellow"
+                android:layout_marginRight="35dip"
+                android:layout_centerVertical="true"/>
+        </FrameLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="#FFF"
+        android:onClick="modUsername">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="昵称"
+            android:textSize="16dp"
+            android:layout_marginLeft="20dp"/>
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:id="@+id/iv_myinfoactivity_arrow2"
+            android:src="@drawable/ic_item_arrow"
+            android:layout_marginRight="15dip"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+        <TextView
+            android:id="@+id/tv_myinfoactivity_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="昵称"
+            android:textSize="16dp"
+            android:textColor="#20C9F5"
+            android:layout_toLeftOf="@id/iv_myinfoactivity_arrow2"
+            android:layout_marginRight="15dip"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="40dp"
+        android:background="#FFF"
+        android:text="退出登录"
+        android:textSize="16dp"
+        android:textColor="#20C9F5"
+        android:onClick="exit"/>
+
+
+
+
+</LinearLayout>

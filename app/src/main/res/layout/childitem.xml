@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:background="@android:color/transparent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+        <View
+            android:layout_gravity="center"
+            android:layout_width="1dp"
+            android:background="#E6E6E6"
+            android:layout_height="match_parent"/>
+    <RelativeLayout
+        android:background="@android:color/transparent"
+        android:id="@+id/rl_account_pager_item_layout"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageButton
+            android:visibility="invisible"
+            android:id="@+id/ib_account_pager_item_edit"
+            android:layout_centerInParent="true"
+            android:background="@drawable/ic_pen2_default"
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
+
+        <ImageButton
+            android:visibility="invisible"
+            android:id="@+id/ib_account_pager_item_delete"
+            android:layout_centerInParent="true"
+            android:background="@drawable/ic_chushihua_default"
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
+    <ImageButton
+        android:id="@+id/ib_account_pager_item_img_describe"
+        android:layout_centerInParent="true"
+        android:background="@drawable/ic_yiban_yellow"
+        android:layout_width="25dp"
+        android:layout_height="25dp" />
+
+        <ImageView
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@id/ib_account_pager_item_img_describe"
+            android:id="@+id/iv_account_pager_item_photo"
+            android:src="@drawable/ic_yue_default"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+        <TextView
+            android:paddingLeft="5dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/ib_account_pager_item_img_describe"
+            android:text="电影"
+            android:textSize="10sp"
+            android:id="@+id/tv_account_pager_word_describe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_marginRight="5dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/tv_account_pager_word_describe"
+            android:text="16903.00"
+            android:textSize="10sp"
+            android:id="@+id/tv_account_pager_how_much"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    </FrameLayout>

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.zs.bean.payouContentInfo;
+import com.example.zs.bean.PayoutContentInfo;
 import com.example.zs.dataBase.PayOutContentDB;
 
 import java.util.ArrayList;
@@ -27,8 +27,8 @@ public class PayOutContentDAO {
      * 以集合形式返回表格中所有数据
      * @return
      */
-    public ArrayList<payouContentInfo> getAllPayoutContentFromDB(){
-        ArrayList<payouContentInfo> payouContentInfos = new ArrayList<>();
+    public ArrayList<PayoutContentInfo> getAllPayoutContentFromDB(){
+        ArrayList<PayoutContentInfo> payouContentInfos = new ArrayList<>();
         Cursor cursor = db.rawQuery("select * from payouContent", null);
         while (cursor.moveToNext()){
             int anInt = cursor.getInt(0);
@@ -40,7 +40,7 @@ public class PayOutContentDAO {
             String string2 = cursor.getString(6);
             String string3 = cursor.getString(7);
             String string4 = cursor.getString(8);
-            payouContentInfo payouContentInfo = new payouContentInfo(anInt,anInt1, string1, anInt2, anInt3, anInt4, string2, string3, string4);
+            PayoutContentInfo payouContentInfo = new PayoutContentInfo(anInt,anInt1, string1, anInt2, anInt3, anInt4, string2, string3, string4);
             payouContentInfos.add(payouContentInfo);
         }
         return payouContentInfos;
@@ -50,7 +50,7 @@ public class PayOutContentDAO {
      * 修改时，除id外，其它全部更新下
      * @param payouContentInfo 传入表格当行所有信息
      */
-    public void updataPayoutContentDB(int id,payouContentInfo payouContentInfo){
+    public void updataPayoutContentDB(int id,PayoutContentInfo payouContentInfo){
         ContentValues contentValues = new ContentValues();
         contentValues.put("resourceID",payouContentInfo.resourceID);
         contentValues.put("year",payouContentInfo.year);
@@ -68,7 +68,7 @@ public class PayOutContentDAO {
      * 单个插入到数据库中
      * @param payouContentInfo
      */
-    public void addPayoutContentToDB(payouContentInfo payouContentInfo){
+    public void addPayoutContentToDB(PayoutContentInfo payouContentInfo){
         ContentValues contentValues = new ContentValues();
         contentValues.put("id",payouContentInfo.id);
         contentValues.put("resourceID",payouContentInfo.resourceID);
@@ -95,5 +95,15 @@ public class PayOutContentDAO {
         }
         return sum;
     }
-
+    /**
+     * 跳转来的页面携带类别，通过类别找到对应的resourceID
+     * @param name
+     * @return
+     */
+    public int getResourceIDFromName(String name){
+        Cursor cursor = db.rawQuery("select resourceID from payouContent where category=?", new String[]{name});
+        boolean b = cursor.moveToNext();
+        int resourceID = cursor.getInt(0);
+        return resourceID;
+    }
 }
