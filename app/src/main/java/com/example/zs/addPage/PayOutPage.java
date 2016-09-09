@@ -43,11 +43,11 @@ public class PayOutPage extends AddBasePage {
     private CircleImageView previous;
     private CircleImageView firstCircle;
     private boolean isFirstOnclick;
+    private int jumpItemEnable;
 
-    public PayOutPage(Activity activity) {
-        super(activity);
+    public PayOutPage(Activity activity, boolean isJump) {
+        super(activity, isJump);
     }
-
     @Override
     public View initView() {
         //初始化父类构造器时多态执行子类的执行initView（）时tag还为初始化
@@ -82,13 +82,20 @@ public class PayOutPage extends AddBasePage {
                 } else {
                     //选中背景色变化
                     CircleImageView iv = (CircleImageView) view.findViewById(R.id.cv_addPage_recordIcon);
-                    if (previous != null) {
-                        previous.setEnabled(true);
-                    } else {
-                        Log.i(TAG, "first--");
-                        isFirstOnclick = true;
-                        firstCircle.setEnabled(true);
-                        //myGridViewAdapter.notifyDataSetChanged();
+
+
+                        if (previous != null) {
+
+                            Log.i(TAG,"previous="+previous.toString());
+                            previous.setEnabled(true);
+                         } else {
+                            Log.i(TAG, "first--");
+                            isFirstOnclick = true;
+                            firstCircle.setEnabled(true);
+                            Log.i(TAG,"firstCircle="+firstCircle.toString());
+                            Log.i(TAG,"current iv="+iv.toString());
+
+                            //myGridViewAdapter.notifyDataSetChanged();
                     }
                     iv.setEnabled(false);
                     previous = iv;
@@ -99,6 +106,18 @@ public class PayOutPage extends AddBasePage {
             }
         });
         return gridView;
+    }
+    public void setItemEnable(int resID,String name){
+        isJump = true;
+        //通过categoryName，在数据库中查找对应的resourceID
+        for (int i=0;i<payoutCategoryToDB.size();i++){
+            if (payoutCategoryToDB.get(i).getResourceID()==resID){
+                if (payoutCategoryToDB.get(i).getCategoryName().equals(name)){
+                    jumpItemEnable = i;
+                    return;
+                }
+            }
+        }
     }
 
     float startY;
@@ -118,7 +137,7 @@ public class PayOutPage extends AddBasePage {
                         Log.i(TAG, "ACTION_MOVE" + Math.abs(endY - startY));
                         if (Math.abs(endY - startY) > 100) {
                             //动画隐藏掉键盘
-                            //keyAnimationInVisble();
+                          // keyAnimationInVisble();
                         }
                         break;
                     case MotionEvent.ACTION_UP:
@@ -137,6 +156,7 @@ public class PayOutPage extends AddBasePage {
         int height = addRecordActivity.ll_addRecordActivity_keyboard.getMeasuredHeight();
         Log.i(TAG, x + "-" + y + "-" + height + "-");
         TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 0, height);
+        // TranslateAnimation translateAnimation = new TranslateAnimation(0, y, , height);
         translateAnimation.setDuration(1000);
         translateAnimation.setFillAfter(true);
         addRecordActivity.ll_addRecordActivity_downRegion.startAnimation(translateAnimation);
@@ -179,6 +199,7 @@ public class PayOutPage extends AddBasePage {
 
 
     class MyGridViewAdapter extends BaseAdapter {
+        CircleImageView cv = null;
         @Override
         public int getCount() {
             return payoutCategoryToDB.size() + 1;
@@ -201,25 +222,31 @@ public class PayOutPage extends AddBasePage {
             View inflate = View.inflate(activity, R.layout.page_addrecord_detail, null);
             CircleImageView iv_addPage_catagoryIcon = (CircleImageView) inflate.findViewById(R.id.cv_addPage_recordIcon);
             TextView tv_addPage_catagoryContent = (TextView) inflate.findViewById(R.id.tv_addPage_catagoryContent);
+
             if (i < payoutCategoryToDB.size()) {
-               /* if (i== cuurentItem){
-                    iv_addPage_catagoryIcon.setEnabled(false);
-                }
-                if (i==lastItem){
-                    iv_addPage_catagoryIcon.setEnabled(true);
-                }*/
-                if (i == 0) {
-                    firstCircle = iv_addPage_catagoryIcon;
-                    //刷新就会变化，所有不适合在适配器中设置enable
+                if (i==0){
+                    //第一个item设置false
                     if (!isFirstOnclick) {
                         Log.i(TAG, "---");
                         iv_addPage_catagoryIcon.setEnabled(false);
                     }
+                }
+                //记录第一个item之前的CircleImageView实例
+                if (i == 1&&!isJump) {
+                    firstCircle = cv;
+                    Log.i(TAG,firstCircle.toString());
+                    //刷新就会变化，所有不适合在适配器中设置enable
                     // iv_addPage_catagoryIcon.setEnabled(false);
+                }else if (!isJump){
+                    cv = iv_addPage_catagoryIcon;
+                }
+                //从明细，报表跳转过来点亮对应的item
+                if (isJump&&jumpItemEnable ==i){
+                    iv_addPage_catagoryIcon.setEnabled(false);
+                     previous = iv_addPage_catagoryIcon;
                 }
                 iv_addPage_catagoryIcon.setImageResource(payoutCategoryToDB.get(i).getResourceID());
                 tv_addPage_catagoryContent.setText(payoutCategoryToDB.get(i).getCategoryName());
-
             } else
                 //最后一个为默认item，作用为跳转到addCategory页面
                 if (i == payoutCategoryToDB.size()) {
