@@ -16,6 +16,7 @@ import com.example.zs.bean.PayoutContentInfo;
 import com.example.zs.pager.AccountPager;
 import com.example.zs.pager.BasePager;
 import com.example.zs.pager.OwnerPager;
+import com.example.zs.pager.ReportFormPager;
 import com.example.zs.pager.WishPager;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         pageList.add(new AccountPager(this));
         pageList.add(new WishPager(this));
         //pageList.add(new 57页面);
-        //pageList.add(new ReportFormPager(this));
+        pageList.add(new ReportFormPager(this));
         pageList.add(new OwnerPager(this));
 
         //新建Adapter用于每个RadioButton点击显示不同页面

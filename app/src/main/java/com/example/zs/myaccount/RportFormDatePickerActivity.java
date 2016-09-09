@@ -143,6 +143,7 @@ public class RportFormDatePickerActivity extends AppCompatActivity {
                                 edit.commit();
                             }
                         }else {
+                            dp_reportformdate_end.updateDate(currentYear,2,28);
                             edit.putInt("reportformTime_fromyear",touch_startyear);
                             edit.putInt("reportformTime_frommonth",touch_startmonth);
                             edit.putInt("reportformTime_fromday",touch_startday);
@@ -183,7 +184,7 @@ public class RportFormDatePickerActivity extends AppCompatActivity {
 
     //返回
     public void reportFormDataBack(View v){
-        startActivity(new Intent(RportFormDatePickerActivity.this,MainActivity.class));
+        //startActivity(new Intent(RportFormDatePickerActivity.this,MainActivity.class));
         finish();
     }
 

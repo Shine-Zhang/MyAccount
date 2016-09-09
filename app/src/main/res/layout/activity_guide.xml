@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.zs.myaccount.GuideActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
     <android.support.v4.view.ViewPager
@@ -21,6 +22,17 @@
         android:id="@+id/ib_guideactivity_enter"
         android:background="@android:color/transparent">
     </ImageButton>
+
+    <com.viewpagerindicator.CirclePageIndicator
+        android:id="@+id/indicator_guide"
+        android:padding="10dip"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_alignParentBottom="true"
+        app:radius="4dp"
+        app:fillColor="#00FFFF"
+        app:pageColor="#81F7F3"
+        />
 
 
 </RelativeLayout>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.zs.myaccount.MyInfoActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#FFF"
+        android:paddingLeft="20dp">
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="fitCenter"
+            android:id="@+id/iv_myinfoactivity_back"
+            android:layout_centerVertical="true"
+            android:background="@drawable/ic_arrow_default"
+            android:onClick="back"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/iv_myinfoactivity_back"
+            android:layout_centerVertical="true"
+            android:text="修改昵称"
+            android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/tv_modifyusernameactivity_complete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="完成"
+            android:textColor="#20C9F5"
+            android:textSize="18dp"
+            android:onClick="complete"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/et_modifyusernameactivity_username"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#FFF"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="20dp"
+        android:text="昵称"
+        android:textColor="#20C9F5"/>
+
+</LinearLayout>
