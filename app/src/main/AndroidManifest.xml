@@ -88,6 +88,7 @@
         <activity android:name=".AnswerActivity_08" />
         <activity android:name=".AnswerActivity_09" />
         <activity android:name=".AnswerActivity_10"></activity>
+    <activity android:name=".ShowBudgetStateAcivity"></activity>
     </application>
 
 </manifest>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+<ImageView
+    android:layout_centerHorizontal="true"
+    android:id="@+id/account_pager_item_foot"
+    android:layout_width="wrap_content"
+    android:src="@drawable/ic_tail_default"
+    android:layout_height="80dp" />
+
+    <TextView
+        android:layout_marginTop="5dp"
+        android:foregroundGravity="center"
+        android:id="@+id/account_pager_record_start_time"
+        android:gravity="center_horizontal"
+        android:layout_below="@id/account_pager_item_foot"
+        android:textSize="10sp"
+        android:text="2016年9月05日"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_marginTop="3dp"
+        android:gravity="center_horizontal"
+        android:layout_below="@id/account_pager_record_start_time"
+        android:textSize="10sp"
+        android:text="开启了愿望记账之旅"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</RelativeLayout>
