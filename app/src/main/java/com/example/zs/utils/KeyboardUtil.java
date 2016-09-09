@@ -160,7 +160,7 @@ public class KeyboardUtil {
     public void hideKeyboard() {
         int visibility = keyboardView.getVisibility();
         if (visibility == View.VISIBLE) {
-            keyboardView.setVisibility(View.INVISIBLE);
+            keyboardView.setVisibility(View.GONE);
         }
     }
     

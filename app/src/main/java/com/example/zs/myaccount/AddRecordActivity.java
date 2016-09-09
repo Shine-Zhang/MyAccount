@@ -34,6 +34,7 @@ import com.example.zs.bean.PayoutContentInfo;
 import com.example.zs.bean.UserAddCategoryInfo;
 import com.example.zs.dao.IncomeContentDAO;
 import com.example.zs.dao.PayOutContentDAO;
+import com.example.zs.utils.KeyboardUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -59,7 +60,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private DatePicker datePicker;
     private Button btn_addRecordActivity_time;
     private StringBuffer stringNumber;
-    private TextView tv_addRecordActivity_inputNumber;
+    private EditText tv_addRecordActivity_inputNumber;
     private boolean isIncomePage;
     private PayOutContentDAO payOutContentDAO;
     public LinearLayout ll_addRecordActivity_downRegion;
@@ -80,12 +81,15 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private ImageView iv_addRecordActivity_remarkIcon;
     private TextView tv_addRecordActivity_jumpRemark;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_record);
         //隐藏标题栏
         getSupportActionBar().hide();
+
+
         RadioGroup rg_addRecordActivity_singleChoice = (RadioGroup) findViewById(R.id.rg_addRecordActivity_singleChoice);
         btn_addRecordActivity_time = (Button) findViewById(R.id.btn_addRecordActivity_time);
         ImageView iv_addRecordActivity_finish = (ImageView) findViewById(R.id.iv_addRecordActivity_finish);
@@ -94,6 +98,14 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         rl_addRecordActivity_remarklayout = (RelativeLayout) findViewById(R.id.rl_addRecordActivity_remarklayout);
         rl_addRecordActivity_photolayout = (RelativeLayout) findViewById(R.id.rl_addRecordActivity_photolayout);
         et_addCategory_markContent = (EditText) findViewById(R.id.et_addCategory_markContent);
+        tv_addRecordActivity_inputNumber = (EditText) findViewById(R.id.tv_addRecordActivity_inputNumber);
+
+        int inputback = tv_addRecordActivity_inputNumber.getInputType();
+        tv_addRecordActivity_inputNumber.setInputType(InputType.TYPE_NULL);
+        KeyboardUtil keyboardUtil = new KeyboardUtil(this, this, tv_addRecordActivity_inputNumber);
+        keyboardUtil.setNumberFormat(7);
+        keyboardUtil.showKeyboard();
+        tv_addRecordActivity_inputNumber.setInputType(inputback);
         //关闭当前页面按钮
         iv_addRecordActivity_finish.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,7 +213,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         TextView viewById10 = (TextView) findViewById(R.id.tv_addCategory_10);
         tv_addRecordActivity_jumpRemark = (TextView) findViewById(R.id.tv_addRecordActivity_jumpRemark);
         tv_addRecordActivity_remarkShow = (TextView) findViewById(R.id.tv_addRecordActivity_remarkShow);
-        tv_addRecordActivity_inputNumber = (TextView) findViewById(R.id.tv_addRecordActivity_inputNumber);
+
         ImageView tv_addCategory_removeNumber = (ImageView) findViewById(R.id.tv_addCategory_removeNumber);
         TextView tv_addCategory_submit = (TextView) findViewById(R.id.tv_addCategory_submit);
         iv_addRecordActivity_remarkIcon = (ImageView) findViewById(R.id.iv_addRecordActivity_remarkIcon);

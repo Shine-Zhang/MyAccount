@@ -175,7 +175,7 @@
                     android:layout_centerVertical="true"
                     android:src="@drawable/ic_pen2_default"
                     android:layout_toRightOf="@+id/iv_addRecordActivity_photo"/>
-                <TextView
+                <EditText
                     android:id="@+id/tv_addRecordActivity_inputNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -358,5 +358,20 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        <android.inputmethodservice.KeyboardView
+            android:id="@+id/keyboard_view"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:background="@android:color/transparent"
+            android:keyBackground="@drawable/btn_keyboard_key"
+            android:keyTextColor="#e6e6e6"
+            android:visibility="gone" />
+    </RelativeLayout>
 
 </LinearLayout>
