@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.example.zs.bean.WishInfo;
 import com.example.zs.dao.CompleteWishDAO;
-import com.example.zs.dao.OnGoingWishDAO;
+import com.example.zs.dao.OnGoingWishDao;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class WishDBTest extends AndroidTestCase{
     private static final String TAG = "WishDBTest";
 
     public void testAddOnGoingWish(){
-        OnGoingWishDAO dao = new OnGoingWishDAO(getContext());
+        OnGoingWishDao dao = new OnGoingWishDao(getContext());
         for(int i =0;i<5;i++){
             WishInfo wishInfo = new WishInfo(2016,9,8,"我的愿望"+i,"备注"+i,"100.00","0");
             dao.addOnGoingWishInfo(wishInfo);
@@ -26,24 +26,24 @@ public class WishDBTest extends AndroidTestCase{
     }
 
     public void testDeleteOnGoingWish(){
-        OnGoingWishDAO dao = new OnGoingWishDAO(getContext());
+        OnGoingWishDao dao = new OnGoingWishDao(getContext());
         dao.deleteOnGoingWishInfo(1);
     }
 
     public void testupdateOnGoingWish(){
-        OnGoingWishDAO dao = new OnGoingWishDAO(getContext());
+        OnGoingWishDao dao = new OnGoingWishDao(getContext());
         WishInfo wishInfo = new WishInfo(2016,9,3,"我的愿望发呆","备注发呆","100.00","0");
         dao.updateOnGoingWishInfo(wishInfo,3);
     }
 
     public void testGetOnGoingWishNumber(){
-        OnGoingWishDAO dao = new OnGoingWishDAO(getContext());
+        OnGoingWishDao dao = new OnGoingWishDao(getContext());
         int allOnGoingWishNumber = dao.getAllOnGoingWishNumber();
         assertTrue(allOnGoingWishNumber==4);
     }
 
     public void testgetAllOnGoingWishInfo(){
-        OnGoingWishDAO dao = new OnGoingWishDAO(getContext());
+        OnGoingWishDao dao = new OnGoingWishDao(getContext());
         List<WishInfo> allOnGoingWishInfo = dao.getAllOnGoingWishInfo();
         for (WishInfo info: allOnGoingWishInfo) {
             Log.i(TAG,info.toString());
