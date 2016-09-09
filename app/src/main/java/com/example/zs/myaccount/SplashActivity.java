@@ -48,7 +48,7 @@ public class SplashActivity extends Activity {
 
         //渐变动画
         AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
-        alphaAnimation.setDuration(5000);
+        alphaAnimation.setDuration(2500);
 
         animationSet.addAnimation(alphaAnimation);
       rl_splashactivity_bg.setAnimation(animationSet);
