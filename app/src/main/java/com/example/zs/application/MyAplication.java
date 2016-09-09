@@ -11,6 +11,8 @@ import android.content.SharedPreferences;
 public class MyAplication extends Application{
 
     public static SharedPreferences sp;
+    public static SharedPreferences UserInfosp;
+    public static SharedPreferences CurUsersp;
 
     /**
      * 应用创建时调用oncreate（）
@@ -18,6 +20,8 @@ public class MyAplication extends Application{
     @Override
     public void onCreate() {
         sp = getSharedPreferences("MyAccount", MODE_PRIVATE);
+        UserInfosp = getSharedPreferences("config",MODE_PRIVATE);
+        CurUsersp = getSharedPreferences("currentUsername",MODE_PRIVATE);
         super.onCreate();
     }
 
@@ -68,6 +72,46 @@ public class MyAplication extends Application{
     }
     public static int getIntFromSp(String name){
         return   sp.getInt(name,0);
+    }
+
+    /**
+     * 保存用户名和密码到SharedPreferences,用户名为键，密码为值
+     * @param username  用户名
+     * @param password  密码
+     */
+    public static void saveUserInfoToSp(String username,String password){
+        SharedPreferences.Editor edit = UserInfosp.edit();
+        edit.putString(username,password);
+        edit.commit();
+    }
+
+    /**
+     * 根据用户名从SharedPreferences获取密码的字符串
+     * @param username
+     * @return
+     */
+    public static String getUserInfoFromSp(String username){
+        return   UserInfosp.getString(username,"");
+    }
+
+    /**
+     * 保存当前用户名到sp
+     * @param username  用户名
+     * @param password  密码
+     */
+    public static void saveCurUsernaemToSp(String username,String password){
+        SharedPreferences.Editor edit = CurUsersp.edit();
+        edit.putString(username,password);
+        edit.commit();
+    }
+
+    /**
+     * 获取当前用户名
+     * @param username
+     * @return
+     */
+    public static String getCurUsernameFromSp(String username){
+        return   CurUsersp.getString(username,"");
     }
 
 }
