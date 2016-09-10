@@ -103,6 +103,7 @@ public class PayOutPage extends AddBasePage {
                     selectCategoryName = payoutCategoryToDB.get(i).getCategoryName();
                 }
                 Log.i(TAG, "--" + i);
+                addRecordActivity.keyboardUtil.showKeyboard();
             }
         });
         return gridView;
@@ -138,6 +139,7 @@ public class PayOutPage extends AddBasePage {
                         if (Math.abs(endY - startY) > 100) {
                             //动画隐藏掉键盘
                           // keyAnimationInVisble();
+                            addRecordActivity.keyboardUtil.hideKeyboard();
                         }
                         break;
                     case MotionEvent.ACTION_UP:
@@ -194,6 +196,9 @@ public class PayOutPage extends AddBasePage {
         payoutCategoryDAO.addPayoutCategoryToDB(id, name);
         //gridview刷新数据
         payoutCategoryToDB.add(categoryInfo);
+        //isJump = true;
+        //firstCircle.setEnabled(true);
+        //jumpItemEnable = payoutCategoryToDB.size();
         myGridViewAdapter.notifyDataSetChanged();
     }
 

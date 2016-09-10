@@ -4,8 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.zs.bean.IncomeContentInfo;
+import com.example.zs.bean.TimeInfo;
+import com.example.zs.dataBase.IncometContentDB;
 import com.example.zs.dataBase.PayOutContentDB;
 
 import java.util.ArrayList;
@@ -19,8 +22,8 @@ public class IncomeContentDAO {
 
     public IncomeContentDAO(Context ctx) {
         this.ctx = ctx;
-        PayOutContentDB payOutContentDB = new PayOutContentDB(ctx, "IncomeContent.db", null, 1);
-        db = payOutContentDB.getReadableDatabase();
+        IncometContentDB incometContentDB = new IncometContentDB(ctx, "IncomeContent.db", null, 1);
+        db = incometContentDB.getReadableDatabase();
     }
 
     /**查询
@@ -79,7 +82,7 @@ public class IncomeContentDAO {
         contentValues.put("money",incomeContentInfo.money);
         contentValues.put("remarks",incomeContentInfo.remarks);
         contentValues.put("photo",incomeContentInfo.photo);
-        db.insert("payouContent",null,contentValues);
+        db.insert("incomeContent",null,contentValues);
     }
     //单个删除
     public void deleteIncomeContentItemFromDB(int id){

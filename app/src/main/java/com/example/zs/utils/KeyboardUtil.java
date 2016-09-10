@@ -8,6 +8,7 @@ import android.inputmethodservice.KeyboardView;
 import android.inputmethodservice.KeyboardView.OnKeyboardActionListener;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -26,7 +27,7 @@ public class KeyboardUtil {
 	private Keyboard k2;// 数字键盘
 	public boolean isnun = false;// 是否数据键盘
 	public boolean isupper = false;// 是否大写
-
+	private KeyBoardConfirmListener mKeyBoardConfirmListenerL;
 
 
 	private String rule;
@@ -78,6 +79,11 @@ public class KeyboardUtil {
 		public void onKey(int primaryCode, int[] keyCodes) {
 			Editable editable = ed.getText();
 			int start = ed.getSelectionStart();
+			int length = editable.length();
+			if(length>0){
+				ed.setSelection(length);
+				start = length;
+			}
 			//String tmp =Character.toString((char) primaryCode);
 			char tmp = (char) primaryCode;
 			if(tmp>='0'&&tmp<='9'||tmp=='.'){
@@ -86,6 +92,9 @@ public class KeyboardUtil {
 				}
 			}
 				if (primaryCode == Keyboard.KEYCODE_CANCEL) {// 完成
+					if(mKeyBoardConfirmListenerL!=null){
+						mKeyBoardConfirmListenerL.toConfirm();
+					}
 					hideKeyboard();
 				} else if (primaryCode == Keyboard.KEYCODE_DELETE) {// 回退
 					if (editable != null && editable.length() > 0) {
@@ -150,13 +159,12 @@ public class KeyboardUtil {
 	}
 
     public void showKeyboard() {
+		Log.i("haha","showKeyboard");
 		if(!TextUtils.isEmpty(ed.getText().toString())){
 			ed.setText("");
 		}
-        int visibility = keyboardView.getVisibility();
-        if (visibility == View.GONE || visibility == View.INVISIBLE) {
             keyboardView.setVisibility(View.VISIBLE);
-        }
+
     }
     
     public void hideKeyboard() {
@@ -184,6 +192,18 @@ public class KeyboardUtil {
 
 	public void setNumberFormat(int intDigits) {
 		rule = "^\\d{1,"+intDigits+"}|^\\d{1,"+intDigits+"}\\.\\d{0,2}";
+	}
+
+	public void setOnkeyBoardConfirmListener(KeyBoardConfirmListener keyBoardConfirmListenerL){
+
+		this.mKeyBoardConfirmListenerL = keyBoardConfirmListenerL;
+
+
+	}
+	public interface KeyBoardConfirmListener{
+
+		public void toConfirm();
+
 	}
 
 }

@@ -7,14 +7,21 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.zs.application.MyAplication;
+import com.example.zs.bean.IncomeContentInfo;
 import com.example.zs.bean.PayoutContentInfo;
+import com.example.zs.dao.IncomeContentDAO;
+import com.example.zs.dao.PayOutContentDAO;
+import com.example.zs.view.CircleImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,6 +34,11 @@ public class MyBalanceActivity extends AppCompatActivity {
     private ListView lv_mybalanceactivity_recordlist;
 
     List<PayoutContentInfo> recordlist;//用于存放消费信息的集合
+    private ArrayList<PayoutContentInfo> allPayoutContentFromDBList;
+    private ArrayList<IncomeContentInfo> allIncomeContentFromDBList;
+    private RelativeLayout rl_mybalanceactivity_norecord;
+    private TextView tv_mybalance_income;
+    private TextView tv_mybalance_zhichu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +46,12 @@ public class MyBalanceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_balance);
         getSupportActionBar().hide();
 
-        recordlist = null;
-
         tv_mybalanceactivity_choiceDate = (TextView) findViewById(R.id.tv_mybalanceactivity_choiceDate);
         lv_mybalanceactivity_recordlist = (ListView) findViewById(R.id.lv_mybalanceactivity_recordlist);
-        RelativeLayout rl_mybalanceactivity_norecord = (RelativeLayout) findViewById(R.id.rl_mybalanceactivity_norecord);
-
+        rl_mybalanceactivity_norecord = (RelativeLayout) findViewById(R.id.rl_mybalanceactivity_norecord);
+        tv_mybalance_income = (TextView) findViewById(R.id.tv_mybalance_income);
+        tv_mybalance_zhichu = (TextView) findViewById(R.id.tv_mybalanceactivity_pay);
+        initData();
 
         //从sp文件中取出已经选择是日期数据，用于回显
         String choiceDate = MyAplication.getStringFromSp("choiceDate");
@@ -47,13 +59,26 @@ public class MyBalanceActivity extends AppCompatActivity {
             tv_mybalanceactivity_choiceDate.setText(choiceDate);
         }
 
-        /*if (!(recordlist.size()==0)) {
-            lv_mybalanceactivity_recordlist.setVisibility(View.VISIBLE);
-            rl_mybalanceactivity_norecord.setVisibility(View.INVISIBLE);
-            //当集合中有数据时，设置ListView可见，并为ListView设置Adapter
-            lv_mybalanceactivity_recordlist.setAdapter(new MyRecordListAdapter());
+        MyRecordListAdapter myRecordListAdapter = new MyRecordListAdapter();
+        lv_mybalanceactivity_recordlist.setAdapter(myRecordListAdapter);
+
+    }
+
+    private void initData() {
+        //查询有无收入或支出记录
+        PayOutContentDAO payOutContentDAO = new PayOutContentDAO(this);
+        allPayoutContentFromDBList = payOutContentDAO.getAllPayoutContentFromDB();
+        int moneySum = payOutContentDAO.getMoneySum();
+        tv_mybalance_zhichu.setText(moneySum+"");
+        IncomeContentDAO incomeContentDAO = new IncomeContentDAO(this);
+        allIncomeContentFromDBList = incomeContentDAO.getAllIncomeContentFromDB();
+        int moneySum1 = incomeContentDAO.getMoneySum();
+        tv_mybalance_income.setText(moneySum1+"");
+        if (allPayoutContentFromDBList.size()!=0||allIncomeContentFromDBList.size()!=0){
+            Log.i(TAG,"allIncomeContentFromDBList="+allIncomeContentFromDBList);
+            Log.i(TAG,"allPayoutContentFromDBList="+allPayoutContentFromDBList);
+            rl_mybalanceactivity_norecord.setVisibility(View.GONE);
         }
-*/
 
     }
 
@@ -90,7 +115,8 @@ public class MyBalanceActivity extends AppCompatActivity {
     private class MyRecordListAdapter extends BaseAdapter {
         @Override
         public int getCount() {
-            return 1;
+            Log.i(TAG,allIncomeContentFromDBList.size()+"--"+allPayoutContentFromDBList.size());
+            return allIncomeContentFromDBList.size()+allPayoutContentFromDBList.size()+1;
         }
 
         @Override
@@ -106,12 +132,32 @@ public class MyBalanceActivity extends AppCompatActivity {
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
 
-            if (recordlist.size()==0){
-
-            }
-
             View recordView = View.inflate(MyBalanceActivity.this,R.layout.item_recordlist,null);
-
+            CircleImageView iv_recordlist_icon = (CircleImageView) recordView.findViewById(R.id.iv_recordlist_icon);
+            TextView tv_recordlist_category = (TextView) recordView.findViewById(R.id.tv_recordlist_category);
+            TextView tv_recordlist_remarks = (TextView) recordView.findViewById(R.id.tv_recordlist_remarks);
+            TextView tv_recordlist_money = (TextView) recordView.findViewById(R.id.tv_recordlist_money);
+            int paysize = allPayoutContentFromDBList.size();
+            int insize = allIncomeContentFromDBList.size();
+            if (i==0){
+                View inflate = View.inflate(MyBalanceActivity.this, R.layout.item_timeshow, null);
+                return inflate;
+            }else {
+                if (i<paysize+1){
+                    PayoutContentInfo payoutContentInfo = allPayoutContentFromDBList.get(paysize-i);
+                    Log.i(TAG,payoutContentInfo.toString());
+                    iv_recordlist_icon.setImageResource(payoutContentInfo.resourceID);
+                    tv_recordlist_category.setText(payoutContentInfo.category);
+                    tv_recordlist_remarks.setText(payoutContentInfo.remarks);
+                    tv_recordlist_money.setText("-"+payoutContentInfo.money);
+                }else if (i<paysize+insize+1){
+                    IncomeContentInfo incomeContentInfo = allIncomeContentFromDBList.get(insize+paysize-i);
+                    iv_recordlist_icon.setImageResource(incomeContentInfo.resourceID);
+                    tv_recordlist_category.setText(incomeContentInfo.category);
+                    tv_recordlist_remarks.setText(incomeContentInfo.remarks);
+                    tv_recordlist_money.setText("+"+incomeContentInfo.money);
+                }
+            }
 
             return recordView;
         }

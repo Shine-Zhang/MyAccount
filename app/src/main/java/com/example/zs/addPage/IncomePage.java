@@ -25,8 +25,6 @@ import com.example.zs.view.CircleImageView;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -37,26 +35,27 @@ import java.util.ArrayList;
  */
 public class IncomePage extends AddBasePage {
     private GridView gridView;
-    private String TAG="IncomePage";
+    private String TAG = "IncomePage";
     private AddRecordActivity addRecordActivity;
     private ArrayList<UserAddCategoryInfo> incomeCategoryToDB;
     private MyGridViewAdapter myGridViewAdapter;
-    public  String selectCategoryName;
-    public  int selectResourceID;
+    public String selectCategoryName;
+    public int selectResourceID;
+    private CircleImageView previous;
+    private CircleImageView firstCircle;
+    private boolean isFirstOnclick;
+    private int jumpItemEnable;
 
     public IncomePage(Activity activity, boolean isJump) {
         super(activity, isJump);
     }
-
-
     @Override
     public View initView() {
         //初始化父类构造器时多态执行子类的执行initView（）时tag还为初始化
-        TAG="IncomePage";
-        Log.i(TAG,"initView");
+        TAG = "PayOutPage";
+        Log.i(TAG, "initView");
         initData();
         addRecordActivity = (AddRecordActivity) activity;
-
         // GridView gridView = new GridView(activity);
         View inflate = View.inflate(activity, R.layout.gridview_layout, null);
         gridView = (GridView) inflate.findViewById(R.id.gv_addRecord_gridView);
@@ -77,36 +76,69 @@ public class IncomePage extends AddBasePage {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //显示键盘区
-               // keyAnimationVisble();
-                if(i==incomeCategoryToDB.size()){
+                // keyAnimationVisble();
+                if (i == incomeCategoryToDB.size()) {
                     //跳转到addCategory页面
-                    activity.startActivityForResult(new Intent(activity, AddCategoryActivity.class),50);
-                }else {
+                    activity.startActivityForResult(new Intent(activity, AddCategoryActivity.class), 90);
+                } else {
+                    //选中背景色变化
+                    CircleImageView iv = (CircleImageView) view.findViewById(R.id.cv_addPage_recordIcon);
+                    if (previous != null) {
+
+                        Log.i(TAG,"previous="+previous.toString());
+                        previous.setEnabled(true);
+                    } else {
+                        Log.i(TAG, "first--");
+                        isFirstOnclick = true;
+                        firstCircle.setEnabled(true);
+                        Log.i(TAG,"firstCircle="+firstCircle.toString());
+                        Log.i(TAG,"current iv="+iv.toString());
+
+                        //myGridViewAdapter.notifyDataSetChanged();
+                    }
+                    iv.setEnabled(false);
+                    previous = iv;
                     selectResourceID = incomeCategoryToDB.get(i).getResourceID();
                     selectCategoryName = incomeCategoryToDB.get(i).getCategoryName();
                 }
-                Log.i(TAG,"--"+i);
+                addRecordActivity.keyboardUtil.showKeyboard();
+                Log.i(TAG, "--" + i);
             }
         });
         return gridView;
     }
+    public void setItemEnable(int resID,String name){
+        isJump = true;
+        //通过categoryName，在数据库中查找对应的resourceID
+        for (int i=0;i<incomeCategoryToDB.size();i++){
+            if (incomeCategoryToDB.get(i).getResourceID()==resID){
+                if (incomeCategoryToDB.get(i).getCategoryName().equals(name)){
+                    jumpItemEnable = i;
+                    return;
+                }
+            }
+        }
+    }
+
     float startY;
+
     private void slideGridView() {
 
         gridView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 float rawY = motionEvent.getRawY();
-                switch (motionEvent.getAction()){
+                switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         startY = motionEvent.getRawY();
                         break;
                     case MotionEvent.ACTION_MOVE:
                         float endY = motionEvent.getRawY();
-                        Log.i(TAG,"ACTION_MOVE"+Math.abs(endY-startY));
-                        if (Math.abs(endY-startY)>100){
+                        Log.i(TAG, "ACTION_MOVE" + Math.abs(endY - startY));
+                        if (Math.abs(endY - startY) > 100) {
                             //动画隐藏掉键盘
-                           // keyAnimationInVisble();
+                            // keyAnimationInVisble();
+                            addRecordActivity.keyboardUtil.hideKeyboard();
                         }
                         break;
                     case MotionEvent.ACTION_UP:
@@ -123,18 +155,20 @@ public class IncomePage extends AddBasePage {
         float x = addRecordActivity.ll_addRecordActivity_downRegion.getX();
         float y = addRecordActivity.ll_addRecordActivity_downRegion.getY();
         int height = addRecordActivity.ll_addRecordActivity_keyboard.getMeasuredHeight();
-        Log.i(TAG,x+"-"+y+"-"+height+"-");
-        TranslateAnimation translateAnimation = new TranslateAnimation(0,0,0,height);
+        Log.i(TAG, x + "-" + y + "-" + height + "-");
+        TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 0, height);
+        // TranslateAnimation translateAnimation = new TranslateAnimation(0, y, , height);
         translateAnimation.setDuration(1000);
         translateAnimation.setFillAfter(true);
         addRecordActivity.ll_addRecordActivity_downRegion.startAnimation(translateAnimation);
     }
+
     private void keyAnimationVisble() {
         float x = addRecordActivity.ll_addRecordActivity_downRegion.getX();
         float y = addRecordActivity.ll_addRecordActivity_downRegion.getMeasuredHeight();
         int height = addRecordActivity.ll_addRecordActivity_keyboard.getMeasuredHeight();
-        Log.i(TAG,x+"-"+y+"-"+height+"-");
-        TranslateAnimation translateAnimation = new TranslateAnimation(0,0,y,y-height);
+        Log.i(TAG, x + "-" + y + "-" + height + "-");
+        TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, y, y - height);
         translateAnimation.setDuration(1000);
         translateAnimation.setFillAfter(true);
         addRecordActivity.ll_addRecordActivity_downRegion.startAnimation(translateAnimation);
@@ -147,28 +181,32 @@ public class IncomePage extends AddBasePage {
         //默认为一般种类
         selectResourceID = R.drawable.ic_yiban_default;
         selectCategoryName = "一般";
-        Log.i(TAG,"initData");
+        Log.i(TAG, "initData");
         IncomeCategoryDAO incomeCategoryDAO = new IncomeCategoryDAO(activity);
         incomeCategoryToDB = incomeCategoryDAO.getIncomeCategoryToDB();
-        // Log.i(TAG, incomeCategoryToDB.toString());
-        // Log.i(TAG, incomeCategoryToDB.get(0).toString());
+        // Log.i(TAG, payoutCategoryToDB.toString());
+        // Log.i(TAG, payoutCategoryToDB.get(0).toString());
     }
 
-    public void getActivityResult(int id,String name) {
-        Log.i(TAG,"getActivityResult");
+    public void getActivityResult(int id, String name) {
+        Log.i(TAG, "getActivityResult");
         UserAddCategoryInfo categoryInfo = new UserAddCategoryInfo(id, name);
         IncomeCategoryDAO incomeCategoryDAO = new IncomeCategoryDAO(activity);
-        incomeCategoryDAO.addIncomeCategoryToDB(id,name);
+        incomeCategoryDAO.addIncomeCategoryToDB(id, name);
         //gridview刷新数据
         incomeCategoryToDB.add(categoryInfo);
+        //isJump = true;
+        //firstCircle.setEnabled(true);
+        //jumpItemEnable = payoutCategoryToDB.size();
         myGridViewAdapter.notifyDataSetChanged();
     }
 
 
-    class MyGridViewAdapter extends BaseAdapter{
+    class MyGridViewAdapter extends BaseAdapter {
+        CircleImageView cv = null;
         @Override
         public int getCount() {
-            return incomeCategoryToDB.size()+1;
+            return incomeCategoryToDB.size() + 1;
         }
 
         @Override
@@ -184,16 +222,38 @@ public class IncomePage extends AddBasePage {
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
             //
+            Log.i(TAG, "getView: " + i);
             View inflate = View.inflate(activity, R.layout.page_addrecord_detail, null);
             CircleImageView iv_addPage_catagoryIcon = (CircleImageView) inflate.findViewById(R.id.cv_addPage_recordIcon);
             TextView tv_addPage_catagoryContent = (TextView) inflate.findViewById(R.id.tv_addPage_catagoryContent);
-            if(i<incomeCategoryToDB.size()){
+
+            if (i < incomeCategoryToDB.size()) {
+                if (i==0){
+                    //第一个item设置false
+                    if (!isFirstOnclick) {
+                        Log.i(TAG, "---");
+                        iv_addPage_catagoryIcon.setEnabled(false);
+                    }
+                }
+                //记录第一个item之前的CircleImageView实例
+                if (i == 1&&!isJump) {
+                    firstCircle = cv;
+                    Log.i(TAG,firstCircle.toString());
+                    //刷新就会变化，所有不适合在适配器中设置enable
+                    // iv_addPage_catagoryIcon.setEnabled(false);
+                }else if (!isJump){
+                    cv = iv_addPage_catagoryIcon;
+                }
+                //从明细，报表跳转过来点亮对应的item
+                if (isJump&&jumpItemEnable ==i){
+                    iv_addPage_catagoryIcon.setEnabled(false);
+                    previous = iv_addPage_catagoryIcon;
+                }
                 iv_addPage_catagoryIcon.setImageResource(incomeCategoryToDB.get(i).getResourceID());
                 tv_addPage_catagoryContent.setText(incomeCategoryToDB.get(i).getCategoryName());
-
-            }else
+            } else
                 //最后一个为默认item，作用为跳转到addCategory页面
-                if(i==incomeCategoryToDB.size()){
+                if (i == incomeCategoryToDB.size()) {
                     iv_addPage_catagoryIcon.setBackgroundColor(Color.WHITE);
                     iv_addPage_catagoryIcon.setImageResource(R.drawable.ic_jia_default);
                     tv_addPage_catagoryContent.setText("添加");
