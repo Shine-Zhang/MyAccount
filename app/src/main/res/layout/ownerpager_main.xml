@@ -5,32 +5,85 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackgroud">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-        <com.example.zs.view.OwnerItem
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="#30C9F2">
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            app:ownerItemIcon="@drawable/ic_touxiang1_yellow"
-            app:ownerItemTitle="未登录"
-            android:background="#30C9F2"
-            android:id="@+id/oi_ownerpager_login"
-            ></com.example.zs.view.OwnerItem>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="50dp"
-            android:textSize="16sp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:background="@drawable/rectangle_back"
-            android:text="去登录"/>
-    </RelativeLayout>
+            android:layout_height="match_parent"
+            android:id="@+id/rl_ownerpager_unlogin">
+            <com.example.zs.view.CircleImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:id="@+id/iv_ownerpager_unlogin"
+                android:src="@drawable/ic_touxiang1_yellow"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/iv_ownerpager_unlogin"
+                android:text="未登录"
+                android:layout_marginLeft="20dp"
+                android:layout_centerVertical="true"
+                android:textSize="16sp"/>
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/ic_item_arrow"
+                android:layout_marginRight="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="50dp"
+                android:textSize="16sp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:background="@drawable/rectangle_back"
+                android:text="去登录"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/rl_ownerpager_logined"
+            android:visibility="gone">
+            <com.example.zs.view.CircleImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:id="@+id/iv_ownerpager_loginIcon"
+                android:src="@drawable/ic_touxiang1_yellow"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"/>
+            <TextView
+                android:id="@+id/iv_ownerpager_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/iv_ownerpager_loginIcon"
+                android:text="未登录"
+                android:layout_marginLeft="20dp"
+                android:layout_centerVertical="true"
+                android:textSize="16sp"/>
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/ic_item_arrow"
+                android:layout_marginRight="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+    </FrameLayout>
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -153,7 +206,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="50dp"
                     android:textSize="16sp"
-                    android:text="v0.0" />
+                    android:text="v1.0" />
             </RelativeLayout>
         </LinearLayout>
 

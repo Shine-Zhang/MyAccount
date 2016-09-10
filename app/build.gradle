@@ -35,4 +35,5 @@ dependencies {
     compile files('libs/fastjson.jar')
     compile files('libs/okhttp-2.6.0-leancloud.jar')
     compile files('libs/okio-1.6.0-leancloud.jar')
+    compile project(path: ':library')
 }

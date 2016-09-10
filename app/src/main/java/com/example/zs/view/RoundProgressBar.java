@@ -244,6 +244,4 @@ public class RoundProgressBar extends View {
         this.roundWidth = roundWidth;
     }
 
-
-
 }

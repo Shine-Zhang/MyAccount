@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.example.zs.addPage.ReportFormIncome;
 import com.example.zs.bean.PayoutContentInfo;
+import com.example.zs.bean.PayoutContentInfo;
 import com.example.zs.dao.PayOutContentDAO;
 import com.example.zs.dao.PayoutCategoryDAO;
 import com.example.zs.myaccount.RportFormDatePickerActivity;
@@ -53,24 +54,6 @@ import java.util.List;
  */
 public class ReportFormPager extends BasePager {
     //各个支出类型所占比重
-    public float yibanPercent;
-    public float canyinPercent;
-    public float transportPercent;
-    public float linshiPercent;
-    public float fruitPercent;
-    public float juhuiPercent;
-    public float jiushuiPercent;
-    public float moviePercent;
-    public float clothPercent;
-    public float lifePercent;
-    public float huafeiPercent;
-    public float rentPercent;
-    public float hufuPercent;
-    public float yaopinPercent;
-    public float lvxingPercent;
-    public float liwuPercent;
-    public float sportPercent;
-    public float xuexiPercent;
 
     //报表视图
     private View reportformpager_content_view;
@@ -103,18 +86,21 @@ public class ReportFormPager extends BasePager {
 
     public ArrayList<Entry> valueList;
     public ReportFormIncome reportFormincome;
-    
+
     //从数据库拿到的支出数据
-    public ArrayList<PayoutContentInfo  > allPayoutCategory;
+    public ArrayList<PayoutContentInfo> allPayoutCategory;
     //这个数决定了圆饼被分为几部分
     public  int allNumber;
     //总的消费金额
     public int allAccount;
+    private PayoutNumAndAccount payoutNumAndAccount;
+    private int[] leixing;
 
     public ReportFormPager(Activity activity) {
         super(activity);
-
+        payoutNumAndAccount = new PayoutNumAndAccount();
         initData();
+        initChart();
     }
 
     @Override
@@ -140,7 +126,7 @@ public class ReportFormPager extends BasePager {
         //整体的framlauout包含了支出和收入
         fl_reportform = (FrameLayout) reportformpager_content_view.findViewById(R.id.fl_reportform);
 
-        initChart();
+
         //接收由RportFormDataPickerActivity回传的数据
         Intent intent = mActivity.getIntent();
         String date = intent.getStringExtra("date");
@@ -178,7 +164,7 @@ public class ReportFormPager extends BasePager {
                     //收入对应报表页面
                     case R.id.rb_reportform_income:
                         //加载收入页面
-                        reportFormincome = new ReportFormIncome(mActivity,false);
+                        reportFormincome = new ReportFormIncome(mActivity);
                         ll_reportform_zhichu.setVisibility(View.GONE);
                         ll_reportform_shouru.setVisibility(View.VISIBLE);
                         fl_reportform_shouru.addView(reportFormincome.pieChart);
@@ -191,7 +177,6 @@ public class ReportFormPager extends BasePager {
 
     @Override
     public void initData() {
-        PayoutNumAndAccount payoutNumAndAccount = new PayoutNumAndAccount();
         //从数据库拿数据
         PayOutContentDAO payoutCotnetDAO =  new PayOutContentDAO(mActivity);
         allPayoutCategory = payoutCotnetDAO.getAllPayoutContentFromDB();
@@ -200,57 +185,111 @@ public class ReportFormPager extends BasePager {
             if(allPayoutCategory.get(i).category.equals("一般")){
                 payoutNumAndAccount.normalNumber = 1;
                 payoutNumAndAccount.normalAccount = Integer.parseInt(allPayoutCategory.get(i).money);
+
+                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+
             }else if(allPayoutCategory.get(i).category.equals("餐饮")){
                 payoutNumAndAccount.canyinNumber = 1;
                 payoutNumAndAccount.canyinAccount = Integer.parseInt(allPayoutCategory.get(i).money);
+
+                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+
             }else if(allPayoutCategory.get(i).category.equals("交通")){
                 payoutNumAndAccount.transportNumber = 1;
                 payoutNumAndAccount.transportAccount = Integer.parseInt(allPayoutCategory.get(i).money);
+
+                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+
             }else if(allPayoutCategory.get(i).category.equals("零食")){
                 payoutNumAndAccount.linshiNumber = 1;
                 payoutNumAndAccount.linshiAccount = Integer.parseInt(allPayoutCategory.get(i).money);
+
+                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+
             }else if(allPayoutCategory.get(i).category.equals("水果")){
                 payoutNumAndAccount.fruitNumber = 1;
                 payoutNumAndAccount.fruitAccount = Integer.parseInt(allPayoutCategory.get(i).money);
+
+                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+
             }else if(allPayoutCategory.get(i).category.equals("腐败聚会")){
                 payoutNumAndAccount.juhuiNumber = 1;
                 payoutNumAndAccount.juhuiAccount = Integer.parseInt(allPayoutCategory.get(i).money);
+
+                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+
             }else if(allPayoutCategory.get(i).category.equals("酒水饮料")){
                 payoutNumAndAccount.jiushuiNumber = 1;
                 payoutNumAndAccount.jiushuiAccount = Integer.parseInt(allPayoutCategory.get(i).money);
+
+                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+
             }else if(allPayoutCategory.get(i).category.equals("电影")){
                 payoutNumAndAccount.movieNumber = 1;
                 payoutNumAndAccount.movieAccount = Integer.parseInt(allPayoutCategory.get(i).money);
+
+                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+
             }else if(allPayoutCategory.get(i).category.equals("衣服鞋包")){
                 payoutNumAndAccount.clothNumber = 1;
                 payoutNumAndAccount.clothAccount = Integer.parseInt(allPayoutCategory.get(i).money);
+
+                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+
             }else if(allPayoutCategory.get(i).category.equals("生活用品")){
                 payoutNumAndAccount.lifeNumber = 1;
                 payoutNumAndAccount.lifeAccount = Integer.parseInt(allPayoutCategory.get(i).money);
+
+                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+
             }else if(allPayoutCategory.get(i).category.equals("话费")){
                 payoutNumAndAccount.huafeiNumber = 1;
                 payoutNumAndAccount.huafeiAccount = Integer.parseInt(allPayoutCategory.get(i).money);
+
+                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+
             }else if(allPayoutCategory.get(i).category.equals("房租")){
                 payoutNumAndAccount.rentNumber = 1;
                 payoutNumAndAccount.rentAccount = Integer.parseInt(allPayoutCategory.get(i).money);
+
+                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+
             }else if(allPayoutCategory.get(i).category.equals("护肤彩妆")){
                 payoutNumAndAccount.hufuNumber = 1;
                 payoutNumAndAccount.hufuAccount = Integer.parseInt(allPayoutCategory.get(i).money);
+
+                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+
             }else if(allPayoutCategory.get(i).category.equals("药品")){
                 payoutNumAndAccount.yaopinNumber = 1;
                 payoutNumAndAccount.yaopinAccount = Integer.parseInt(allPayoutCategory.get(i).money);
+
+                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+
             }else if(allPayoutCategory.get(i).category.equals("旅行")){
                 payoutNumAndAccount.lvxingNumber = 1;
                 payoutNumAndAccount.lvxingAccount = Integer.parseInt(allPayoutCategory.get(i).money);
+
+                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category + "----" +allPayoutCategory.get(i).money );
+
             }else if(allPayoutCategory.get(i).category.equals("礼物")){
                 payoutNumAndAccount.liwuNumber = 1;
                 payoutNumAndAccount.liwuAccount = Integer.parseInt(allPayoutCategory.get(i).money);
+
+                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+
             }else if(allPayoutCategory.get(i).category.equals("运动")){
                 payoutNumAndAccount.sportNumber = 1;
                 payoutNumAndAccount.sportAccount = Integer.parseInt(allPayoutCategory.get(i).money);
+
+                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+
             }else if(allPayoutCategory.get(i).category.equals("学习")){
                 payoutNumAndAccount.xuexiNumber = 1;
                 payoutNumAndAccount.xuexiAccount = Integer.parseInt(allPayoutCategory.get(i).money);
+
+                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+
             }
         }
 
@@ -258,7 +297,10 @@ public class ReportFormPager extends BasePager {
                 + payoutNumAndAccount.lvxingNumber + payoutNumAndAccount.yaopinNumber + payoutNumAndAccount.hufuNumber
                 + payoutNumAndAccount.rentNumber + payoutNumAndAccount.huafeiNumber + payoutNumAndAccount.linshiNumber
                 + payoutNumAndAccount.clothNumber + payoutNumAndAccount.movieNumber + payoutNumAndAccount.jiushuiNumber
-                + payoutNumAndAccount.fruitNumber + payoutNumAndAccount.normalNumber;
+                + payoutNumAndAccount.fruitNumber + payoutNumAndAccount.normalNumber + payoutNumAndAccount.sportNumber
+                + payoutNumAndAccount.juhuiNumber + payoutNumAndAccount.transportNumber + payoutNumAndAccount.canyinNumber;
+
+        Log.i("payoutNumAndAccount",allNumber + "");
 
         allAccount = payoutNumAndAccount.normalAccount + payoutNumAndAccount.canyinAccount + payoutNumAndAccount.transportAccount
                 + payoutNumAndAccount.linshiAccount + payoutNumAndAccount.fruitAccount + payoutNumAndAccount.juhuiAccount
@@ -266,100 +308,76 @@ public class ReportFormPager extends BasePager {
                 + payoutNumAndAccount.lifeAccount + payoutNumAndAccount.huafeiAccount + payoutNumAndAccount.rentAccount
                 + payoutNumAndAccount.hufuAccount + payoutNumAndAccount.yaopinAccount + payoutNumAndAccount.lvxingAccount
                 + payoutNumAndAccount.liwuAccount + payoutNumAndAccount.sportAccount + payoutNumAndAccount.xuexiAccount;
-        //“一般”消费所占比例
-        yibanPercent = payoutNumAndAccount.normalAccount / allAccount;
-        //“餐饮”消费所占比例
-        canyinPercent = payoutNumAndAccount.canyinAccount / allAccount;
-        //交通
-        transportPercent = payoutNumAndAccount.transportAccount / allAccount;
-        //零食
-        linshiPercent = payoutNumAndAccount.linshiAccount / allAccount;
-        //水果
-        fruitPercent = payoutNumAndAccount.fruitAccount / allAccount;
-        //聚会
-        juhuiPercent = payoutNumAndAccount.juhuiAccount / allAccount;
-        //酒水
-        jiushuiPercent = payoutNumAndAccount.jiushuiAccount / allAccount;
-        //电影
-        moviePercent = payoutNumAndAccount.movieAccount / allAccount;
-        //衣服
-        clothPercent = payoutNumAndAccount.movieAccount / allAccount;
-        //生活用品
-        lifePercent = payoutNumAndAccount.lifeAccount / allAccount;
-        //话费
-        huafeiPercent = payoutNumAndAccount.huafeiAccount / allAccount;
-        //房租
-        rentPercent = payoutNumAndAccount.rentAccount / allAccount;
-        //护肤
-        hufuPercent = payoutNumAndAccount.hufuAccount / allAccount;
-        //药品
-        yaopinPercent = payoutNumAndAccount.yaopinAccount / allAccount;
-        //旅行
-        lvxingPercent = payoutNumAndAccount.lvxingAccount / allAccount;
-        //礼物
-        liwuPercent = payoutNumAndAccount.liwuAccount / allAccount;
-        //运动
-        sportPercent = payoutNumAndAccount.sportAccount / allAccount;
-        //学习
-        xuexiPercent = payoutNumAndAccount.xuexiAccount / allAccount;
+
+        Log.i("payoutNumAndAccount",allAccount + "");
+
+        leixing = new int[]{payoutNumAndAccount.movieNumber,payoutNumAndAccount.huafeiNumber,payoutNumAndAccount.hufuNumber,
+                payoutNumAndAccount.jiushuiNumber,payoutNumAndAccount.liwuNumber,payoutNumAndAccount.sportNumber,
+                payoutNumAndAccount.clothNumber,payoutNumAndAccount.xuexiNumber,payoutNumAndAccount.yaopinNumber,
+                payoutNumAndAccount.fruitNumber,payoutNumAndAccount.lifeNumber,payoutNumAndAccount.lvxingNumber,
+                payoutNumAndAccount.linshiNumber,payoutNumAndAccount.transportNumber,payoutNumAndAccount.juhuiNumber,
+                payoutNumAndAccount.rentNumber, payoutNumAndAccount.canyinNumber,payoutNumAndAccount.normalNumber
+        };
+
+        initChart();
     }
 
     public void initChart() {
-            //设置饼状图是否接受点击事件，默认为true
-            pc_reportform_piechart.setTouchEnabled(true);
-            //设置图饼是否显示百分比
-            pc_reportform_piechart.setUsePercentValues(true);
-            //是否显示圆盘中间文字
-            pc_reportform_piechart.setDrawCenterText(true);
-            //设置圆盘中间的颜色
-            pc_reportform_piechart.setHoleColor(Color.WHITE);
-            //设置圆盘中间文字
-            pc_reportform_piechart.setCenterText(generateCenterSpannableText());
-            //设置中间圆盘的半径,值为所占饼图的百分比
-            pc_reportform_piechart.setHoleRadius(60);
-            //设置圆盘是否可以转动
-            pc_reportform_piechart.setRotationEnabled(true);
-            pc_reportform_piechart.setRotationAngle(90);
-            //设置动画
-            pc_reportform_piechart.animateX(1000, Easing.EasingOption.EaseInOutQuad);
-            //将在下方显示的比例视图
-            customizeLegend();
-            //设置饼图右下角的文字描述
-            pc_reportform_piechart.setDescription("");
-            //文字描述的颜色
-            pc_reportform_piechart.setDescriptionColor(Color.BLACK);
-            //设置饼图右下角的文字大小
-            pc_reportform_piechart.setDescriptionTextSize(16);
+        //设置饼状图是否接受点击事件，默认为true
+        pc_reportform_piechart.setTouchEnabled(true);
+        //设置图饼是否显示百分比
+        pc_reportform_piechart.setUsePercentValues(true);
+        //是否显示圆盘中间文字
+        pc_reportform_piechart.setDrawCenterText(true);
+        //设置圆盘中间的颜色
+        pc_reportform_piechart.setHoleColor(Color.WHITE);
+        //设置圆盘中间文字
+        pc_reportform_piechart.setCenterText(generateCenterSpannableText());
+        //设置中间圆盘的半径,值为所占饼图的百分比
+        pc_reportform_piechart.setHoleRadius(60);
+        //设置圆盘是否可以转动
+        pc_reportform_piechart.setRotationEnabled(true);
+        pc_reportform_piechart.setRotationAngle(90);
+        //设置动画
+        pc_reportform_piechart.animateX(1000, Easing.EasingOption.EaseInOutQuad);
+        //将在下方显示的比例视图
+        customizeLegend();
+        //设置饼图右下角的文字描述
+        pc_reportform_piechart.setDescription("");
+        //文字描述的颜色
+        pc_reportform_piechart.setDescriptionColor(Color.WHITE);
+        //设置饼图右下角的文字大小
+        pc_reportform_piechart.setDescriptionTextSize(16);
 
-            //设置比例图(图例，即那种颜色代表那种消费类型)
-            Legend legend = pc_reportform_piechart.getLegend();
-            //设置比例图显示在饼图的哪个位置
-            legend.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
-            //设置比例图的形状，默认是方形,可为方形、圆形、线性,这里我们设置为圆形
-            legend.setForm(Legend.LegendForm.CIRCLE);
-            //设置距离饼图的距离，防止与饼图重合
-            legend.setXEntrySpace(10f);
-            legend.setYEntrySpace(7f);
-            //legend.setYOffset(10f);
-            //设置比例块换行...
-            legend.setWordWrapEnabled(true);
+        //设置比例图(图例，即那种颜色代表那种消费类型)
+        Legend legend = pc_reportform_piechart.getLegend();
+        //设置比例图显示在饼图的哪个位置
+        legend.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
+        //设置比例图的形状，默认是方形,可为方形、圆形、线性,这里我们设置为圆形
+        legend.setForm(Legend.LegendForm.CIRCLE);
+        //设置距离饼图的距离，防止与饼图重合
+        legend.setXEntrySpace(10f);
+        legend.setYEntrySpace(7f);
+        //legend.setYOffset(10f);
+        //设置比例块换行...
+        legend.setWordWrapEnabled(true);
 
-            //绑定数据,括号中的内容代表的饼状图将被分为几部分
-            bindData(allNumber);
-            // 设置一个选中区域监听
-            pc_reportform_piechart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-                @Override
-                public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-                    pc_reportform_piechart.setDescription(dataType[e.getXIndex()] + " " + (int) e.getVal() + "元");
-                    Log.i("e.getXIndex()", e.getXIndex() + "");
-                }
+        //绑定数据,括号中的内容代表的饼状图将被分为几部分
+        bindData(allNumber);
+        // 设置一个选中区域监听
+        pc_reportform_piechart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+                //pc_reportform_piechart.setDescription(dataType[e.getXIndex()] + " " + (int) e.getVal() + "元");
+                Log.i("e.getXIndex()", e.getXIndex() + "");
+            }
 
-                @Override
-                public void onNothingSelected() {
+            @Override
+            public void onNothingSelected() {
 
-                }
-            });
-        }
+            }
+        });
+    }
 
     public void customizeLegend() {
         Legend legend = pc_reportform_piechart.getLegend();//设置比例图
@@ -381,35 +399,138 @@ public class ReportFormPager extends BasePager {
     public void bindData(int count) {
         //nameList用来表示饼状图每部分的文字内容，如第一部分，第二部分...
         ArrayList<String> nameList = new ArrayList<String>();
-        for (int i = 0; i < count; i++) {
-            nameList.add(dataType[i]);
-        }
+        for (int i = 0; i < 18; i++) {
+            if(leixing[i] == 1){
+                switch (dataType[i]){
+                    case "电影":
+                        nameList.add(dataType[i]);
+                        break;
+                    case "话费":
+                        nameList.add(dataType[i]);
+                        break;
+                    case "护肤彩妆":
+                        nameList.add(dataType[i]);
+                        break;
+                    case "酒水饮料":
+                        nameList.add(dataType[i]);
+                        break;
+                    case "礼物":
+                        nameList.add(dataType[i]);
+                        break;
+                    case "运动":
+                        nameList.add(dataType[i]);
+                        break;
+                    case "衣服鞋包":
+                        nameList.add(dataType[i]);
+                        break;
+                    case "学习":
+                        nameList.add(dataType[i]);
+                        break;
+                    case "药品":
+                        nameList.add(dataType[i]);
+                        break;
+                    case "水果":
+                        nameList.add(dataType[i]);
+                        break;
+                    case "生活用品":
+                        nameList.add(dataType[i]);
+                        break;
+                    case "旅行":
+                        nameList.add(dataType[i]);
+                        break;
+                    case "零食":
+                        nameList.add(dataType[i]);
+                        break;
+                    case "交通":
+                        nameList.add(dataType[i]);
+                        break;
+                    case "腐败聚餐":
+                        nameList.add(dataType[i]);
+                        break;
+                    case "房租":
+                        nameList.add(dataType[i]);
+                        break;
+                    case "餐饮":
+                        nameList.add(dataType[i]);
+                        break;
+                    case "一般":
+                        nameList.add(dataType[i]);
+                        break;
+                }
 
+            }else {
+                continue;
+            }
+        }
         /**
          * valueList中的元素个数决定了将圆饼分为几部分
          * Entry的构造函数中第一个值代表所占比值，第二个代表在饼状图中的位置，
          * 还可以有第三个，表示携带的数据Object，这里没用到
          */
         valueList = new ArrayList<Entry>();
+        for(int i = 0; i < 18; i ++){
+            if(leixing[i] == 1){
+                switch (dataType[i]){
+                    case "电影":
+                        valueList.add(new Entry(payoutNumAndAccount.movieAccount , 0));
+                        break;
+                    case "话费":
+                        valueList.add(new Entry(payoutNumAndAccount.huafeiAccount , 1));
+                        break;
+                    case "护肤彩妆":
+                        valueList.add(new Entry(payoutNumAndAccount.hufuAccount , 2));
+                        break;
+                    case "酒水饮料":
+                        valueList.add(new Entry(payoutNumAndAccount.jiushuiAccount , 3));
+                        break;
+                    case "礼物":
+                        valueList.add(new Entry(payoutNumAndAccount.liwuAccount , 4));
+                        break;
+                    case "运动":
+                        valueList.add(new Entry(payoutNumAndAccount.sportAccount, 5));
+                        break;
+                    case "衣服鞋包":
+                        valueList.add(new Entry(payoutNumAndAccount.clothAccount, 6));
+                        break;
+                    case "学习":
+                        valueList.add(new Entry(payoutNumAndAccount.xuexiAccount , 7));
+                        break;
+                    case "药品":
+                        valueList.add(new Entry(payoutNumAndAccount.yaopinAccount, 8));
+                        break;
+                    case "水果":
+                        valueList.add(new Entry(payoutNumAndAccount.fruitAccount, 9));
+                        break;
+                    case "生活用品":
+                        valueList.add(new Entry(payoutNumAndAccount.lifeAccount , 10));
+                        break;
+                    case "旅行":
+                        valueList.add(new Entry(payoutNumAndAccount.lvxingAccount , 11));
+                        break;
+                    case "零食":
+                        valueList.add(new Entry(payoutNumAndAccount.linshiAccount , 12));
+                        break;
+                    case "交通":
+                        valueList.add(new Entry(payoutNumAndAccount.transportAccount, 13));
+                        break;
+                    case "腐败聚餐":
+                        valueList.add(new Entry(payoutNumAndAccount.transportAccount, 14));
+                        break;
+                    case "房租":
+                        valueList.add(new Entry(payoutNumAndAccount.rentAccount, 15));
+                        break;
+                    case "餐饮":
+                        valueList.add(new Entry(payoutNumAndAccount.canyinAccount , 16));
+                        break;
+                    case "一般":
+                        valueList.add(new Entry(payoutNumAndAccount.normalAccount , 17));
+                        break;
+                }
 
-        valueList.add(new Entry(moviePercent * 100, 0));
-        valueList.add(new Entry(huafeiPercent * 100, 1));
-        valueList.add(new Entry(hufuPercent * 100, 2));
-        valueList.add(new Entry(jiushuiPercent * 100, 3));
-        valueList.add(new Entry(liwuPercent * 100, 4));
-        valueList.add(new Entry(sportPercent * 100, 5));
-        valueList.add(new Entry(clothPercent * 100, 6));
-        valueList.add(new Entry(xuexiPercent * 100, 7));
-        valueList.add(new Entry(yaopinPercent * 100, 8));
-        valueList.add(new Entry(fruitPercent * 100, 9));
-        valueList.add(new Entry(lifePercent * 100, 10));
-        valueList.add(new Entry(lvxingPercent * 100, 11));
-        valueList.add(new Entry(linshiPercent * 100, 12));
-        valueList.add(new Entry(transportPercent * 100 , 13));
-        valueList.add(new Entry(juhuiPercent * 100, 14));
-        valueList.add(new Entry(rentPercent * 100, 15));
-        valueList.add(new Entry(canyinPercent * 100, 16));
-        valueList.add(new Entry(yibanPercent * 100, 17));
+            }else {
+                continue;
+            }
+        }
 
         //显示在比例图上
         PieDataSet dataSet = new PieDataSet(valueList, "");
@@ -422,26 +543,70 @@ public class ReportFormPager extends BasePager {
 
         //设置各个区域的颜色
         ArrayList<Integer> color = new ArrayList<>();
-        color.add(colors[0]);
-        color.add(colors[1]);
-        color.add(colors[2]);
-        color.add(colors[3]);
-        color.add(colors[4]);
-        color.add(colors[5]);
-        color.add(colors[6]);
-        color.add(colors[7]);
-        color.add(colors[8]);
-        color.add(colors[9]);
-        color.add(colors[10]);
-        color.add(colors[11]);
-        color.add(colors[12]);
-        color.add(colors[13]);
-        color.add(colors[14]);
-        color.add(colors[15]);
-        color.add(colors[16]);
-        color.add(colors[17]);
-        dataSet.setColors(color);
+        for(int i = 0; i <allNumber; i ++){
+            if(leixing[i] == 1){
+                switch (dataType[i]){
+                    case "电影":
+                        color.add(colors[0]);
+                        break;
+                    case "话费":
+                        color.add(colors[1]);
+                        break;
+                    case "护肤彩妆":
+                        color.add(colors[2]);
+                        break;
+                    case "酒水饮料":
+                        color.add(colors[3]);
+                        break;
+                    case "礼物":
+                        color.add(colors[4]);
+                        break;
+                    case "运动":
+                        color.add(colors[5]);
+                        break;
+                    case "衣服鞋包":
+                        color.add(colors[6]);
+                        break;
+                    case "学习":
+                        color.add(colors[7]);
+                        break;
+                    case "药品":
+                        color.add(colors[8]);
+                        break;
+                    case "水果":
+                        color.add(colors[10]);
+                        break;
+                    case "生活用品":
+                        color.add(colors[9]);
+                        break;
+                    case "旅行":
+                        color.add(colors[11]);
+                        break;
+                    case "零食":
+                        color.add(colors[12]);
+                        break;
+                    case "交通":
+                        color.add(colors[13]);
+                        break;
+                    case "腐败聚餐":
+                        color.add(colors[14]);
+                        break;
+                    case "房租":
+                        color.add(colors[15]);
+                        break;
+                    case "餐饮":
+                        color.add(colors[16]);
+                        break;
+                    case "一般":
+                        color.add(colors[17]);
+                        break;
+                }
+            }else{
+                continue;
+            }
+        }
 
+        dataSet.setColors(color);
         PieData pieData = new PieData(nameList, dataSet);
         //设置显示百分比
         pieData.setValueFormatter(new PercentFormatter());

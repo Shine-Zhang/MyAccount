@@ -40,6 +40,7 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
     private CompleteWishDAO completeWishDAO;
     private int allCompleteWishNumber;
     private List<WishInfo> allCompleteWishInfo;
+    private MyCompleteWishRecyclerViewAdapter myAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,6 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void initView() {
-
 
         if (allCompleteWishNumber!=0) {
             //有已完成愿望
@@ -91,6 +91,8 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
         //notifyForDescendents:匹配规则,true:精确匹配  false:模糊匹配
         getContentResolver().registerContentObserver(uri, true, new ContentObserver(null) {
             public void onChange(boolean selfChange) {
+                Log.i("wwwwwww","registerContentObserver======"+selfChange );
+
                 //更新数据
                 allCompleteWishNumber = completeWishDAO.getAllCompleteWishNumber();
                 if(allCompleteWishNumber!=0) {
@@ -102,8 +104,9 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
         Log.i("wwwwwww","allCompleteWishNumber="+allCompleteWishNumber );
 
         if(allCompleteWishNumber!=0) {
+            allCompleteWishInfo = completeWishDAO.getAllCompleteWishInfo();
             //初始化自定义的适配器
-            MyCompleteWishRecyclerViewAdapter myAdapter = new MyCompleteWishRecyclerViewAdapter(allCompleteWishInfo);
+            myAdapter = new MyCompleteWishRecyclerViewAdapter(allCompleteWishInfo);
             //为rcv_wishpager_wishes设置适配器
             rcv_completewishactivity_wishes.setAdapter(myAdapter);
             //给拿到RecyclerView添加条目点击事件
@@ -133,8 +136,8 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
         View view_wishdetail = View.inflate(CompleteWishActivity.this, R.layout.popupwindow_wishdetail, null);
         CircleImageView civ_popupwindowwishdetail_close = (CircleImageView) view_wishdetail.findViewById(R.id.civ_popupwindowwishdetail_close);
         TextView tv_popupwindowwishdetail_wishtitle = (TextView) view_wishdetail.findViewById(R.id.tv_popupwindowwishdetail_wishtitle);
-        TextView tv__popupwindowwishdetail_progress = (TextView) view_wishdetail.findViewById(R.id.tv__popupwindowwishdetail_progress);
-        TextView tv__popupwindowwishdetail_wishdescription = (TextView) view_wishdetail.findViewById(R.id.tv__popupwindowwishdetail_wishdescription);
+        TextView tv_popupwindowwishdetail_progress = (TextView) view_wishdetail.findViewById(R.id.tv_popupwindowwishdetail_progress);
+        TextView tv_popupwindowwishdetail_wishdescription = (TextView) view_wishdetail.findViewById(R.id.tv_popupwindowwishdetail_wishdescription);
         RoundProgressBar rpb_popupwindowwishdetail_progress = (RoundProgressBar) view_wishdetail.findViewById(R.id.rpb_popupwindowwishdetail_progress);
         CircleImageView civ_popupwindowwishdetail_edit = (CircleImageView) view_wishdetail.findViewById(R.id.civ_popupwindowwishdetail_edit);
         CircleImageView civ_popupwindowwishdetail_pen = (CircleImageView) view_wishdetail.findViewById(R.id.civ_popupwindowwishdetail_pen);
@@ -144,27 +147,29 @@ public class CompleteWishActivity extends AppCompatActivity implements View.OnCl
         tv_popupwindowwishdetail_wishtitle.setText(wishInfo.wishTitle);
         //愿望备注的显示
         if(wishInfo.wishDescription.isEmpty()){
-            tv__popupwindowwishdetail_wishdescription.setVisibility(View.INVISIBLE);
+            tv_popupwindowwishdetail_wishdescription.setVisibility(View.GONE);
         }else{
-            tv__popupwindowwishdetail_wishdescription.setText(wishInfo.wishDescription);
+            tv_popupwindowwishdetail_wishdescription.setVisibility(View.VISIBLE);
+            tv_popupwindowwishdetail_wishdescription.setText(wishInfo.wishDescription);
         }
         //隐藏编辑框，因为是已完成愿望，不可编辑
         civ_popupwindowwishdetail_edit.setVisibility(View.GONE);
         civ_popupwindowwishdetail_pen.setVisibility(View.GONE);
 
         //愿望进度 text默认100%,不再修改，修改圆形进度条
-        tv__popupwindowwishdetail_progress.setText("100%");
+        tv_popupwindowwishdetail_progress.setText("100%");
         rpb_popupwindowwishdetail_progress.setMax(100);
         rpb_popupwindowwishdetail_progress.setProgress(100);
         rpb_popupwindowwishdetail_progress.getProgress();
 
         //显示图片  如果有图，显示图片，没有则隐藏控件
-        if(!wishInfo.wishphotoUri.isEmpty()){
-            //显示图片
-            iv_popupwindowwishdetail_photo.setImageURI(Uri.parse(wishInfo.wishphotoUri));
-        }else{
+        if(wishInfo.wishphotoUri.isEmpty() || wishInfo.wishphotoUri.equals("null") || wishInfo.wishphotoUri.equals("0") ){
             //没有图片，隐藏ImageView控件
             iv_popupwindowwishdetail_photo.setVisibility(View.GONE);
+        }else {
+            //显示图片
+            iv_popupwindowwishdetail_photo.setVisibility(View.VISIBLE);
+            iv_popupwindowwishdetail_photo.setImageURI(Uri.parse(wishInfo.wishphotoUri));
         }
 
         //获得焦点
