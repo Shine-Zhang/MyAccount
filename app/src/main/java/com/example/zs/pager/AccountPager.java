@@ -3,20 +3,32 @@ package com.example.zs.pager;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +43,10 @@ import com.example.zs.view.PinnedHeaderExpandableListView;
 import com.example.zs.view.StickyLayout;
 import com.lidroid.xutils.view.annotation.ViewInject;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 /**
  *
@@ -42,7 +57,7 @@ import java.util.ArrayList;
 public class AccountPager extends BasePager implements
         ExpandableListView.OnChildClickListener,
         ExpandableListView.OnGroupClickListener,
-        PinnedHeaderExpandableListView.OnHeaderUpdateListener, StickyLayout.OnGiveUpTouchEventListener{
+        PinnedHeaderExpandableListView.OnHeaderUpdateListener, StickyLayout.OnGiveUpTouchEventListener,View.OnClickListener{
 
     @ViewInject(R.id.lv_accountpager_showaccounts)
 
@@ -53,6 +68,11 @@ public class AccountPager extends BasePager implements
 
     private MyexpandableListAdapter adapter;
     private RelativeLayout accountPagerBudgetSta;
+
+    private static final int PHOTO_REQUEST_CAREMA = 100;// 拍照
+    private static final int PHOTO_REQUEST_GALLERY = 101;// 从相册中选择
+    private PopupWindow popupwindow_getphoto;
+    private Uri photoUri;
 
 
     public AccountPager(Activity activity) {
@@ -74,6 +94,13 @@ public class AccountPager extends BasePager implements
         expandableListView.initFootView(footView);
 
         accountPagerBudgetSta = (RelativeLayout) mrootView.findViewById(R.id.rl_account_pager_budget_state);
+        ImageButton ib_account_pager_camera = (ImageButton) mrootView.findViewById(R.id.ib_account_pager_camera);
+        ib_account_pager_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                   showPhotoPopWindow();
+            }
+        });
         accountPagerBudgetSta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,6 +118,38 @@ public class AccountPager extends BasePager implements
 
     }
 
+    private void showPhotoPopWindow() {
+
+        //弹出PopWindow供用户选择
+        View contentView= View.inflate(mActivity,R.layout.popupwindow_getphoto_addwish,null);
+        Button btAddWishPopwindowCamera = (Button) contentView.findViewById(R.id.bt_addwishpopupwindow_camera);
+        Button btAddWishPopwindowGallery = (Button) contentView.findViewById(R.id.bt_addwishpopupwindow_gallery);
+        Button btAddWishPopwindowCancle = (Button) contentView.findViewById(R.id.bt_addwishpopupwindow_cancel);
+
+        //初始化popupwindow
+        popupwindow_getphoto = new PopupWindow();
+        //获得焦点
+        popupwindow_getphoto.setFocusable(true);
+        popupwindow_getphoto.setBackgroundDrawable(new BitmapDrawable());
+        //设置popupwindow弹出和退出时的动画效果
+        popupwindow_getphoto.setAnimationStyle(R.style.AnimationBottomFade);
+        //将popup_view部署到popupWindow上
+        popupwindow_getphoto.setContentView(contentView);
+        //设置popupWindow的宽高（必须要设置）
+        popupwindow_getphoto.setHeight(RelativeLayout.LayoutParams.WRAP_CONTENT);
+        popupwindow_getphoto.setWidth(RelativeLayout.LayoutParams.MATCH_PARENT);
+        //设置popupwindow显示的位置
+        popupwindow_getphoto.showAtLocation(mrootView,Gravity.BOTTOM,0,0);
+
+    }
+
+    private void hidePopuwindow() {
+        if (popupwindow_getphoto != null) {
+            popupwindow_getphoto.dismiss();//隐藏气泡
+            popupwindow_getphoto = null;
+        }
+    }
+
 
     /**
      * 初始化明细页面所要显示的数据，也就是实际所需要现实的内容
@@ -105,7 +164,7 @@ public class AccountPager extends BasePager implements
             groupItems.clear();
         }
 
-      /*  Log.i("haha","************进入initData***********");
+        Log.i("haha","************进入initData***********");
         //手动写的测试数据
         AccountChildItemBean itemBean1 = new AccountChildItemBean(9,1,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1200",true);
         AccountChildItemBean itemBean2 = new AccountChildItemBean(9,1,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1300",false);
@@ -143,7 +202,7 @@ public class AccountPager extends BasePager implements
         groupItems.add(groupItemBean1);
         groupItems.add(groupItemBean2);
         groupItems.add(groupItemBean3);
-        Log.i("haha","************初始化数据完毕***********");*/
+        Log.i("haha","************初始化数据完毕***********");
 
         adapter = new MyexpandableListAdapter(mActivity);
         expandableListView.setAdapter(adapter);
@@ -160,6 +219,11 @@ public class AccountPager extends BasePager implements
         expandableListView.setOnGroupClickListener(this);
         stickyLayout.setOnGiveUpTouchEventListener(this);
 
+
+    }
+
+    @Override
+    public void onClick(View view) {
 
     }
 
@@ -323,10 +387,19 @@ public class AccountPager extends BasePager implements
                             public void onClick(View view) {
                                 //删除该条
                                 Toast.makeText(mActivity,"点击了delete",Toast.LENGTH_SHORT).show();
-                                Log.i("haha","position: "+(tmpChildPosition));
-                                childItems.get(tmpGroupPosition).remove(tmpChildPosition);
-                                //通知更新
-                                adapter.notifyDataSetChanged();
+                               // Log.i("haha","position: "+(tmpChildPosition));
+                                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mActivity);
+                                dialogBuilder.setMessage("你确定要删除所选账目吗？");
+                                dialogBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        childItems.get(tmpGroupPosition).remove(tmpChildPosition);
+                                        //通知更新
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                });
+                                dialogBuilder.setNegativeButton("取消",null);
+                                dialogBuilder.create().show();
                             }
                         });
 
@@ -536,6 +609,79 @@ public class AccountPager extends BasePager implements
             }
         }
     }
+
+
+    /**
+     * 该方法用于去图库获取图片
+     */
+    private void toGallery() {
+        // 激活系统图库，选择一张图片
+        Intent intent = new Intent("android.intent.action.PICK");
+        intent.setType("image/*");
+        // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_GALLERY
+        mActivity.startActivityForResult(intent,PHOTO_REQUEST_GALLERY);
+    }
+
+    /**
+     * 该函数用于调用系统的相机，并将拍好的照片传回来
+     */
+    private void toCamera() {
+
+        String path = Environment.getExternalStorageDirectory() + "/MyAccount/";
+        String fileName;
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        new DateFormat();
+        fileName= DateFormat.format("yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA))+".jpg";
+        photoUri =  Uri.fromFile(new File(path + fileName));
+        Log.i("wwwwwwww","使用相机前  uri="+photoUri);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT,photoUri);
+        mActivity.startActivityForResult(intent, PHOTO_REQUEST_CAREMA);
+
+    }
+
+
+    /**
+     * 该函数用于获取传回来的数据。
+     * 即 跳转到其他地方之后获取到想要的信息，将信息传回来
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+  /*  @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.i("wwwwwwwwwwwwwww","onActivityResult requestCode="+requestCode+"  resultCode="+resultCode+"   data="+data);
+        //去图库获取到的数据
+        if(requestCode==PHOTO_REQUEST_GALLERY){
+            if(resultCode==mActivity.RESULT_OK){
+                if(data!=null){
+                    if(data.hasExtra("data")){
+                        Bitmap bitmap = data.getParcelableExtra("data");
+                        civ_addwishactivity_image.setImageBitmap(bitmap);
+                    }
+                    //获取图片的全路径uri
+                    photoUri = data.getData();
+                    Log.i("wwwwwwww","调用图库  uri="+photoUri);
+                    civ_addwishactivity_image.setImageURI(photoUri);
+                    iv_addwishactivity_photo.setVisibility(View.INVISIBLE);
+
+                }else{
+                    return;
+                }
+            }
+        }
+        //照相
+        if(requestCode==PHOTO_REQUEST_CAREMA){
+            if(resultCode==mActivity.RESULT_OK){
+                civ_addwishactivity_image.setImageURI(photoUri);
+                iv_addwishactivity_photo.setVisibility(View.INVISIBLE);
+            }
+        }
+    }*/
 
 
 }
