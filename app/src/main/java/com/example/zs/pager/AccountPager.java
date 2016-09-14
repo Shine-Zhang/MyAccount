@@ -14,6 +14,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Gravity;
@@ -21,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
@@ -107,7 +109,7 @@ public class AccountPager extends BasePager implements
                 Intent intent = new Intent(mActivity, ShowBudgetStateAcivity.class);
                 float currentHight = DensityUtil.dip2px(mActivity,150);
                 intent.putExtra("currentHight",0.5f);
-                Log.i("haha","&&&&&&&&&&&&&&&&&&&&:"+currentHight);
+               // Log.i("haha","&&&&&&&&&&&&&&&&&&&&:"+currentHight);
                 mActivity.startActivity(intent);
             }
         });
@@ -164,11 +166,11 @@ public class AccountPager extends BasePager implements
             groupItems.clear();
         }
 
-        Log.i("haha","************进入initData***********");
+       // Log.i("haha","************进入initData***********");
         //手动写的测试数据
-        AccountChildItemBean itemBean1 = new AccountChildItemBean(9,1,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1200",true);
-        AccountChildItemBean itemBean2 = new AccountChildItemBean(9,1,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1300",false);
-        AccountChildItemBean itemBean3 = new AccountChildItemBean(9,1,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1400",false);
+        AccountChildItemBean itemBean1 = new AccountChildItemBean(9,1,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1200",true,1);
+        AccountChildItemBean itemBean2 = new AccountChildItemBean(9,1,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1300",false,2);
+        AccountChildItemBean itemBean3 = new AccountChildItemBean(9,1,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1400",false,3);
         //第一个Group
         ArrayList<AccountChildItemBean> tmp1 = new ArrayList<>();
         tmp1.add(itemBean1);
@@ -176,18 +178,18 @@ public class AccountPager extends BasePager implements
         tmp1.add(itemBean3);
         childItems.add(tmp1);
         //第二个Group
-        AccountChildItemBean itemBean4 = new AccountChildItemBean(9,2,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1900",true);
-        AccountChildItemBean itemBean5 = new AccountChildItemBean(9,2,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","200",true);
-        AccountChildItemBean itemBean6 = new AccountChildItemBean(9,2,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","300",false);
+        AccountChildItemBean itemBean4 = new AccountChildItemBean(9,2,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1900",true,4);
+        AccountChildItemBean itemBean5 = new AccountChildItemBean(9,2,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","200",true,5);
+        AccountChildItemBean itemBean6 = new AccountChildItemBean(9,2,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","300",false,6);
         ArrayList<AccountChildItemBean> tmp2 = new ArrayList<>();
         tmp2.add(itemBean4);
         tmp2.add(itemBean5);
         tmp2.add(itemBean6);
         childItems.add(tmp2);
         //第三个Group
-        AccountChildItemBean itemBean7 = new AccountChildItemBean(9,3,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1900",true);
-        AccountChildItemBean itemBean8 = new AccountChildItemBean(9,3,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","200",true);
-        AccountChildItemBean itemBean9 = new AccountChildItemBean(9,3,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","300",false);
+        AccountChildItemBean itemBean7 = new AccountChildItemBean(9,3,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1900",true,7);
+        AccountChildItemBean itemBean8 = new AccountChildItemBean(9,3,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","200",true,8);
+        AccountChildItemBean itemBean9 = new AccountChildItemBean(9,3,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","300",false,9);
         ArrayList<AccountChildItemBean> tmp3 = new ArrayList<>();
         tmp3.add(itemBean7);
         tmp3.add(itemBean8);
@@ -202,7 +204,7 @@ public class AccountPager extends BasePager implements
         groupItems.add(groupItemBean1);
         groupItems.add(groupItemBean2);
         groupItems.add(groupItemBean3);
-        Log.i("haha","************初始化数据完毕***********");
+        //Log.i("haha","************初始化数据完毕***********");
 
         adapter = new MyexpandableListAdapter(mActivity);
         expandableListView.setAdapter(adapter);
@@ -236,10 +238,26 @@ public class AccountPager extends BasePager implements
         private Context context;
         private LayoutInflater inflater;
         private ChildViewHolder holder;
-
+        private int tmpGroupPosition =-1;
+        private int tmpChildPosition = -1;
+        private ChildViewHolder preHolder = null;
         public MyexpandableListAdapter(Context context) {
             this.context = context;
             inflater = LayoutInflater.from(context);
+            expandableListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView absListView, int i) {
+                    if(preHolder!=null){
+                        unFold(preHolder);
+                    }
+                }
+
+                @Override
+                public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+
+
+                }
+            });
         }
 
         // 返回父列表个数
@@ -319,10 +337,10 @@ public class AccountPager extends BasePager implements
         @Override
         public View getChildView(int groupPosition, int childPosition,
                                  boolean isLastChild, View convertView, ViewGroup parent) {
-            Log.i("haha","tmpGroupPosition: "+groupPosition+"--childPosition: "+childPosition);
-            final int tmpGroupPosition = groupPosition;
-            final int tmpChildPosition = childPosition;
+
             View view = null;
+            tmpGroupPosition = groupPosition;
+            tmpChildPosition = childPosition;
             if (convertView != null) {
                 view = convertView;
                 holder = (ChildViewHolder) convertView.getTag();
@@ -336,41 +354,108 @@ public class AccountPager extends BasePager implements
                 holder.ib_account_pager_item_edit = (ImageButton) view.findViewById(R.id.ib_account_pager_item_edit);
                 holder.ib_account_pager_item_delete = (ImageButton) view.findViewById(R.id.ib_account_pager_item_delete);
                 holder.isIncome = false;
-                view.setTag(holder);
+
             }
 
-            AccountChildItemBean itemBean1 = new AccountChildItemBean(9,2,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","100",true);
-            AccountChildItemBean itemBean2 = new AccountChildItemBean(9,2,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","800",false);
-            if(childPosition%2==0)
-                setChildItemBean(itemBean1, holder);
-            else
-                setChildItemBean(itemBean2, holder);
+            holder.child = childPosition;
+            holder.group = groupPosition;
             final ChildViewHolder tmpHolder = holder;
+            view.setTag(holder);
+            AccountChildItemBean itemBean1 = new AccountChildItemBean(9,2,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","100",true,10);
+            AccountChildItemBean itemBean2 = new AccountChildItemBean(9,2,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","800",false,11);
+            if(childPosition%2==0) {
+                setChildItemBean(itemBean1, tmpHolder);
+            }
+
+            else {
+
+                setChildItemBean(itemBean2, tmpHolder);
+            }
+
             //设置监听
             tmpHolder.ib_account_pager_item_img_describe.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                   // Log.i("nima","*******tmpGroupPosition: "+tmpGroupPosition+"--childPosition: "+tmpChildPosition);
                     // Toast.makeText(MainActivity.this,"hahahaha",Toast.LENGTH_SHORT).show();
                     //开始属性动画
 /*                    if(holder==null){
                         Log.i("haha","******************");
                     }*/
                     //开始设置两个ImageButtion的属性动画
-                    boolean isFold = childItems.get(tmpGroupPosition).get(tmpChildPosition).isFold();
+                    if(preHolder ==null){
+
+                        fold(tmpHolder,500);
+                        preHolder = tmpHolder;
+                    }else{
+                        int group = preHolder.group;
+                        int child = preHolder.child;
+                        unFold(preHolder);
+                        if(preHolder!=tmpHolder) {
+                           // Log.i("nima", "******************************************");
+                            fold(tmpHolder,500);
+                            tmpHolder.ib_account_pager_item_edit.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    //跳转到第二个标签页
+                                    Toast.makeText(mActivity,"点击了edit",Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                            //给删除图标设置监听
+                            tmpHolder.ib_account_pager_item_delete.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    //删除该条
+                                    Toast.makeText(mActivity,"点击了delete",Toast.LENGTH_SHORT).show();
+                                    // Log.i("haha","position: "+(tmpChildPosition));
+                                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mActivity);
+                                    dialogBuilder.setMessage("你确定要删除所选账目吗？");
+                                    dialogBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                                            int group = tmpHolder.group;
+                                            int child = tmpHolder.child;
+                                          //  Log.i("nima","goup : "+ group +"child: "+ child);
+                                            childItems.get(group).remove(child);
+                                            //通知更新
+                                            adapter.notifyDataSetChanged();
+                                            preHolder = null;
+                                        }
+                                    });
+                                    dialogBuilder.setNegativeButton("取消",null);
+                                    dialogBuilder.create().show();
+                                }
+                            });
+
+                            childItems.get(group).get(child).setFold(false);
+                            preHolder = tmpHolder;
+                        }else{
+                            preHolder=null;
+                            childItems.get(group).get(child).setFold(true);
+                        }
+
+                    }
+/*                    boolean isFold = childItems.get(tmpHolder.group).get(tmpHolder.child).isFold();
+                    Log.i("nima","isFold ; "+isFold);
                     if(!isFold) {
                         //如果当前是展开状态
-                        tmpHolder.ib_account_pager_item_edit.setVisibility(View.VISIBLE);
-                        tmpHolder.ib_account_pager_item_delete.setVisibility(View.VISIBLE);
-                        tmpHolder.tv_account_pager_how_much.setVisibility(View.INVISIBLE);
-                        tmpHolder.iv_account_pager_item_photo.setVisibility(View.INVISIBLE);
-                        tmpHolder.tv_account_pager_word_describe.setVisibility(View.INVISIBLE);
+
                         AnimatorSet set = new AnimatorSet();
-                        ObjectAnimator editorAnimator = ObjectAnimator.ofFloat(tmpHolder.ib_account_pager_item_edit, "TranslationX", 0, DensityUtil.dip2px(mActivity, 100));
-                        ObjectAnimator deleteAnimator = ObjectAnimator.ofFloat(tmpHolder.ib_account_pager_item_delete, "TranslationX", 0, -DensityUtil.dip2px(mActivity, 100));
+                        ObjectAnimator editorAnimator = ObjectAnimator.ofFloat(tmpHolder.ib_account_pager_item_edit, "TranslationX", DensityUtil.dip2px(mActivity, 100),0);
+                        ObjectAnimator deleteAnimator = ObjectAnimator.ofFloat(tmpHolder.ib_account_pager_item_delete, "TranslationX", -DensityUtil.dip2px(mActivity, 100),0);
+
                         set.playTogether(editorAnimator, deleteAnimator);
-                        set.setDuration(500);
+                        set.setDuration(0);
                         set.start();
-                        childItems.get(tmpGroupPosition).get(tmpChildPosition).setFold(!isFold);
+                        tmpHolder.tv_account_pager_how_much.setVisibility(View.VISIBLE);
+                        tmpHolder.iv_account_pager_item_photo.setVisibility(View.VISIBLE);
+                        tmpHolder.tv_account_pager_word_describe.setVisibility(View.VISIBLE);
+                        tmpHolder.ib_account_pager_item_edit.setVisibility(View.GONE);
+                        tmpHolder.ib_account_pager_item_delete.setVisibility(View.GONE);
+                        childItems.get(tmpHolder.group).get(tmpHolder.child).setFold(isFold);
+                        preHolder=null;
                         //同时，在编辑和删除两个图标可见的时候，也要给他们设置监听
                         //编辑设置监听
                         tmpHolder.ib_account_pager_item_edit.setOnClickListener(new View.OnClickListener() {
@@ -393,9 +478,14 @@ public class AccountPager extends BasePager implements
                                 dialogBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        childItems.get(tmpGroupPosition).remove(tmpChildPosition);
+
+                                        int group = tmpHolder.group;
+                                        int child = tmpHolder.child;
+                                        Log.i("nima","goup : "+ group +"child: "+ child);
+                                        childItems.get(group).remove(child);
                                         //通知更新
                                         adapter.notifyDataSetChanged();
+                                        preHolder = null;
                                     }
                                 });
                                 dialogBuilder.setNegativeButton("取消",null);
@@ -406,25 +496,58 @@ public class AccountPager extends BasePager implements
 
                     }else{
                         //否则当前是，收缩状态
-                        tmpHolder.ib_account_pager_item_edit.setVisibility(View.GONE);
-                        tmpHolder.ib_account_pager_item_delete.setVisibility(View.GONE);
-                        tmpHolder.tv_account_pager_how_much.setVisibility(View.VISIBLE);
-                        tmpHolder.iv_account_pager_item_photo.setVisibility(View.VISIBLE);
-                        tmpHolder.tv_account_pager_word_describe.setVisibility(View.VISIBLE);
+                        tmpHolder.ib_account_pager_item_edit.setVisibility(View.VISIBLE);
+                        tmpHolder.ib_account_pager_item_delete.setVisibility(View.VISIBLE);
+                        tmpHolder.tv_account_pager_how_much.setVisibility(View.INVISIBLE);
+                        tmpHolder.iv_account_pager_item_photo.setVisibility(View.INVISIBLE);
+                        tmpHolder.tv_account_pager_word_describe.setVisibility(View.INVISIBLE);
                         AnimatorSet set = new AnimatorSet();
-                        ObjectAnimator editorAnimator = ObjectAnimator.ofFloat(tmpHolder.ib_account_pager_item_edit, "TranslationX",  DensityUtil.dip2px(mActivity, 100),0);
-                        ObjectAnimator deleteAnimator = ObjectAnimator.ofFloat(tmpHolder.ib_account_pager_item_delete, "TranslationX",-DensityUtil.dip2px(mActivity, 100), 0 );
+
+                       ; ObjectAnimator editorAnimator = ObjectAnimator.ofFloat(tmpHolder.ib_account_pager_item_edit, "TranslationX", 0, DensityUtil.dip2px(mActivity, 100));
+                        ObjectAnimator deleteAnimator = ObjectAnimator.ofFloat(tmpHolder.ib_account_pager_item_delete, "TranslationX",0,-DensityUtil.dip2px(mActivity, 100) );
+
                         set.playTogether(editorAnimator, deleteAnimator);
                         set.setDuration(500);
                         set.start();
-                        childItems.get(tmpGroupPosition).get(tmpChildPosition).setFold(!isFold);
-                    }
+                        childItems.get(tmpHolder.group).get(tmpHolder.child).setFold(!isFold);
+                    }*/
 
 
                 }
             });
             holder=null;
             return view;
+        }
+
+        private void fold(ChildViewHolder holder,int duration) {
+
+            holder.ib_account_pager_item_edit.setVisibility(View.VISIBLE);
+            holder.ib_account_pager_item_delete.setVisibility(View.VISIBLE);
+            holder.tv_account_pager_how_much.setVisibility(View.INVISIBLE);
+            holder.iv_account_pager_item_photo.setVisibility(View.INVISIBLE);
+            holder.tv_account_pager_word_describe.setVisibility(View.INVISIBLE);
+            AnimatorSet set = new AnimatorSet();
+            ObjectAnimator editorAnimator = ObjectAnimator.ofFloat(holder.ib_account_pager_item_edit, "TranslationX",0, DensityUtil.dip2px(mActivity, 100));
+            ObjectAnimator deleteAnimator = ObjectAnimator.ofFloat(holder.ib_account_pager_item_delete, "TranslationX", 0,-DensityUtil.dip2px(mActivity, 100));
+            set.playTogether(editorAnimator, deleteAnimator);
+            set.setDuration(duration);
+            set.start();
+        }
+
+        private void unFold(ChildViewHolder holder) {
+
+            AnimatorSet set = new AnimatorSet();
+            ObjectAnimator editorAnimator = ObjectAnimator.ofFloat(holder.ib_account_pager_item_edit, "TranslationX", DensityUtil.dip2px(mActivity, 100),0);
+            ObjectAnimator deleteAnimator = ObjectAnimator.ofFloat(holder.ib_account_pager_item_delete, "TranslationX", -DensityUtil.dip2px(mActivity, 100),0);
+            set.playTogether(editorAnimator, deleteAnimator);
+            set.setDuration(0);
+            set.start();
+            holder.ib_account_pager_item_edit.setVisibility(View.GONE);
+            holder.ib_account_pager_item_delete.setVisibility(View.GONE);
+            holder.tv_account_pager_word_describe.setVisibility(View.VISIBLE);
+            holder.iv_account_pager_item_photo.setVisibility(View.VISIBLE);
+            holder.tv_account_pager_how_much.setVisibility(View.VISIBLE);
+
         }
 
 
@@ -462,6 +585,8 @@ public class AccountPager extends BasePager implements
         TextView tv_account_pager_how_much;
         ImageButton ib_account_pager_item_edit;
         ImageButton ib_account_pager_item_delete;
+        int child;
+        int group;
     }
 
     /**
