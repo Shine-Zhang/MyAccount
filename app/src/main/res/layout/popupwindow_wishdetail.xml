@@ -25,29 +25,30 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <LinearLayout
+                android:id="@+id/ll_popupwindowwishdetail_detailtop"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="9"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width ="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:text="我的愿望"
-                        android:textSize="12sp"
-                        android:textColor="#BFBFBF"
-                        android:layout_marginBottom="15dp" />
-                </RelativeLayout>
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical">
+
+                <TextView
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:layout_gravity="center"
+                    android:layout_centerVertical="true"
+                    android:layout_width ="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/tv_popupwindowwishdetail_title"
+                    android:text="我的愿望"
+                    android:textSize="12sp"
+                    android:textColor="#BFBFBF" />
+
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="11"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="吃吃吃吃"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginBottom="15dp"
                     android:textSize="13sp"
                     android:textColor="#000"
                     android:id="@+id/tv_popupwindowwishdetail_wishtitle"/>
@@ -84,7 +85,7 @@
                         android:textColor="#1FB9EC"
                         android:textSize="13sp"
                         android:gravity="center"
-                        android:id="@+id/tv__popupwindowwishdetail_progress"/>
+                        android:id="@+id/tv_popupwindowwishdetail_progress"/>
                 </LinearLayout>
             </RelativeLayout>
             <ImageView
@@ -93,19 +94,25 @@
                 android:id="@+id/iv_popupwindowwishdetail_photo"
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center" />
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="备注"
-                android:clickable="false"
-                android:padding="6dp"
-                android:textSize="14sp"
-                android:gravity="center"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="10dp"
-                android:id="@+id/tv__popupwindowwishdetail_wishdescription"
-                android:background="@drawable/bg_textview_blue" />
+                android:id="@+id/ll_popupwindowwishdetail_detailbottom">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="备注"
+                    android:clickable="false"
+                    android:padding="6dp"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/tv_popupwindowwishdetail_wishdescription"
+                    android:background="@drawable/bg_textview_blue" />
+            </LinearLayout>
+
         </LinearLayout>
 
     </RelativeLayout>

@@ -3,6 +3,7 @@ package com.example.zs.pager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -18,6 +19,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.zs.dao.IncomeContentDAO;
+import com.example.zs.dao.PayOutContentDAO;
 import com.example.zs.application.MyAplication;
 import com.example.zs.myaccount.AboutUsActivity;
 import com.example.zs.myaccount.FeedbackActivity;
@@ -73,6 +76,7 @@ public class OwnerPager extends BasePager {
     private int CURRENT_VERSION;
     private String downloadurl;
     private ProgressBar pb_ownerpager_downloadapk;
+    private TextView tv_ownerpager_mybalance;
     private RelativeLayout rl_ownerpager_unlogin;
     private RelativeLayout rl_ownerpager_logined;
 
@@ -97,11 +101,14 @@ public class OwnerPager extends BasePager {
         oi_ownerpager_aboutUs = (OwnerItem) OwnerPagerView.findViewById(R.id.oi_ownerpager_aboutUs);
 
         TextView tv_ownerpager_version = (TextView) OwnerPagerView.findViewById(R.id.tv_ownerpager_version);
+        tv_ownerpager_mybalance = (TextView) OwnerPagerView.findViewById(R.id.tv_ownerpager_mybalance);
         TextView iv_ownerpager_username = (TextView) OwnerPagerView.findViewById(R.id.iv_ownerpager_username);
         pb_ownerpager_downloadapk = (ProgressBar) OwnerPagerView.findViewById(R.id.pb_ownerpager_downloadapk);
         CircleImageView iv_ownerpager_unlogin = (CircleImageView) OwnerPagerView.findViewById(R.id.iv_ownerpager_unlogin);
         CircleImageView iv_ownerpager_loginIcon = (CircleImageView) OwnerPagerView.findViewById(R.id.iv_ownerpager_loginIcon);
 
+        tv_ownerpager_version.setText("v"+getVersionName());
+        getDataFromDB();
         //接收由LoginActivity回传的数据
         Intent intent = mActivity.getIntent();
         String usernameStr = intent.getStringExtra("usernameStr");
@@ -139,6 +146,14 @@ public class OwnerPager extends BasePager {
         initAboutUs();      //关于我们
 
         return OwnerPagerView;
+    }
+
+    private void getDataFromDB() {
+        PayOutContentDAO payOutContentDAO = new PayOutContentDAO(mActivity);
+        IncomeContentDAO incomeContentDAO = new IncomeContentDAO(mActivity);
+        int moneySum = payOutContentDAO.getMoneySum();
+        int moneySum1 = incomeContentDAO.getMoneySum();
+        tv_ownerpager_mybalance.setText(moneySum1-moneySum+"");
     }
 
     //初始化 登录 条目，添加点击事件

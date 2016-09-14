@@ -18,12 +18,12 @@ import java.util.List;
  * 对未完成愿望的数据表的操作
  * @author 韦宇
  */
-public class OnGoingWishDao {
+public class OnGoingWishDAO {
 
     Context context;
     private final SQLiteDatabase readableDatabase;
 
-    public OnGoingWishDao(Context context) {
+    public OnGoingWishDAO(Context context) {
         this.context = context;
         WishDB wishDBHelper = new WishDB(context, "wish.db",null, 1);
         readableDatabase = wishDBHelper.getReadableDatabase();
@@ -52,20 +52,14 @@ public class OnGoingWishDao {
 
     //从数据库中删除选中的愿望信息
     public int deleteOnGoingWishInfo(int wishid){
-        return readableDatabase.delete("ongoingwish","wishid = ?",new String[]{wishid+""});
-    }
+        //通知内容观察者数据库变化了
+        ContentResolver contentResolver = context.getContentResolver();
+        //因为是我们自己的数据发生变化了,所以我们要自定义一个uri进行操作
+        Uri uri = Uri.parse("content://com.example.zs.dao.ongoingwish.changed");
+        //通知内容观察者数据发生变化了
+        contentResolver.notifyChange(uri, null);
 
-    //修改愿望信息
-    public int updateOnGoingWishInfo(WishInfo wishInfo,int id){
-        ContentValues values = new ContentValues();
-        values.put("wishTitle",wishInfo.wishTitle);
-        values.put("wishDescription",wishInfo.wishDescription);
-        values.put("wishYear",wishInfo.wishYear);
-        values.put("wishMonth",wishInfo.wishMonth);
-        values.put("wishDay",wishInfo.wishDay);
-        values.put("wishFund",wishInfo.wishFund);
-        values.put("wishphotoUri",wishInfo.wishphotoUri);
-        return readableDatabase.update("ongoingwish",values,"wishid = ?",new String[]{id+""});
+        return readableDatabase.delete("ongoingwish","wishid = ?",new String[]{wishid+""});
     }
 
     //查询所有未完成愿望的信息
