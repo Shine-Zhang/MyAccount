@@ -6,12 +6,10 @@ import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.Keyboard.Key;
 import android.inputmethodservice.KeyboardView;
 import android.inputmethodservice.KeyboardView.OnKeyboardActionListener;
-import android.os.Build;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.example.zs.myaccount.R;
@@ -29,7 +27,7 @@ public class KeyboardUtil {
 	private Keyboard k2;// 数字键盘
 	public boolean isnun = false;// 是否数据键盘
 	public boolean isupper = false;// 是否大写
-
+	private KeyBoardConfirmListener mKeyBoardConfirmListenerL;
 
 
 	private String rule;
@@ -81,9 +79,10 @@ public class KeyboardUtil {
 		public void onKey(int primaryCode, int[] keyCodes) {
 			Editable editable = ed.getText();
 			int start = ed.getSelectionStart();
-			if(!TextUtils.isEmpty(editable.toString())){
-				 ed.setSelection(editable.toString().length());
-				start = editable.toString().length();
+			int length = editable.length();
+			if(length>0){
+				ed.setSelection(length);
+				start = length;
 			}
 			//String tmp =Character.toString((char) primaryCode);
 			char tmp = (char) primaryCode;
@@ -92,56 +91,49 @@ public class KeyboardUtil {
 					return;
 				}
 			}
-				if (primaryCode == Keyboard.KEYCODE_CANCEL) {// 完成
-					hideKeyboard();
-				} else if (primaryCode == Keyboard.KEYCODE_DELETE) {// 回退
-					if (editable != null && editable.length() > 0) {
-						if (start >= 0) {
-							editable.delete(start - 1, start);
-						}
-					}
-				} else if (primaryCode == Keyboard.KEYCODE_SHIFT) {// 大小写切换
-					changeKey();
-					keyboardView.setKeyboard(k1);
-
-				} else if (primaryCode == Keyboard.KEYCODE_MODE_CHANGE) {// 数字键盘切换
-					if (isnun) {
-						isnun = false;
-						keyboardView.setKeyboard(k1);
-					} else {
-						isnun = true;
-						keyboardView.setKeyboard(k2);
-					}
-				} else if (primaryCode == 57419) { // go left
-					if (start > 0) {
-						ed.setSelection(start - 1);
-					}
-				} else if (primaryCode == 57421) { // go right
-					if (start < ed.length()) {
-						ed.setSelection(start + 1);
-					}
-				} else {
-
-
-					InputMethodManager inputMethodManager = (InputMethodManager) act.getSystemService(act.INPUT_METHOD_SERVICE);
-//et_addCategory_markContent为edittext
-//弹出
-//					ed.requestFocus();
-//					inputMethodManager.showSoftInput(ed, 0);
-//隐藏
-					inputMethodManager.hideSoftInputFromWindow(ed.getWindowToken(), 0);
-
-
-					if ("0".equals(ed.getText().toString())) {
-						ed.setText(Character.toString((char) primaryCode));
-					}
-
-					editable.insert(start, Character.toString((char) primaryCode));
+			if (primaryCode == Keyboard.KEYCODE_CANCEL) {// 完成
+				if(mKeyBoardConfirmListenerL!=null){
+					mKeyBoardConfirmListenerL.toConfirm();
 				}
+				hideKeyboard();
+			} else if (primaryCode == Keyboard.KEYCODE_DELETE) {// 回退
+				if (editable != null && editable.length() > 0) {
+					if (start >= 0) {
+						editable.delete(start - 1, start);
+					}
+				}
+			} else if (primaryCode == Keyboard.KEYCODE_SHIFT) {// 大小写切换
+				changeKey();
+				keyboardView.setKeyboard(k1);
+
+			} else if (primaryCode == Keyboard.KEYCODE_MODE_CHANGE) {// 数字键盘切换
+				if (isnun) {
+					isnun = false;
+					keyboardView.setKeyboard(k1);
+				} else {
+					isnun = true;
+					keyboardView.setKeyboard(k2);
+				}
+			} else if (primaryCode == 57419) { // go left
+				if (start > 0) {
+					ed.setSelection(start - 1);
+				}
+			} else if (primaryCode == 57421) { // go right
+				if (start < ed.length()) {
+					ed.setSelection(start + 1);
+				}
+			} else {
+
+				if ("0".equals(ed.getText().toString())) {
+					ed.setText(Character.toString((char) primaryCode));
+				}
+
+				editable.insert(start, Character.toString((char) primaryCode));
 			}
+		}
 
 	};
-	
+
 	/**
 	 * 键盘大小写切换
 	 */
@@ -166,28 +158,29 @@ public class KeyboardUtil {
 		}
 	}
 
-    public void showKeyboard() {
+	public void showKeyboard() {
+		Log.i("haha","showKeyboard");
+		if(!TextUtils.isEmpty(ed.getText().toString())){
+			ed.setText("");
+		}
+		keyboardView.setVisibility(View.VISIBLE);
 
-        int visibility = keyboardView.getVisibility();
-        if (visibility == View.GONE || visibility == View.INVISIBLE) {
-            keyboardView.setVisibility(View.VISIBLE);
-        }
-    }
-    
-    public void hideKeyboard() {
-        int visibility = keyboardView.getVisibility();
-        if (visibility == View.VISIBLE) {
-            keyboardView.setVisibility(View.INVISIBLE);
-        }
-    }
-    
-    private boolean isword(String str){
-    	String wordstr = "abcdefghijklmnopqrstuvwxyz";
-    	if (wordstr.indexOf(str.toLowerCase())>-1) {
+	}
+
+	public void hideKeyboard() {
+		int visibility = keyboardView.getVisibility();
+		if (visibility == View.VISIBLE) {
+			keyboardView.setVisibility(View.GONE);
+		}
+	}
+
+	private boolean isword(String str){
+		String wordstr = "abcdefghijklmnopqrstuvwxyz";
+		if (wordstr.indexOf(str.toLowerCase())>-1) {
 			return true;
 		}
-    	return false;
-    }
+		return false;
+	}
 
 	public  boolean stringFilter(String str)throws PatternSyntaxException {
 
@@ -199,6 +192,18 @@ public class KeyboardUtil {
 
 	public void setNumberFormat(int intDigits) {
 		rule = "^\\d{1,"+intDigits+"}|^\\d{1,"+intDigits+"}\\.\\d{0,2}";
+	}
+
+	public void setOnkeyBoardConfirmListener(KeyBoardConfirmListener keyBoardConfirmListenerL){
+
+		this.mKeyBoardConfirmListenerL = keyBoardConfirmListenerL;
+
+
+	}
+	public interface KeyBoardConfirmListener{
+
+		public void toConfirm();
+
 	}
 
 }

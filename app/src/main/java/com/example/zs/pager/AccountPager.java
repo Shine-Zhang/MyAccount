@@ -244,6 +244,9 @@ public class AccountPager extends BasePager implements
         public MyexpandableListAdapter(Context context) {
             this.context = context;
             inflater = LayoutInflater.from(context);
+            if(preHolder!=null){
+                preHolder=null;
+            }
             expandableListView.setOnScrollListener(new AbsListView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(AbsListView absListView, int i) {
@@ -361,16 +364,53 @@ public class AccountPager extends BasePager implements
             holder.group = groupPosition;
             final ChildViewHolder tmpHolder = holder;
             view.setTag(holder);
-            AccountChildItemBean itemBean1 = new AccountChildItemBean(9,2,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","100",true,10);
-            AccountChildItemBean itemBean2 = new AccountChildItemBean(9,2,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","800",false,11);
+          /*  AccountChildItemBean itemBean1 = new AccountChildItemBean(9,2,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","100",true,10);
+            AccountChildItemBean itemBean2 = new AccountChildItemBean(9,2,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","800",false,11);*/
             if(childPosition%2==0) {
-                setChildItemBean(itemBean1, tmpHolder);
+                setChildItemBean(childItems.get(groupPosition).get(childPosition), tmpHolder);
             }
 
             else {
 
-                setChildItemBean(itemBean2, tmpHolder);
+                setChildItemBean(childItems.get(groupPosition).get(childPosition), tmpHolder);
             }
+
+            tmpHolder.ib_account_pager_item_edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //跳转到第二个标签页
+                    Toast.makeText(mActivity,"******点击了edit: "+tmpHolder.group+"----"+tmpHolder.child,Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            //给删除图标设置监听
+            tmpHolder.ib_account_pager_item_delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //删除该条
+                    Toast.makeText(mActivity,"点击了delete",Toast.LENGTH_SHORT).show();
+                    // Log.i("haha","position: "+(tmpChildPosition));
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mActivity);
+                    dialogBuilder.setMessage("你确定要删除所选账目吗？");
+                    dialogBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            int group = tmpHolder.group;
+                            int child = tmpHolder.child;
+                            Log.i("nima","goup : "+ group +"child: "+ child);
+                           // Log.i("nima","*****************content: "+ childItems.get(group).get(child).getId()+":::::"+childItems.get(group).remove(child).getHowmuch());
+                            childItems.get(group).remove(child);
+                            //通知更新
+                            adapter.notifyDataSetChanged();
+                            unFold(tmpHolder);
+                            preHolder = null;
+                        }
+                    });
+                    dialogBuilder.setNegativeButton("取消",null);
+                    dialogBuilder.create().show();
+                }
+            });
 
             //设置监听
             tmpHolder.ib_account_pager_item_img_describe.setOnClickListener(new View.OnClickListener() {
@@ -393,42 +433,8 @@ public class AccountPager extends BasePager implements
                         unFold(preHolder);
                         if(preHolder!=tmpHolder) {
                            // Log.i("nima", "******************************************");
+
                             fold(tmpHolder,500);
-                            tmpHolder.ib_account_pager_item_edit.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    //跳转到第二个标签页
-                                    Toast.makeText(mActivity,"点击了edit",Toast.LENGTH_SHORT).show();
-                                }
-                            });
-
-                            //给删除图标设置监听
-                            tmpHolder.ib_account_pager_item_delete.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    //删除该条
-                                    Toast.makeText(mActivity,"点击了delete",Toast.LENGTH_SHORT).show();
-                                    // Log.i("haha","position: "+(tmpChildPosition));
-                                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mActivity);
-                                    dialogBuilder.setMessage("你确定要删除所选账目吗？");
-                                    dialogBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                                            int group = tmpHolder.group;
-                                            int child = tmpHolder.child;
-                                          //  Log.i("nima","goup : "+ group +"child: "+ child);
-                                            childItems.get(group).remove(child);
-                                            //通知更新
-                                            adapter.notifyDataSetChanged();
-                                            preHolder = null;
-                                        }
-                                    });
-                                    dialogBuilder.setNegativeButton("取消",null);
-                                    dialogBuilder.create().show();
-                                }
-                            });
-
                             childItems.get(group).get(child).setFold(false);
                             preHolder = tmpHolder;
                         }else{
