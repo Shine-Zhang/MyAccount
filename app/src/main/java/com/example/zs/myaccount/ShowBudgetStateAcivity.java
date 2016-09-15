@@ -61,6 +61,10 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
     private int adapterPosition;
     private int monthdays;
     private Calendar calendar;
+    private String[] normalDays;
+    private String[] abNormalDays;
+    private String[] normal2Days;
+    private String[] special2Days;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,13 +97,26 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
         //获取当前月最后一天,即计算当前月有多少天
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         last = dateFormater.format(calendar.getTime());
-
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int year = calendar.get(Calendar.YEAR);
         //本月天数
         String substring = last.substring(8,10);
         monthdays = Integer.parseInt(substring);
 
-        daysOfMonth = new String[]{"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16",
+        normalDays = new String[]{"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16",
                 "17","18","19","20","21","22","23","24","25","26","27","28","29","30"};
+
+        abNormalDays = new String[]{"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16",
+                "17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"};
+
+        normal2Days = new String[]{"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16",
+                "17","18","19","20","21","22","23","24","25","26","27","28"};
+
+        special2Days = new String[]{"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16",
+                "17","18","19","20","21","22","23","24","25","26","27","28","29"};
+
+        daysOfMonth = bindDaysOfMonths(year, month);
+
 
         mVpShowBudgetSta.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -189,6 +206,67 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
 
     }
 
+    private String[] bindDaysOfMonths(int year,int month) {
+        String [] result = null;
+        switch (month){
+            case 1:
+                result = abNormalDays;
+                break;
+            case 3:
+                result = abNormalDays;
+                break;
+            case 5:
+                result = abNormalDays;
+                break;
+            case 7:
+                result = abNormalDays;
+                break;
+            case 8:
+                result = abNormalDays;
+                break;
+            case 10:
+                result = abNormalDays;
+                break;
+            case 12:
+                result = abNormalDays;
+                break;
+            case 4:
+                result =  normalDays;
+                break;
+            case 6:
+                result =  normalDays;
+                break;
+            case 9:
+                result =  normalDays;
+                break;
+            case 11:
+                result =  normalDays;
+                break;
+            case 2:
+                if(!isLeapYear( year)){
+
+                    result =  normal2Days;
+
+                }else{
+
+                    result =  special2Days;
+                }
+        }
+
+        return result;
+
+    }
+
+    public boolean  isLeapYear(int year){
+        boolean ret = false;
+
+        if((year%4==0&&year%100!=0)||(year%400==0)){
+                ret = true;
+        }
+
+
+        return ret;
+    }
     @Override
     public void onClick(View view) {
         String budget;
@@ -593,12 +671,7 @@ abstract class ShowBudgetStateOnItemTouchListener implements RecyclerView.OnItem
                 onItemClick(VH);
             }
         }
-
-
-
     }
-
-
 }
 
 
