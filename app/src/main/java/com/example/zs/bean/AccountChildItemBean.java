@@ -21,8 +21,6 @@ public class AccountChildItemBean {
     boolean isIncome;
     boolean isFold=true;
 
-    int groupItem;
-    int childItem;
 
     /**
      *全参构造函数主要是为了方便封装bean类
@@ -117,21 +115,6 @@ public class AccountChildItemBean {
         this.id = id;
     }
 
-    public int getGroupItem() {
-        return groupItem;
-    }
-
-    public void setGroupItem(int groupItem) {
-        this.groupItem = groupItem;
-    }
-
-    public int getChildItem() {
-        return childItem;
-    }
-
-    public void setChildItem(int childItem) {
-        this.childItem = childItem;
-    }
 
 
 }

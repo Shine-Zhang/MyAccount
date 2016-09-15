@@ -210,6 +210,7 @@ public class AccountPager extends BasePager implements
         expandableListView.setAdapter(adapter);
 
 
+
         // 展开所有group
 /*        for (int i = 0, count = expandableListView.getCount(); i < count; i++) {
             Log.i("haha","************展开所有数据完毕***********"+i);
