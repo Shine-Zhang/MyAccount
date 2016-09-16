@@ -20,8 +20,6 @@ public class AccountChildItemBean {
     String howmuch;
     boolean isIncome;
     boolean isFold=true;
-
-
     /**
      *全参构造函数主要是为了方便封装bean类
      * @param month 添加该条目到帐薄中时的月份
