@@ -1,6 +1,7 @@
 package com.example.zs.myaccount;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -445,8 +446,20 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
      * @param v
      */
     public void choiceTime(View v){
-
-        //不用指定位置，就不需要使用popupwindow
+        //使用系统提供的日期选择器
+        //api已经封装了dialog 并设置了其的宽高
+        new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                //用户点击确认是调用
+                Log.i(TAG,i+"--"+i1+"--"+"--"+i2);
+                year = i;
+                month = i1+1;
+                day = i2;
+                btn_addRecordActivity_time.setText(month+"月"+day+"日");
+            }
+        },year,month-1,day).show();
+       /* //不用指定位置，就不需要使用popupwindow
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
        // View inflate = View.inflate(this, R.layout.date_choice, null);
         //设置监听事件
@@ -461,15 +474,17 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 PayOutContentDAO payOutContentDAO = new PayOutContentDAO(AddRecordActivity.this);
                 int moneySum = payOutContentDAO.getMoneySum();
                 Log.i(TAG, "moneySum="+moneySum);
-              /*  //test数据
+              *//*  //test数据
                 payOutContentDAO.deletePayoutContentItemFromDB(1);
                 PayouContentInfo test = new PayouContentInfo(2, 12, "test类", 15, 3, 3, "1", "----", "--");
                 payOutContentDAO.updataPayoutContentDB(2,test);
                 ArrayList<PayouContentInfo> allPayoutContentFromDB = payOutContentDAO.getAllPayoutContentFromDB();
-                Log.i(TAG,allPayoutContentFromDB.get(0).toString());*/
+                Log.i(TAG,allPayoutContentFromDB.get(0).toString());*//*
             }
-        });
-        builder.setView(datePicker)
+        });*/
+       //The specified child already has a parent. You must call removeView() on the child's parent first.
+
+        /*builder.setView(datePicker)
                 .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -482,7 +497,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
 
                     }
                 })
-        .show();
+        .show();*/
     }
 }
 
