@@ -36,7 +36,9 @@ import com.example.zs.dao.IncomeContentDAO;
 import com.example.zs.dao.PayOutContentDAO;
 import com.example.zs.utils.KeyboardUtil;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -328,10 +330,11 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
 
     private void saveIncomeInfoToDB() {
         IncomeContentInfo incomeContentInfo = new IncomeContentInfo(idNumberPay, payOutPage.selectResourceID, payOutPage.selectCategoryName,
-                year, month, day, stringNumber.toString(), remarkContent, "this is photo");
+                year, month, day, stringNumber.toString(), remarkContent, "");
             if (!stringNumber.toString().isEmpty()) {
                 if (!isJumpActivity){
-                    idNumberIn++;
+                    /*idNumberIn++;
+                    incomeContentInfo.id = idNumberIn;*/
                     incomeContentDAO.addIncomeContentToDB(incomeContentInfo);
                     finish();
                 }else {
@@ -348,11 +351,14 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private void savePayoutInfoToDB() {
         Log.i(TAG,"savePayoutInfoToDB");
         PayoutContentInfo payouContentInfo = new PayoutContentInfo(idNumberPay,payOutPage.selectResourceID, payOutPage.selectCategoryName,
-                year, month, day, stringNumber.toString(), remarkContent, "this is photo");
+                year, month, day, stringNumber.toString(), remarkContent, "");
                  if (!stringNumber.toString().isEmpty()){
                      if (!isJumpActivity){
-                         idNumberPay++;
+                         //id不自增的原因是，修改时不需要自增
+                        /* idNumberPay++;
+                         payouContentInfo.id = idNumberPay;*/
                          payOutContentDAO.addPayoutContentToDB(payouContentInfo);
+                         Log.i(TAG,"addPayoutContentToDB");
                          finish();
                      }else {
                          //根据id保存数据
@@ -386,11 +392,13 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
 
     public void setDate(boolean b) {
         datePicker = new DatePicker(this);
+        //Calendar calendar = Calendar.getInstance();
         if (!b){
             //从+号加入此activity
             //得到当日的日期
             year = datePicker.getYear();
-            month = datePicker.getMonth();
+            //获取的月份要加1，月份的区间为0-11，转换为正常的月份是1-12月
+            month = datePicker.getMonth()+1;
             day = datePicker.getDayOfMonth();
             btn_addRecordActivity_time.setText(month+"月"+day+"日");
             Log.i(TAG,year+"-"+month+"-"+day);
