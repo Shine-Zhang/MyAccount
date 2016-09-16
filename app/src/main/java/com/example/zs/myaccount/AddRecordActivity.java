@@ -329,8 +329,8 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void saveIncomeInfoToDB() {
-        IncomeContentInfo incomeContentInfo = new IncomeContentInfo(idNumberPay, payOutPage.selectResourceID, payOutPage.selectCategoryName,
-                year, month, day, stringNumber.toString(), remarkContent, "");
+        IncomeContentInfo incomeContentInfo = new IncomeContentInfo(idNumberPay, incomePage.selectResourceID, incomePage.selectCategoryName,
+                year, month, day, stringNumber, remarkContent, "");
             if (!stringNumber.toString().isEmpty()) {
                 if (!isJumpActivity){
                     /*idNumberIn++;
@@ -351,7 +351,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private void savePayoutInfoToDB() {
         Log.i(TAG,"savePayoutInfoToDB");
         PayoutContentInfo payouContentInfo = new PayoutContentInfo(idNumberPay,payOutPage.selectResourceID, payOutPage.selectCategoryName,
-                year, month, day, stringNumber.toString(), remarkContent, "");
+                year, month, day, stringNumber, remarkContent, "");
                  if (!stringNumber.toString().isEmpty()){
                      if (!isJumpActivity){
                          //id不自增的原因是，修改时不需要自增
