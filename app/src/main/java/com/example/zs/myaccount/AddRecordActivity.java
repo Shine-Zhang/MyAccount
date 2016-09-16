@@ -68,8 +68,6 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     public LinearLayout ll_addRecordActivity_downRegion;
     public LinearLayout ll_addRecordActivity_keyboard;
     private IncomePage incomePage;
-    private int idNumberPay;
-    private int idNumberIn;
     private IncomeContentDAO incomeContentDAO;
     private RelativeLayout rl_addRecordActivity_remarklayout;
     private RelativeLayout rl_addRecordActivity_photolayout;
@@ -79,7 +77,6 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private int idFromOther;
     private String photo;
     private String remarkContent="";
-    private TextView tv_addRecordActivity_remarkShow;
     private ImageView iv_addRecordActivity_remarkIcon;
     private TextView tv_addRecordActivity_jumpRemark;
     public KeyboardUtil keyboardUtil;
@@ -123,7 +120,6 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         iv_addRecordActivity_finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveIdIfo();
                 finish();
             }
         });
@@ -165,10 +161,6 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         //显示日期
         setDate(isJumpActivity);
         vp_addRecordActivity_content.setAdapter(new MyViewPagerAdapter());
-
-        //获取表的id值
-        idNumberPay = MyAplication.getIntFromSp("idNumberPay");
-        idNumberIn = MyAplication.getIntFromSp("idNumberIn");
     }
 
     private void getInfoFromActivity() {
@@ -204,7 +196,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         if (flag){
             int resourceIDFromName =  payOutContentDAO.getResourceIDFromName(getCategoryName);
             if (isIncomePage) {
-                //incomePage.setItemEnable(resourceIDFromName);
+                incomePage.setItemEnable(resourceIDFromName,getCategoryName);
             } else {
                 payOutPage.setItemEnable(resourceIDFromName,getCategoryName);
             }
@@ -214,7 +206,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private void keyBoard() {
         //找到键盘位置控件
         tv_addRecordActivity_jumpRemark = (TextView) findViewById(R.id.tv_addRecordActivity_jumpRemark);
-        tv_addRecordActivity_remarkShow = (TextView) findViewById(R.id.tv_addRecordActivity_remarkShow);
+       // tv_addRecordActivity_remarkShow = (TextView) findViewById(R.id.tv_addRecordActivity_remarkShow);
 
         iv_addRecordActivity_remarkIcon = (ImageView) findViewById(R.id.iv_addRecordActivity_remarkIcon);
 
@@ -222,7 +214,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         //设置点击事件
 
         tv_addRecordActivity_jumpRemark.setOnClickListener(this);
-        tv_addRecordActivity_remarkShow.setOnClickListener(this);
+       // tv_addRecordActivity_remarkShow.setOnClickListener(this);
         iv_addRecordActivity_remarkIcon.setOnClickListener(this);
         btn_addCategory_markConfirm.setOnClickListener(this);
     }
@@ -247,6 +239,8 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 break;
             case R.id.tv_addRecordActivity_jumpRemark:
                 //照相区隐藏，显示备注区
+                //键盘消失
+                keyboardUtil.hideKeyboard();
                 rl_addRecordActivity_photolayout.setVisibility(View.GONE);
                 rl_addRecordActivity_remarklayout.setVisibility(View.VISIBLE);
                 et_addCategory_markContent.setText(remarkContent);
@@ -277,15 +271,10 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                     tv_addRecordActivity_jumpRemark.setVisibility(View.GONE);
                     iv_addRecordActivity_remarkIcon.setVisibility(View.VISIBLE);
                 }
-
-                //隐藏键盘
+                //隐藏软键盘
                 inputMethodManager.hideSoftInputFromWindow(et_addCategory_markContent.getWindowToken(), 0);
                 break;
-            case R.id.tv_addRecordActivity_remarkShow:
-                Log.i(TAG,"remarkShow");
-                rl_addRecordActivity_remarklayout.setVisibility(View.GONE);
-                rl_addRecordActivity_photolayout.setVisibility(View.VISIBLE);
-                break;
+
         }
         }
     private void commitAndsave() {
@@ -323,13 +312,10 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private void saveIdIfo() {
-        MyAplication.saveIntToSp("idNumberPay",idNumberPay);
-        MyAplication.saveIntToSp("idNumberIn",idNumberIn);
-    }
 
     private void saveIncomeInfoToDB() {
-        IncomeContentInfo incomeContentInfo = new IncomeContentInfo(idNumberPay, incomePage.selectResourceID, incomePage.selectCategoryName,
+        //id为自增，这里随便填充即可
+        IncomeContentInfo incomeContentInfo = new IncomeContentInfo(0, incomePage.selectResourceID, incomePage.selectCategoryName,
                 year, month, day, stringNumber, remarkContent, "");
             if (!stringNumber.toString().isEmpty()) {
                 if (!isJumpActivity){
@@ -350,9 +336,9 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
      */
     private void savePayoutInfoToDB() {
         Log.i(TAG,"savePayoutInfoToDB");
-        PayoutContentInfo payouContentInfo = new PayoutContentInfo(idNumberPay,payOutPage.selectResourceID, payOutPage.selectCategoryName,
+        PayoutContentInfo payouContentInfo = new PayoutContentInfo(0,payOutPage.selectResourceID, payOutPage.selectCategoryName,
                 year, month, day, stringNumber, remarkContent, "");
-                 if (!stringNumber.toString().isEmpty()){
+                 if (!stringNumber.isEmpty()){
                      if (!isJumpActivity){
                          //id不自增的原因是，修改时不需要自增
                         /* idNumberPay++;
@@ -362,6 +348,8 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                          finish();
                      }else {
                          //根据id保存数据
+                         Log.i(TAG,idFromOther+"idFromOther");
+                         Log.i(TAG,"updataPayoutContentDB");
                          payOutContentDAO.updataPayoutContentDB(idFromOther,payouContentInfo);
                      }
              }else {
@@ -462,7 +450,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
        // View inflate = View.inflate(this, R.layout.date_choice, null);
         //设置监听事件
-        datePicker.init(year, month, day, new DatePicker.OnDateChangedListener() {
+        datePicker.init(year, month-1, day, new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
                 Log.i(TAG,i+"--"+i1+"--"+"--"+i2);
@@ -494,10 +482,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
 
                     }
                 })
-        .show()
-
-            ;
+        .show();
     }
-
 }
 

@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("resourceID",2130837665);
         intent.putExtra("categoryName","红包");
         startActivityForResult(intent,110);*/
-        startActivity(new Intent(MainActivity.this,AddRecordActivity.class));
+      startActivity(new Intent(MainActivity.this,AddRecordActivity.class));
     }
 
     @Override
