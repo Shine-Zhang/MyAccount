@@ -9,7 +9,6 @@ package com.example.zs.bean;
 public class AccountChildItemBean {
 
 
-
     int id;
     int month;
     int dayOfMonth;
@@ -113,6 +112,21 @@ public class AccountChildItemBean {
         this.id = id;
     }
 
+
+    @Override
+    public String toString() {
+        return "AccountChildItemBean{" +
+                "id=" + id +
+                ", month=" + month +
+                ", dayOfMonth=" + dayOfMonth +
+                ", icon=" + icon +
+                ", photoResId=" + photoResId +
+                ", itemDescribe='" + itemDescribe + '\'' +
+                ", howmuch='" + howmuch + '\'' +
+                ", isIncome=" + isIncome +
+                ", isFold=" + isFold +
+                '}';
+    }
 
 
 }
