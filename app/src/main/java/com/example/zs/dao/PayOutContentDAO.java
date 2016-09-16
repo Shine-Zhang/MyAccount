@@ -1,13 +1,17 @@
 package com.example.zs.dao;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.zs.bean.AccountChildItemBean;
+import com.example.zs.bean.AccountGroupItemBean;
 import com.example.zs.bean.PayoutContentInfo;
 import com.example.zs.dataBase.PayOutContentDB;
+import com.example.zs.pager.AccountPager;
 
 import java.util.ArrayList;
 
@@ -110,4 +114,24 @@ public class PayOutContentDAO {
         int resourceID = cursor.getInt(0);
         return resourceID;
     }
+
+    /**
+     * 此函数为Shine-Zhang添加，用于获取时间轴轴中Group数据
+     * @param month
+     */
+    public void getTimeLineData(int month){
+        //ArrayList<AccountGroupItemBean> group  = new  ArrayList<>();
+        float[] costs = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+        Log.i("wuta","***************************");
+        Cursor costCursor = db.rawQuery("select sum(money),day from payouContent where month=?group by day order by day DESC",new String[]{month+""});
+        while(costCursor.moveToNext()){
+           // AccountGroupItemBean =
+            int total = costCursor.getInt(costCursor.getColumnIndex("sum(money)"));
+            int day = costCursor.getInt(costCursor.getColumnIndex("day"));
+                    Log.i("haha","day: "+day+"总支出： "+total);
+        }
+    }
+
+
+
 }

@@ -12,7 +12,7 @@ public class AccountGroupItemBean {
     //一天的总开支
     float totalCosts;
     //一天的总收入
-    float totalIncome;
+    float totalIncome=0;
 
 
     public AccountGroupItemBean(int dayOfMonth, int totalCosts, int totalIncome) {
