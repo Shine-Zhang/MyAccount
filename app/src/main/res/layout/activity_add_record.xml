@@ -197,7 +197,9 @@
             android:background="@android:color/transparent"
             android:focusableInTouchMode="true"
             android:keyBackground="@drawable/btn_keyboard_key"
-            android:keyTextColor="#8E8E8E"
-            android:visibility="invisible"/>
+            android:keyTextColor="#444444"
+            android:visibility="invisible"
+            android:shadowColor="#fff"
+            android:shadowRadius="0.0"/>
     </RelativeLayout>
 </LinearLayout>

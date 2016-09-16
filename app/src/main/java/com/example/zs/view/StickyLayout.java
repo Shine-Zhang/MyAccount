@@ -27,7 +27,9 @@ SOFTWARE.
 package com.example.zs.view;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -35,6 +37,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import com.example.zs.utils.DensityUtil;
 
 import java.util.NoSuchElementException;
 
@@ -42,7 +47,8 @@ import java.util.NoSuchElementException;
 public class StickyLayout extends LinearLayout {
     private static final String TAG = "StickyLayout";
     private static final boolean DEBUG = true;
-    private static int tmpMOriginalHeaderHeight;
+    private  final int tmpMOriginalHeaderHeight;
+    private int pullSpan ;
     public interface OnGiveUpTouchEventListener {
         public boolean giveUpTouchEvent(MotionEvent event);
     }
@@ -79,17 +85,28 @@ public class StickyLayout extends LinearLayout {
     //我加的
     private int startY = -1;
     private PinnedHeaderExpandableListView variable;
+    private Context context;
     public StickyLayout(Context context) {
+
         super(context);
+        this.context = context;
+        tmpMOriginalHeaderHeight = DensityUtil.dip2px(context,40);
+        pullSpan = DensityUtil.dip2px(context,30);
     }
 
     public StickyLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.context = context;
+        tmpMOriginalHeaderHeight = DensityUtil.dip2px(context,40);
+        pullSpan = DensityUtil.dip2px(context,30);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public StickyLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        this.context = context;
+        tmpMOriginalHeaderHeight = DensityUtil.dip2px(context,40);
+        pullSpan = DensityUtil.dip2px(context,30);
     }
 
     @Override
@@ -137,7 +154,6 @@ public class StickyLayout extends LinearLayout {
             mLastX = x;
             mLastY = y;
             intercepted = 0;
-            tmpMOriginalHeaderHeight = mOriginalHeaderHeight;
             break;
         }
         case MotionEvent.ACTION_MOVE: {
@@ -189,30 +205,28 @@ public class StickyLayout extends LinearLayout {
             if (DEBUG) {
                 Log.d(TAG, "mHeaderHeight=" + mHeaderHeight + "  deltaY=" + deltaY + "  mlastY=" + mLastY);
             }
-            mHeaderHeight += deltaY;
+            if(mHeaderHeight+deltaY<=tmpMOriginalHeaderHeight+pullSpan){
+                mHeaderHeight += deltaY;
+            }
            // Log.i("haha","startY:"+startY+"--"+"endY: "+y);
             if(variable!=null){
                 startY = variable.getStartY();
             }
-           int destHeight =y-startY;
-            if(destHeight>0){
+
+
                 //this.smoothSetHeaderHeight(mHeaderHeight, destHeight, 0);
                /* if(destHeight>= DensityUtil.dip2px(,50))*/
-                setOriginalHeaderHeight(mHeaderHeight+destHeight);
-                setHeaderHeight(mHeaderHeight);
 
-            }else{
-                setHeaderHeight(mHeaderHeight);
-            }
-
+                   // setOriginalHeaderHeight(mHeaderHeight);
+                    setHeaderHeight(mHeaderHeight,true);
+               // setHeaderHeight(mHeaderHeight);
             break;
         }
         case MotionEvent.ACTION_UP: {
             // 这里做了下判断，当松开手的时候，会自动向两边滑动，具体向哪边滑，要看当前所处的位置
            /* mOriginalHeaderHeight = tmpMOriginalHeaderHeight;*/
 
-            tmpMOriginalHeaderHeight = 0;
-            startY = -1;
+//            startY = -1;
             int destHeight = 0;
             if (mHeaderHeight <= mOriginalHeaderHeight * 0.5) {
                 destHeight = 0;
@@ -224,6 +238,10 @@ public class StickyLayout extends LinearLayout {
             }
             // 慢慢滑向终点
             this.smoothSetHeaderHeight(mHeaderHeight, destHeight, 200);
+            if(mHeaderHeight-tmpMOriginalHeaderHeight>DensityUtil.dip2px(context,10)){
+                showSynchronizeDialog();
+            }
+
             break;
         }
         default:
@@ -232,6 +250,37 @@ public class StickyLayout extends LinearLayout {
         mLastX = x;
         mLastY = y;
         return true;
+    }
+
+    private void showSynchronizeDialog() {
+       //当向下滑动松开手指的时候 ，弹出是否要刷新数据的Dialog
+
+/*        if(){
+
+        }else{
+
+
+        }*/
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("提示");
+        builder.setMessage("登陆后才可以同步数据哟～");
+        builder.setPositiveButton("去登陆", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(context,"去登陆",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("暂不同步", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(context,"暂不同步",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.create().show();
+
     }
 
     public void smoothSetHeaderHeight(final int from, final int to, long duration) {
@@ -331,5 +380,6 @@ public class StickyLayout extends LinearLayout {
     public void setPinnedHeaderExpandableListView( PinnedHeaderExpandableListView variavle){
         this.variable = variavle;
     }
+
 
 }
