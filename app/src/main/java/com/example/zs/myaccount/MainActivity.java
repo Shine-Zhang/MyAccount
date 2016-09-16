@@ -89,12 +89,12 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.rb_mainactivity_list:
                         vp_mainactivity.setCurrentItem(2);
-                        pageList.get(1).initData();
+                        pageList.get(2).initData();
                         break;
 
                     case R.id.rb_mainactivity_mine:
                         vp_mainactivity.setCurrentItem(3);
-                        pageList.get(1).initData();
+                        pageList.get(3).initData();
                         break;
                 }
             }
@@ -199,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
             String photo = intent.getStringExtra("photo");
             PayoutContentInfo payouContentInfo = new PayoutContentInfo(id, resourceID, categoryName, year, mouth, day, money, marks, photo);
             Log.i(tag,payouContentInfo.toString());
+
             //super无法执行到
             // return;
         }else if(resultCode==444){

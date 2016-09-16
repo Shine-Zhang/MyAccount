@@ -33,7 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.zs.bean.WishInfo;
-import com.example.zs.dao.OnGoingWishDAO;
+import com.example.zs.dao.OnGoingWishDao;
 import com.example.zs.pager.WishPager;
 import com.example.zs.utils.ScreenUtils;
 import com.example.zs.utils.ShowPopupWindowUtils;
@@ -73,7 +73,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
     private File photoStorageDir;
     private Uri photoUri;
     private int wishid;
-    private OnGoingWishDAO onGoingWishDAO;
+    private OnGoingWishDao onGoingWishDAO;
     private int position;
 
     @Override
@@ -84,7 +84,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
 
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        onGoingWishDAO = new OnGoingWishDAO(this);
+        onGoingWishDAO = new OnGoingWishDao(this);
 
         wishFundString = new StringBuffer();
 

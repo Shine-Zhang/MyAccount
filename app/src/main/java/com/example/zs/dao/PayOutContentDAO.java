@@ -52,6 +52,7 @@ public class PayOutContentDAO {
      */
     public void updataPayoutContentDB(int id,PayoutContentInfo payouContentInfo){
         ContentValues contentValues = new ContentValues();
+        contentValues.put("id",payouContentInfo.id);
         contentValues.put("resourceID",payouContentInfo.resourceID);
         contentValues.put("year",payouContentInfo.year);
         contentValues.put("month",payouContentInfo.mouth);
@@ -70,7 +71,6 @@ public class PayOutContentDAO {
      */
     public void addPayoutContentToDB(PayoutContentInfo payouContentInfo){
         ContentValues contentValues = new ContentValues();
-        contentValues.put("id",payouContentInfo.id);
         contentValues.put("resourceID",payouContentInfo.resourceID);
         contentValues.put("year",payouContentInfo.year);
         contentValues.put("month",payouContentInfo.mouth);

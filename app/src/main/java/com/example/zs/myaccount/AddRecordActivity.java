@@ -328,10 +328,11 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
 
     private void saveIncomeInfoToDB() {
         IncomeContentInfo incomeContentInfo = new IncomeContentInfo(idNumberPay, payOutPage.selectResourceID, payOutPage.selectCategoryName,
-                year, month, day, stringNumber.toString(), remarkContent, "this is photo");
+                year, month, day, stringNumber.toString(), remarkContent, "");
             if (!stringNumber.toString().isEmpty()) {
                 if (!isJumpActivity){
-                    idNumberIn++;
+                    /*idNumberIn++;
+                    incomeContentInfo.id = idNumberIn;*/
                     incomeContentDAO.addIncomeContentToDB(incomeContentInfo);
                     finish();
                 }else {
@@ -348,11 +349,14 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private void savePayoutInfoToDB() {
         Log.i(TAG,"savePayoutInfoToDB");
         PayoutContentInfo payouContentInfo = new PayoutContentInfo(idNumberPay,payOutPage.selectResourceID, payOutPage.selectCategoryName,
-                year, month, day, stringNumber.toString(), remarkContent, "this is photo");
+                year, month, day, stringNumber.toString(), remarkContent, "");
                  if (!stringNumber.toString().isEmpty()){
                      if (!isJumpActivity){
-                         idNumberPay++;
+                         //id不自增的原因是，修改时不需要自增
+                        /* idNumberPay++;
+                         payouContentInfo.id = idNumberPay;*/
                          payOutContentDAO.addPayoutContentToDB(payouContentInfo);
+                         Log.i(TAG,"addPayoutContentToDB");
                          finish();
                      }else {
                          //根据id保存数据

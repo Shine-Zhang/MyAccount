@@ -19,6 +19,7 @@ public class NoSrcollPager extends ViewPager {
     }
 
     /**
+     * viewpager默认为拦截事件自己来滑动page
      * If we return true, onMotionEvent will be called and we do the actual
      * scrolling there.
      * 不拦截事件，且防止滑动bug
