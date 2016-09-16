@@ -36,7 +36,9 @@ import com.example.zs.dao.IncomeContentDAO;
 import com.example.zs.dao.PayOutContentDAO;
 import com.example.zs.utils.KeyboardUtil;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -390,11 +392,13 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
 
     public void setDate(boolean b) {
         datePicker = new DatePicker(this);
+        //Calendar calendar = Calendar.getInstance();
         if (!b){
             //从+号加入此activity
             //得到当日的日期
             year = datePicker.getYear();
-            month = datePicker.getMonth();
+            //获取的月份要加1，月份的区间为0-11，转换为正常的月份是1-12月
+            month = datePicker.getMonth()+1;
             day = datePicker.getDayOfMonth();
             btn_addRecordActivity_time.setText(month+"月"+day+"日");
             Log.i(TAG,year+"-"+month+"-"+day);
