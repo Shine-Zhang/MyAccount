@@ -231,7 +231,7 @@ public class PayOutPage extends AddBasePage {
             if (i < payoutCategoryToDB.size()) {
                 if (i==0){
                     //第一个item设置false
-                    if (!isFirstOnclick) {
+                    if (!isFirstOnclick&&!isJump) {
                         Log.i(TAG, "---");
                         iv_addPage_catagoryIcon.setEnabled(false);
                     }
