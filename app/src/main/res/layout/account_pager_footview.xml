@@ -4,9 +4,9 @@
 <ImageView
     android:layout_centerHorizontal="true"
     android:id="@+id/account_pager_item_foot"
-    android:layout_width="wrap_content"
-    android:src="@drawable/ic_tail_default"
-    android:layout_height="80dp" />
+    android:layout_width="57dp"
+   android:background="@drawable/ic_tail_default"
+    android:layout_height="75dp" />
 
     <TextView
         android:layout_marginTop="5dp"

@@ -153,7 +153,7 @@ public class PayOutContentDAO {
      * 此函数为Shine-Zhang添加，用于获取时间轴轴中Child数据
      * @param month
      */
-    public void getTimeLinePayOutChildData(int month){
+    public ArrayList<ArrayList<AccountChildItemBean>> getTimeLinePayOutChildData(int month){
 
         ArrayList<ArrayList<AccountChildItemBean>> children = new ArrayList<ArrayList<AccountChildItemBean>>();
         Cursor dayCursor = db.rawQuery("select day from payouContent where month=?group by day order by day DESC",new String[]{month+""});
@@ -179,6 +179,7 @@ public class PayOutContentDAO {
            children.add(child);
         }
 
+        return children;
     }
 
 
