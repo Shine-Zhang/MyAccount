@@ -448,7 +448,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     public void choiceTime(View v){
         //使用系统提供的日期选择器
         //api已经封装了dialog 并设置了其的宽高
-        new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        new DatePickerDialog(this,  new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                 //用户点击dialog确认是调用

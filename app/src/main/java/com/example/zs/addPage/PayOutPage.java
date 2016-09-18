@@ -245,7 +245,7 @@ public class PayOutPage extends AddBasePage {
             View inflate = View.inflate(activity, R.layout.page_addrecord_detail, null);
             CircleImageView iv_addPage_catagoryIcon = (CircleImageView) inflate.findViewById(R.id.cv_addPage_recordIcon);
             TextView tv_addPage_catagoryContent = (TextView) inflate.findViewById(R.id.tv_addPage_catagoryContent);
-
+            Log.i(TAG, "getView: " + iv_addPage_catagoryIcon.toString());
             if (i < payoutCategoryToDB.size()) {
                 if (i==0){
                     //第一个item设置false
