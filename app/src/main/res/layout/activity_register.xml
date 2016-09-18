@@ -5,20 +5,30 @@
     android:background="#FFFFFF"
     android:layout_gravity="center_horizontal"
     android:orientation="vertical" >
+    <ImageButton
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:scaleType="fitCenter"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_vertical"
+        android:id="@+id/iv_registeractivity_back"
+        android:background="@drawable/ic_arrow_default"
+        android:onClick="back"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="40dp"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp">
         <EditText
             android:id="@+id/et_registeractivity_username"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="1dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
             android:background="#FFFFFF"
             android:drawablePadding="6sp"
             android:hint="请输入您的用户名"
@@ -39,8 +49,6 @@
             android:layout_gravity="center_horizontal"
             android:background="#FFFFFF"
             android:drawablePadding="6sp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
             android:hint="请输入您的密码  "
             android:inputType="textPassword"
             android:textColorHint="#A3B1CA"
@@ -59,8 +67,6 @@
             android:layout_gravity="center_horizontal"
             android:background="#FFFFFF"
             android:drawablePadding="6sp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
             android:hint="请再次输入您的密码"
             android:inputType="textPassword"
             android:textColorHint="#A3B1CA"
@@ -75,8 +81,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="16dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
             android:layout_gravity="center_horizontal"
             android:text=" 请输入常用邮箱，便于找回密码"
             android:textColor="#108AC6"
@@ -95,8 +99,6 @@
             android:layout_gravity="center_horizontal"
             android:background="#FFFFFF"
             android:drawablePadding="6sp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
             android:hint="请输入您的邮箱账号"
             android:inputType="textWebEmailAddress"
             android:textColorHint="#A3B1CA"
@@ -104,6 +106,7 @@
         </EditText>
     </LinearLayout>
     <Button
+        android:id="@+id/bt_registeractivity_register"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_gravity="center_horizontal"
@@ -112,7 +115,7 @@
         android:layout_marginRight="50dp"
         android:gravity="center"
         android:text="注  册"
-        android:background="#20C9F5"
+        android:background="@color/pre_Button"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         android:textStyle="bold"

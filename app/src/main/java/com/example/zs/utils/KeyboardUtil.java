@@ -28,11 +28,8 @@ public class KeyboardUtil {
 	public boolean isnun = false;// 是否数据键盘
 	public boolean isupper = false;// 是否大写
 	private KeyBoardConfirmListener mKeyBoardConfirmListenerL;
-
-
 	private String rule;
 	private EditText ed;
-
 	public KeyboardUtil(Activity act, Context ctx, EditText edit) {
 		this.act = act;
 		this.ctx = ctx;

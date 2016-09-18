@@ -84,6 +84,7 @@
                 android:layout_height="wrap_content" />
         </RelativeLayout>
         <TextView
+            android:id="@+id/tv_account_pager_month_cost"
             android:layout_below="@id/tv_account_pager_month_income_tip"
             android:layout_alignParentRight="true"
             android:layout_marginRight="18dp"
