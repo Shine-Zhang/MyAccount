@@ -25,7 +25,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private String tag="MainActivity";
-    public ViewPager vp_mainactivity;
+    public static ViewPager vp_mainactivity;
     public RadioGroup rg_mainactivity_bottom;
     public RadioButton rb_mainactivity_detail;
     public RadioButton rb_mainactivity_wish;
