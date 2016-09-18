@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Gravity;
@@ -35,8 +36,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.zs.application.MyAplication;
 import com.example.zs.bean.AccountChildItemBean;
 import com.example.zs.bean.AccountGroupItemBean;
+import com.example.zs.dao.IncomeContentDAO;
+import com.example.zs.dao.PayOutContentDAO;
+import com.example.zs.dao.TimeLineDAO;
 import com.example.zs.myaccount.MainActivity;
 import com.example.zs.myaccount.R;
 import com.example.zs.myaccount.ShowBudgetStateAcivity;
@@ -44,6 +49,8 @@ import com.example.zs.utils.DensityUtil;
 import com.example.zs.view.PinnedHeaderExpandableListView;
 import com.example.zs.view.StickyLayout;
 import com.lidroid.xutils.view.annotation.ViewInject;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -75,6 +82,15 @@ public class AccountPager extends BasePager implements
     private static final int PHOTO_REQUEST_GALLERY = 101;// 从相册中选择
     private PopupWindow popupwindow_getphoto;
     private Uri photoUri;
+    private TimeLineDAO timeDao;
+    private Calendar now;
+    private int today;
+    private TextView tvAccountPagerTotalIncome;
+    private TextView tvAccountPagerTotalCost;
+    private float totalIncome;
+    private float totalCost;
+    private String myBudget;
+    private TextView tvAccountPagerBudget;
 
 
     public AccountPager(Activity activity) {
@@ -87,6 +103,9 @@ public class AccountPager extends BasePager implements
      */
     @Override
     public View initView() {
+//        Log.i("jjjjjjjjjj","********************************");
+        now = Calendar.getInstance();
+        today = now.get(Calendar.DAY_OF_MONTH);
         mrootView = View.inflate(mActivity,R.layout.account_pager_layout,null);
         expandableListView = (PinnedHeaderExpandableListView) mrootView.findViewById(R.id.expandablelist);
         stickyLayout = (StickyLayout) mrootView.findViewById(R.id.sticky_layout);
@@ -107,15 +126,25 @@ public class AccountPager extends BasePager implements
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mActivity, ShowBudgetStateAcivity.class);
-                float currentHight = DensityUtil.dip2px(mActivity,150);
-                intent.putExtra("currentHight",0.5f);
+                float budget = Float.parseFloat(myBudget);
+                float balance = budget-totalCost;
+                float currentHight = balance/budget;
+                intent.putExtra("currentHight",0.45f);
+                intent.putExtra("balance",balance);
+                intent.putExtra("totalIncome",totalIncome);
                // Log.i("haha","&&&&&&&&&&&&&&&&&&&&:"+currentHight);
                 mActivity.startActivity(intent);
             }
         });
 
-        childItems = new  ArrayList<ArrayList<AccountChildItemBean>> ();
-        groupItems = new ArrayList<>();
+        tvAccountPagerBudget = (TextView) mrootView.findViewById(R.id.tv_account_pager_buget);
+        tvAccountPagerTotalIncome = (TextView) mrootView.findViewById(R.id.account_pager_total_income);
+        tvAccountPagerTotalCost = (TextView) mrootView.findViewById(R.id.tv_account_pager_month_cost);
+
+
+  /*      childItems = new  ArrayList<ArrayList<AccountChildItemBean>> ();
+        groupItems = new ArrayList<>();*/
+
         return mrootView;
 
     }
@@ -165,49 +194,73 @@ public class AccountPager extends BasePager implements
         if(groupItems!=null){
             groupItems.clear();
         }
+        timeDao = new TimeLineDAO(mActivity);
+        childItems = timeDao.getTimeLinePayOutChildData(9);
+        groupItems = timeDao.getTimeLineGroupData(9);
 
+        if((!TextUtils.isEmpty(MyAplication.getStringFromSp("myBudget")))) {
+            //Log.i("haha","***************************"+MyAplication.getStringFromSp("myBudget"));
+            myBudget =MyAplication.getStringFromSp("myBudget");
+        }else{
+            myBudget ="3000.00";
+
+        }
+        tvAccountPagerBudget.setText(myBudget);
+        totalIncome = 0;
+        totalCost = 0;
+        for(int i=0;i<groupItems.size();i++){
+            totalIncome +=groupItems.get(i).getTotalIncome();
+            totalCost += groupItems.get(i).getTotalCosts();
+        }
+
+        tvAccountPagerTotalIncome.setText(String.format("%.2f", totalIncome));
+        tvAccountPagerTotalCost.setText(String.format("%.2f", totalCost));
+//        setDatasource();
        // Log.i("haha","************进入initData***********");
         //手动写的测试数据
-        AccountChildItemBean itemBean1 = new AccountChildItemBean(9,1,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1200",true,1);
+/*        AccountChildItemBean itemBean1 = new AccountChildItemBean(9,1,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1200",true,1);
         AccountChildItemBean itemBean2 = new AccountChildItemBean(9,1,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1300",false,2);
-        AccountChildItemBean itemBean3 = new AccountChildItemBean(9,1,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1400",false,3);
+        AccountChildItemBean itemBean3 = new AccountChildItemBean(9,1,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1400",false,3);*/
         //第一个Group
-        ArrayList<AccountChildItemBean> tmp1 = new ArrayList<>();
+/*        ArrayList<AccountChildItemBean> tmp1 = new ArrayList<>();
         tmp1.add(itemBean1);
         tmp1.add(itemBean2);
         tmp1.add(itemBean3);
-        childItems.add(tmp1);
+        childItems.add(tmp1);*/
         //第二个Group
-        AccountChildItemBean itemBean4 = new AccountChildItemBean(9,2,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1900",true,4);
+/*        AccountChildItemBean itemBean4 = new AccountChildItemBean(9,2,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1900",true,4);
         AccountChildItemBean itemBean5 = new AccountChildItemBean(9,2,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","200",true,5);
         AccountChildItemBean itemBean6 = new AccountChildItemBean(9,2,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","300",false,6);
         ArrayList<AccountChildItemBean> tmp2 = new ArrayList<>();
         tmp2.add(itemBean4);
         tmp2.add(itemBean5);
         tmp2.add(itemBean6);
-        childItems.add(tmp2);
+        childItems.add(tmp2);*/
         //第三个Group
-        AccountChildItemBean itemBean7 = new AccountChildItemBean(9,3,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1900",true,7);
+/*        AccountChildItemBean itemBean7 = new AccountChildItemBean(9,3,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","1900",true,7);
         AccountChildItemBean itemBean8 = new AccountChildItemBean(9,3,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","200",true,8);
         AccountChildItemBean itemBean9 = new AccountChildItemBean(9,3,R.drawable.ic_yiban_yellow,R.drawable.ic_yue_default,"一般","300",false,9);
         ArrayList<AccountChildItemBean> tmp3 = new ArrayList<>();
         tmp3.add(itemBean7);
         tmp3.add(itemBean8);
         tmp3.add(itemBean9);
-        childItems.add(tmp3);
+        childItems.add(tmp3);*/
 
 
-        AccountGroupItemBean groupItemBean1 = new AccountGroupItemBean(1,100000,200);
+/*        AccountGroupItemBean groupItemBean1 = new AccountGroupItemBean(1,100000,200);
         AccountGroupItemBean groupItemBean2 = new AccountGroupItemBean(2,200000,300);
         AccountGroupItemBean groupItemBean3 = new AccountGroupItemBean(3,300000,400);
 
         groupItems.add(groupItemBean1);
         groupItems.add(groupItemBean2);
-        groupItems.add(groupItemBean3);
+        groupItems.add(groupItemBean3);*/
         //Log.i("haha","************初始化数据完毕***********");
 
-        adapter = new MyexpandableListAdapter(mActivity);
-        expandableListView.setAdapter(adapter);
+        if(adapter==null) {
+            adapter = new MyexpandableListAdapter(mActivity);
+        }
+
+            expandableListView.setAdapter(adapter);
 
 
 
@@ -216,14 +269,54 @@ public class AccountPager extends BasePager implements
             Log.i("haha","************展开所有数据完毕***********"+i);
             expandableListView.expandGroup(i);
         }*/
-        expandableListView.expandGroup(0);
+        if(groupItems.size()!=0) {
+            expandableListView.expandGroup(0);
+
+        }
+
         expandableListView.setOnHeaderUpdateListener(this);
+        //Log.i("huibuhui","**************************************************");
         expandableListView.setOnChildClickListener(this);
         expandableListView.setOnGroupClickListener(this);
         stickyLayout.setOnGiveUpTouchEventListener(this);
 
-
     }
+
+    /*private void setDatasource() {
+        float[] groupOut = null;
+        float[] groupIn = null;
+        ArrayList<ArrayList<AccountChildItemBean>> inChild = null;
+        ArrayList<ArrayList<AccountChildItemBean>> outChild = null;
+        groupItems = new ArrayList<>();
+        if(outDao!=null){
+            groupOut  = outDao.getTimeLineGroupData(9);
+             outChild = outDao.getTimeLinePayOutChildData(9);
+        }
+
+        if(inDao!=null){
+            groupIn = inDao.getTimeLineGroupData(9);
+             inChild = inDao.getTimeLineIncomeChildData(9);
+
+        }
+
+        if(groupOut!=null&&groupIn!=null) {
+            for (int i = groupIn.length-1; i>=0 ; i--) {
+                if (groupOut[i] != 0 || groupIn[i] != 0) {
+                    groupItems.add(new AccountGroupItemBean(i + 1, groupOut[i], groupIn[i]));
+                }
+            }
+        }
+
+        if(inChild!=null&&outChild!=null) {
+  *//*          inChild.addAll(outChild);
+            childItems =inChild;*//*
+            childItems = inChild;
+   *//*         for(int i=0;i<inChild.size();i++){
+                if(inChild.get(i).get(0).getDayOfMonth()==)
+            }
+*//*
+        }
+    }*/
 
     @Override
     public void onClick(View view) {
@@ -278,7 +371,6 @@ public class AccountPager extends BasePager implements
 
         @Override
         public Object getGroup(int groupPosition) {
-
             return groupItems.get(groupPosition);
         }
 
@@ -552,7 +644,9 @@ public class AccountPager extends BasePager implements
             holder.ib_account_pager_item_edit.setVisibility(View.GONE);
             holder.ib_account_pager_item_delete.setVisibility(View.GONE);
             holder.tv_account_pager_word_describe.setVisibility(View.VISIBLE);
-            holder.iv_account_pager_item_photo.setVisibility(View.VISIBLE);
+            if( childItems.get(holder.group).get(holder.child).getPhotoResId()>0) {
+                holder.iv_account_pager_item_photo.setVisibility(View.VISIBLE);
+            }
             holder.tv_account_pager_how_much.setVisibility(View.VISIBLE);
 
         }
@@ -607,6 +701,7 @@ public class AccountPager extends BasePager implements
 
     @Override
     public View getPinnedHeader() {
+       // Log.i("xuanyuan","&*&&*&*&*&");
         View headerView = (ViewGroup) mActivity.getLayoutInflater().inflate(R.layout.groupitem, null);
         headerView.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -616,13 +711,20 @@ public class AccountPager extends BasePager implements
 
     @Override
     public void updatePinnedHeader(View headerView, int firstVisibleGroupPos) {
-        AccountGroupItemBean firstVisibleGroup = (AccountGroupItemBean) adapter.getGroup(firstVisibleGroupPos);
-        TextView MonthOfDay = (TextView) headerView.findViewById(R.id.iv_account_pager_item_img_describe);
-        TextView income = (TextView) headerView.findViewById(R.id.tv_account_pager_income_how_much);
-        TextView outcome = (TextView) headerView.findViewById(R.id.tv_account_pager_outcome_how_much);
-        MonthOfDay.setText(firstVisibleGroup.getDayOfMonth()+"号");
-        income.setText(firstVisibleGroup.getTotalIncome()+"");
-        outcome.setText(firstVisibleGroup.getTotalCosts()+"");
+       // Log.i("xuanyuan","1212121212:"+firstVisibleGroupPos);
+        if(firstVisibleGroupPos!=-1) {
+            AccountGroupItemBean firstVisibleGroup = (AccountGroupItemBean) adapter.getGroup(firstVisibleGroupPos);
+            TextView MonthOfDay = (TextView) headerView.findViewById(R.id.iv_account_pager_item_img_describe);
+            TextView income = (TextView) headerView.findViewById(R.id.tv_account_pager_income_how_much);
+            TextView outcome = (TextView) headerView.findViewById(R.id.tv_account_pager_outcome_how_much);
+            MonthOfDay.setText(firstVisibleGroup.getDayOfMonth() + "号");
+            if (today == firstVisibleGroup.getDayOfMonth()) {
+                MonthOfDay.setText("今天");
+                MonthOfDay.setBackground(mActivity.getResources().getDrawable(R.drawable.account_pager_group_today_icon));
+            }
+            income.setText(String.format("%.2f", firstVisibleGroup.getTotalIncome()));
+            outcome.setText(String.format("%.2f", firstVisibleGroup.getTotalCosts()));
+        }
     }
 
     @Override
@@ -642,14 +744,15 @@ public class AccountPager extends BasePager implements
     public void setChildItemBean(AccountChildItemBean childItemBean, ChildViewHolder holder){
         // Log.i("haha","**************************************");
         //首先设置，条目的图标，因为无论是收入还是支出，其位置都是不变的，都在正中间的位置
-        holder.ib_account_pager_item_img_describe.setBackgroundResource(childItemBean.getIcon());
+        /*holder.ib_account_pager_item_img_describe.setBackground(mActivity.getResources().getDrawable(childItemBean.getIcon()));*/
+        holder.ib_account_pager_item_img_describe.setImageResource(childItemBean.getIcon());
+        holder.ib_account_pager_item_img_describe.setBackgroundResource(R.drawable.account_pager_group_today_icon);
         if(childItemBean.isIncome()){
             //如果当前添加的条目是收入
             //  Log.i("haha","收入*************************");
             if(!holder.isIncome) {
                 //该view的布局变成了income的
                 holder.isIncome = true;
-
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.iv_account_pager_item_photo.getLayoutParams();
                 //清除之前的布局，否则不会生效
                 layoutParams.removeRule(RelativeLayout.LEFT_OF);
@@ -686,8 +789,13 @@ public class AccountPager extends BasePager implements
                 holder.tv_account_pager_word_describe.setLayoutParams(countlayoutParams);
                 holder.tv_account_pager_word_describe.setText(childItemBean.getItemDescribe());
             }else{
-                //当前服用的listView的Item的布局是收入的布局，此时其布局参数不用变，我们直接赋值就可以了
-                holder.iv_account_pager_item_photo.setImageResource(childItemBean.getPhotoResId());
+                //当前服用的listView的Item的布局是支出的布局，此时其布局参数不用变，我们直接赋值就可以了
+                if (childItemBean.getPhotoResId() > 0) {
+                    holder.iv_account_pager_item_photo.setVisibility(View.VISIBLE);
+                    holder.iv_account_pager_item_photo.setImageResource(childItemBean.getPhotoResId());
+                }else{
+                    holder.iv_account_pager_item_photo.setVisibility(View.INVISIBLE);
+                }
                 holder.tv_account_pager_word_describe.setText(childItemBean.getItemDescribe());
                 holder.tv_account_pager_how_much.setText(childItemBean.getHowmuch());
             }
@@ -709,8 +817,9 @@ public class AccountPager extends BasePager implements
                 holder.iv_account_pager_item_photo.setLayoutParams(layoutParams);
                 if (childItemBean.getPhotoResId() > 0) {
                     //如果用户设置了图片,就在改变为之后的ImageView中显示该图片
-                    holder.iv_account_pager_item_photo.setImageResource(childItemBean.getPhotoResId());
                     holder.iv_account_pager_item_photo.setVisibility(View.VISIBLE);
+                    holder.iv_account_pager_item_photo.setImageResource(childItemBean.getPhotoResId());
+
                 } else {
                     //如果没有图片就设置imageView为不可见,同时为了方便用户之后可能会存在的添加行为,同时也要改变ImageView的布局
                     holder.iv_account_pager_item_photo.setVisibility(View.INVISIBLE);
@@ -735,7 +844,12 @@ public class AccountPager extends BasePager implements
                 holder.tv_account_pager_how_much.setText(childItemBean.getHowmuch());
             } else{
                 //  Log.i("haha","支出*************************");
-                holder.iv_account_pager_item_photo.setImageResource(childItemBean.getPhotoResId());
+                if (childItemBean.getPhotoResId() > 0) {
+                    holder.iv_account_pager_item_photo.setVisibility(View.VISIBLE);
+                    holder.iv_account_pager_item_photo.setImageResource(childItemBean.getPhotoResId());
+                }else{
+                    holder.iv_account_pager_item_photo.setVisibility(View.INVISIBLE);
+                }
                 holder.tv_account_pager_word_describe.setText(childItemBean.getItemDescribe());
                 holder.tv_account_pager_how_much.setText(childItemBean.getHowmuch());
             }

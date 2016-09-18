@@ -7,9 +7,9 @@
     <com.example.zs.view.CircleImageView
         android:layout_marginTop="20dp"
         android:id="@+id/cv_addPage_recordIcon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:padding="5dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:padding="8dp"
         android:background="@drawable/bg_addcategory"
         android:src="@drawable/ic_yiban_default"
         android:layout_gravity="center"/>

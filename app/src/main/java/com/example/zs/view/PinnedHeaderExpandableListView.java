@@ -131,12 +131,19 @@ public class PinnedHeaderExpandableListView extends ExpandableListView implement
             mHeaderWidth = mHeaderHeight = 0;
             return;
         }
-        mHeaderView = listener.getPinnedHeader();
+
         int firstVisiblePos = getFirstVisiblePosition();
-        int firstVisibleGroupPos = getPackedPositionGroup(getExpandableListPosition(firstVisiblePos));
-        listener.updatePinnedHeader(mHeaderView, firstVisibleGroupPos);
-        requestLayout();
-        postInvalidate();
+      //  Log.i("xuanyan","9090909090:"+firstVisiblePos);
+
+
+            int firstVisibleGroupPos = getPackedPositionGroup(getExpandableListPosition(firstVisiblePos));
+            if(firstVisibleGroupPos!=-1) {
+                mHeaderView = listener.getPinnedHeader();
+            }
+            listener.updatePinnedHeader(mHeaderView, firstVisibleGroupPos);
+            requestLayout();
+            postInvalidate();
+
     }
 
     @Override

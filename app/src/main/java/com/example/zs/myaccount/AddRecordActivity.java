@@ -451,8 +451,8 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         new DatePickerDialog(this,  new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                //用户点击dialog确认是调用
-                Log.i(TAG,i+"--"+i1+"--"+"--"+i2);
+                //用户点击dialog确认时调用
+                Log.i(TAG,i+"--"+i1+"--"+"--" +i2);
                 year = i;
                 month = i1+1;
                 day = i2;
