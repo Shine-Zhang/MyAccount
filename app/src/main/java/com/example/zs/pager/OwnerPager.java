@@ -113,6 +113,7 @@ public class OwnerPager extends BasePager {
         String usernameStr = intent.getStringExtra("usernameStr");
         Log.i(TAG,"usernameStr="+usernameStr);
 
+        //获取当前用户的信息
         String username = MyAplication.getCurUsernameFromSp("username");
         Uri photoUri = Uri.parse(MyAplication.getCurUsernameFromSp("photoUri"));
         Log.i(TAG,"username ="+username+" photoUri ="+photoUri);
@@ -136,8 +137,7 @@ public class OwnerPager extends BasePager {
             //有用户名，说明登录成功，修改显示的布局
             rl_ownerpager_logined.setVisibility(View.VISIBLE);
             rl_ownerpager_unlogin.setVisibility(View.GONE);
-            //并将用户名保存到临时文件中，用于回显
-            MyAplication.saveCurUsernaemToSp("username",usernameStr);
+
             iv_ownerpager_username.setText(usernameStr);
             initLogined();
         }
@@ -503,7 +503,7 @@ public class OwnerPager extends BasePager {
         //PackageManager可以去获取任意的app的信息
         PackageManager packageManager = mActivity.getPackageManager();
         try {
-            PackageInfo packageInfo = packageManager.getPackageInfo("com.mobilemanager.zyt.mobilemanager",0);
+            PackageInfo packageInfo = packageManager.getPackageInfo("com.example.zs.myaccount",0);
             versionName = packageInfo.versionName;
 
         } catch (PackageManager.NameNotFoundException e) {

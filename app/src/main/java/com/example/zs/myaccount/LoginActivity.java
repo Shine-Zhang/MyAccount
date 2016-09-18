@@ -81,10 +81,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.ll_loginactivity_weiboLogin:
                 Log.i(TAG,"weiboLogin");
                 thirdSinaLogin();
+                finish();
                 break;
             case R.id.ll_loginactivity_QQLogin:
                 Log.i(TAG,"QQLogin");
                 thirdQQLogin();
+                finish();
                 break;
         }
     }
@@ -118,16 +120,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
          *   http://sharesdk.cn/androidDoc/cn/sharesdk/framework/PlatformActionListener.html
          *
          */
-
         PlatformDb platDB = platform.getDb();//获取数平台数据DB
         //通过DB获取各种数据
-        Log.i("sharesdk use_id", platDB.getUserId()); //获取用户id
-        Log.i("sharesdk use_name", platDB.getUserName());//获取用户名称
-        Log.i("sharesdk use_icon", platDB.getUserIcon());//获取用户头像
-        Log.i(TAG,"授权成功"+"\n"+"用户id:" + platDB.getUserId() + "\n" +
-                "获取用户名称：" + platDB.getUserName() + "\n" +
-                "获取用户头像：" + platDB.getUserIcon());
-
+        String UserId = platDB.getUserId(); //获取用户id
+        String UserName = platDB.getUserName();//获取用户名称
+        String UserIcon = platDB.getUserIcon();//获取用户头像
+        Log.i(TAG,"授权成功"+"\n"+"用户id:" + UserId + "\n" +
+                "获取用户名称：" + UserName + "\n" +
+                "获取用户头像：" + UserIcon);
     }
     /** 取消授权 */
     @Override
@@ -193,8 +193,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if(MyAplication.getUserInfoFromSp(usernameStr).isEmpty()){
                 Toast.makeText(LoginActivity.this, "用户名不存在，请重新输入！", Toast.LENGTH_SHORT).show();
             }else {
+                //如果根据用户名取得的密码与用户输入的密码相同，则登录成功，否则显示密码不正确
                 if (MyAplication.getUserInfoFromSp(usernameStr).equals(passwordStr)) {
                     Log.i(TAG,"登录成功！");
+                    //登录成功就立即将用户名保存到当前用户的临时文件中，用于回显
+                    MyAplication.saveCurUsernaemToSp("username",usernameStr);
                     //带用户名传回OwnerPager
                     Intent intent = new Intent(this, MainActivity.class);
                     intent.putExtra("usernameStr",usernameStr);
@@ -230,13 +233,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         usernameStr = et_loginactivity_username.getText().toString();
         passwordStr = et_loginactivity_pwd.getText().toString();
         Log.i(TAG,"usernameStr=**"+usernameStr+" passwordStr=**"+passwordStr);
-
+        //当用户输入的字符串长度大于5时，登录Button的背景颜色更改
         if(passwordStr.length()>5){
             bt_loginactivity_login.setBackgroundColor(Color.parseColor("#30C9F2"));
         }else {
             bt_loginactivity_login.setBackgroundColor(Color.parseColor("#E6E6E6"));
         }
-
     }
 
     @Override
