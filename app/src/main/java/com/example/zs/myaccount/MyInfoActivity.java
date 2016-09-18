@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.zs.application.MyAplication;
 import com.example.zs.utils.ScreenUtils;
@@ -95,9 +96,10 @@ public class MyInfoActivity extends AppCompatActivity implements View.OnClickLis
         if(file.exists()){
             file.delete();
             Log.i(TAG,"currentUsername删除成功");
-            finish();
-            startActivity(new Intent(this,MainActivity.class));
+            Toast.makeText(MyInfoActivity.this, "退出成功！", Toast.LENGTH_SHORT).show();
         }
+        startActivity(new Intent(this,MainActivity.class));
+        finish();
     }
 
     public void back(View v){
