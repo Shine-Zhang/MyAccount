@@ -33,7 +33,7 @@ public class WishDBTest extends AndroidTestCase{
     public void testupdateOnGoingWish(){
         OnGoingWishDao dao = new OnGoingWishDao(getContext());
         WishInfo wishInfo = new WishInfo(2016,9,3,"我的愿望发呆","备注发呆","100.00","0");
-        dao.updateOnGoingWishInfo(wishInfo,3);
+        //dao.updateOnGoingWishInfo(wishInfo,3);
     }
 
     public void testGetOnGoingWishNumber(){

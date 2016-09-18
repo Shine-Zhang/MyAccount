@@ -4,32 +4,47 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#FFF">
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
+    <com.example.zs.view.CircleImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:padding="5dp"
         android:id="@+id/iv_recordlist_icon"
         android:layout_alignParentLeft="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_margin="10dp"
+        android:background="#31C9F2"
         android:src="@drawable/ic_hongbao_yellow"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:layout_toRightOf="@+id/iv_recordlist_icon">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_recordlist_category"
+            android:layout_toRightOf="@id/iv_recordlist_icon"
+            android:text="红包"
+            android:textSize="15sp"
+            android:layout_centerVertical="true"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_recordlist_remarks"
+            android:layout_toRightOf="@id/iv_recordlist_icon"
+            android:text="红包"
+            android:textSize="10sp"
+            android:layout_centerVertical="true"/>
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/iv_recordlist_name"
-        android:layout_toRightOf="@id/iv_recordlist_icon"
-        android:text="红包"
-        android:textSize="20sp"
-        android:layout_centerVertical="true"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/iv_recordlist_money"
+        android:id="@+id/tv_recordlist_money"
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
         android:text="+100.00"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:layout_centerVertical="true"/>
 </RelativeLayout>

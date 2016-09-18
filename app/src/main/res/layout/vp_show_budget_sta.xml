@@ -118,6 +118,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
+            android:id="@+id/tv_show_budget_state_activity_deadSpan"
             android:textSize="15sp"
             android:textStyle="bold"
             android:text="24"

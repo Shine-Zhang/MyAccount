@@ -5,11 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -30,10 +34,13 @@ import android.widget.Toast;
 
 import com.example.zs.bean.WishInfo;
 import com.example.zs.dao.OnGoingWishDao;
+import com.example.zs.pager.WishPager;
 import com.example.zs.utils.ScreenUtils;
+import com.example.zs.utils.ShowPopupWindowUtils;
 import com.example.zs.view.CircleImageView;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -41,6 +48,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import static com.example.zs.application.MyAplication.setWishInfo;
 
 public class AddWishActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -65,6 +74,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
     private Uri photoUri;
     private int wishid;
     private OnGoingWishDao onGoingWishDAO;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,24 +107,27 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
             String title = bundle.getString("title","");
             String description = bundle.getString("description","");
             String wishfund = bundle.getString("wishfund","");
-            String photoid = bundle.getString("photoid","");
+            String photoUri = bundle.getString("photoUri","");
             wishid = bundle.getInt("wishid");
+            position = bundle.getInt("position");
 
             et_addwishactivity_mywish.setText(title);
-            Log.i("wwwwwwwww","wishtitle="+title);
+            Log.i("wwwwwwwww","addwish  wishtitle="+title);
             et_addwishactivity_description.setText(description);
             et_addwishactivity_wishfund.setText(wishfund);
-            if(photoid.isEmpty()){
+
+            Log.i("wwwwwwwww","addwish  photoid="+photoUri);
+            if(photoUri.isEmpty() || photoUri.equals("0") || photoUri.equals("null")){
                 iv_addwishactivity_photo.setVisibility(View.VISIBLE);
                 civ_addwishactivity_image.setImageResource(R.drawable.blankrect);
             }else {
                 iv_addwishactivity_photo.setVisibility(View.INVISIBLE);
-                civ_addwishactivity_image.setImageURI(Uri.parse(photoid));
+                civ_addwishactivity_image.setImageURI(Uri.parse(photoUri));
             }
-            if(!title.isEmpty() && !wishfund.isEmpty()){
-                bt_addwishactivity_addwish.setClickable(true);
-                bt_addwishactivity_addwish.setBackgroundColor(Color.rgb(31,185,236));
-            }
+            bt_addwishactivity_addwish.setClickable(true);
+            bt_addwishactivity_addwish.setBackgroundColor(Color.rgb(31,185,236));
+            bt_addwishactivity_addwish.setOnClickListener(AddWishActivity.this);
+
         }
 
         //给civ_addwishactivity_image设置点击事件
@@ -126,7 +139,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
                 //判断用户是否已经选择图片
                 if(iv_addwishactivity_photo.getVisibility()==View.INVISIBLE){
                     //显示图片详情
-                    showPhoto(view,photoUri);
+                    showPhoto(view, photoUri);
                 }else{
                     civ_addwishactivity_image.setImageResource(R.drawable.blankrect);
                     iv_addwishactivity_photo.setVisibility(View.VISIBLE);
@@ -143,6 +156,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
         });
 
         //给edittext设置监听，当我的愿望和愿望资金都填写时，“许下愿望”按钮变蓝，可以点击
+        //我的愿望
         et_addwishactivity_mywish.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -170,7 +184,6 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
-
         //愿望资金
         et_addwishactivity_wishfund.addTextChangedListener(new TextWatcher() {
             @Override
@@ -185,6 +198,8 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
                         !et_addwishactivity_wishfund.getText().toString().isEmpty()){
                     bt_addwishactivity_addwish.setClickable(true);
                     bt_addwishactivity_addwish.setBackgroundColor(Color.rgb(31,185,236));
+                    //给“许下愿望”按钮添加点击监听
+                    bt_addwishactivity_addwish.setOnClickListener(AddWishActivity.this);
                 }else{
                     bt_addwishactivity_addwish.setClickable(false);
                     bt_addwishactivity_addwish.setBackgroundColor(Color.rgb(229,229,229));
@@ -196,6 +211,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
 
             }
         });
+
         //et_addwishactivity_wishfund的焦点变化事件，获取焦点时弹出popupwindow
         et_addwishactivity_wishfund.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -207,14 +223,19 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
                     }
                     et_addwishactivity_wishfund.setInputType(InputType.TYPE_NULL);
                     //显示自定义键盘
-                    showNumberKeyboard(view);
+                   /* //showNumberKeyboard(view);
+                    int inputback = et_addwishactivity_wishfund.getInputType();
+                    et_addwishactivity_wishfund.setInputType(InputType.TYPE_NULL);
+                    KeyboardUtil keyboardUtil = new KeyboardUtil(this, this, et_addwishactivity_wishfund);
+                    keyboardUtil.setNumberFormat(7);
+                    keyboardUtil.showKeyboard();
+                    et_addwishactivity_wishfund.setInputType(inputback);*/
                 }
             }
         });
         et_addwishactivity_wishfund.setOnClickListener(this);
 
-        //给“许下愿望”按钮添加点击监听
-        bt_addwishactivity_addwish.setOnClickListener(AddWishActivity.this);
+
 
     }
 

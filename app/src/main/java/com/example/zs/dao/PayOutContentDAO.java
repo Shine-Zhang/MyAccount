@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.zs.bean.AccountChildItemBean;
 import com.example.zs.bean.PayoutContentInfo;
 import com.example.zs.dataBase.PayOutContentDB;
 
@@ -46,6 +47,9 @@ public class PayOutContentDAO {
         return payouContentInfos;
     }
 
+
+
+
     /**
      * 修改时，除id外，其它全部更新下
      * @param payouContentInfo 传入表格当行所有信息
@@ -70,7 +74,6 @@ public class PayOutContentDAO {
      */
     public void addPayoutContentToDB(PayoutContentInfo payouContentInfo){
         ContentValues contentValues = new ContentValues();
-        contentValues.put("id",payouContentInfo.id);
         contentValues.put("resourceID",payouContentInfo.resourceID);
         contentValues.put("year",payouContentInfo.year);
         contentValues.put("month",payouContentInfo.mouth);

@@ -207,20 +207,7 @@ public class PinnedHeaderExpandableListView extends ExpandableListView implement
                      }
                 }
             }*/else if (ev.getAction() == MotionEvent.ACTION_UP) {
-/*                if(mCurrentSta == RELEASE_TO_REFRESH){
-                    mCurrentSta = REFRESHING;
-                    //弹出对话框或者回调
-                    mCurrentSta = PULL_TO_REFRESH;
-                    //回复位置
-                    mHeaderView.layout(0, 0, mHeaderWidth, mHeaderHeight);
-                    //重新初始化，以防万一
-                    this.dy = -1;
-                }else if(mCurrentSta == PULL_TO_REFRESH){
-                    //回复当前位置
-                    mHeaderView.layout(0, 0, mHeaderWidth, mHeaderHeight);
-                    //重新初始化，以防万一
-                    this.dy = -1;
-                }*/
+
                 View touchTarget = getTouchTarget(mHeaderView, x, y);
                 if (touchTarget == mTouchTarget && mTouchTarget.isClickable()) {
                     mTouchTarget.performClick();
@@ -335,6 +322,7 @@ public class PinnedHeaderExpandableListView extends ExpandableListView implement
         if (mScrollListener != null) {
             mScrollListener.onScrollStateChanged(view, scrollState);
         }
+
     }
 
     @Override

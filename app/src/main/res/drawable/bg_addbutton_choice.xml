@@ -1,23 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_checked="true" android:drawable="@drawable/w">
-        <shape
-            android:shape="rectangle">
-            <corners android:radius="10dp"/>
-            <stroke android:color="#31C9F2"
-                android:width="2px"/>
-            <size android:width="180dp"
-                android:height="30dp"/>
-        </shape>
+    <item android:state_checked="true" android:drawable="@drawable/bg_radionbutton_reportchecked">
     </item>
-    <item android:drawable="@drawable/white">
-        <shape
-            android:shape="rectangle">
-            <corners android:radius="10dp"/>
-            <stroke android:color="#31C9F2"
-                android:width="2px"/>
-            <size android:width="180dp"
-                android:height="30dp"/>
-        </shape>
+    <item android:drawable="@drawable/bg_radionbutton_reportunchecked">
     </item>
 </selector>

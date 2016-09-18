@@ -9,6 +9,8 @@ package com.example.zs.bean;
 public class AccountChildItemBean {
 
 
+
+    int id;
     int month;
     int dayOfMonth;
     int icon;
@@ -17,7 +19,8 @@ public class AccountChildItemBean {
     String itemDescribe;
     String howmuch;
     boolean isIncome;
-    boolean isFold=false;
+    boolean isFold=true;
+
 
     /**
      *全参构造函数主要是为了方便封装bean类
@@ -29,7 +32,7 @@ public class AccountChildItemBean {
      * @param howmuch 该条目中具体住处/收入的数额
      * @param isIncome 用来判断该条目是收入/支出
      */
-    public AccountChildItemBean(int month, int dayOfMonth, int icon, int photoResId, String itemDescribe, String howmuch, boolean isIncome) {
+    public AccountChildItemBean(int month, int dayOfMonth, int icon, int photoResId, String itemDescribe, String howmuch, boolean isIncome,int id) {
         this.month = month;
         this.dayOfMonth = dayOfMonth;
         this.icon = icon;
@@ -37,6 +40,7 @@ public class AccountChildItemBean {
         this.itemDescribe = itemDescribe;
         this.howmuch = howmuch;
         this.isIncome = isIncome;
+        this.id = id;
     }
 
     public int getMonth() {
@@ -103,7 +107,13 @@ public class AccountChildItemBean {
         isFold = fold;
     }
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
 
 

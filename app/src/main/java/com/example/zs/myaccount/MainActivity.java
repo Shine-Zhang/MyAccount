@@ -1,6 +1,8 @@
 package com.example.zs.myaccount;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
     public RadioButton rb_mainactivity_plus;
     public RadioButton rb_mainactivity_list;
     public RadioButton rb_mainactivity_mine;
+    private static final int PHOTO_REQUEST_CAREMA = 100;// 拍照
+    private static final int PHOTO_REQUEST_GALLERY = 101;// 从相册中选择
+    private Uri photoUri;
     //新建ArrayList用于存储ViewPager里的不同page，从BasePager里面拿View
     List<BasePager> pageList =  new ArrayList<BasePager>();
     @Override
@@ -89,12 +94,12 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.rb_mainactivity_list:
                         vp_mainactivity.setCurrentItem(2);
-                        pageList.get(1).initData();
+                        pageList.get(2).initData();
                         break;
 
                     case R.id.rb_mainactivity_mine:
                         vp_mainactivity.setCurrentItem(3);
-                        pageList.get(1).initData();
+                        pageList.get(3).initData();
                         break;
                 }
             }
@@ -179,13 +184,14 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("resourceID",2130837665);
         intent.putExtra("categoryName","红包");
         startActivityForResult(intent,110);*/
-        startActivity(new Intent(MainActivity.this,AddRecordActivity.class));
+      startActivity(new Intent(MainActivity.this,AddRecordActivity.class));
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         Log.i(tag,resultCode+"--"+requestCode);
         Log.i(tag,"000");
+        Bitmap resultBitmap;
         //确认健返回
         if(resultCode==555&&intent!=null){
             int id = intent.getIntExtra("id", 0);
@@ -199,11 +205,71 @@ public class MainActivity extends AppCompatActivity {
             String photo = intent.getStringExtra("photo");
             PayoutContentInfo payouContentInfo = new PayoutContentInfo(id, resourceID, categoryName, year, mouth, day, money, marks, photo);
             Log.i(tag,payouContentInfo.toString());
+
             //super无法执行到
             // return;
         }else if(resultCode==444){
 
+        } else if(requestCode==PHOTO_REQUEST_GALLERY){
+            //去图库获取到的数据
+            if(resultCode==RESULT_OK){
+                if(intent!=null){
+                    if(intent.hasExtra("data")){
+                        Bitmap bitmap = intent.getParcelableExtra("data");
+                        ;
+                    }
+                    //获取图片的全路径uri
+                    photoUri = intent.getData();
+                    Log.i("wwwwwwww","调用图库  uri="+photoUri);
+
+                }else{
+                    return;
+                }
+            }
+        } else if(requestCode==PHOTO_REQUEST_CAREMA){
+            //照相
+            if(resultCode==RESULT_OK){
+            }
         }
         super.onActivityResult(requestCode, resultCode, intent);
     }
+
+    /**
+     * 该函数用于获取传回来的数据。
+     * 即 跳转到其他地方之后获取到想要的信息，将信息传回来
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+/*    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.i("wwwwwwwwwwwwwww","onActivityResult requestCode="+requestCode+"  resultCode="+resultCode+"   data="+data);
+        //去图库获取到的数据
+        if(requestCode==PHOTO_REQUEST_GALLERY){
+            if(resultCode==RESULT_OK){
+                if(data!=null){
+                    if(data.hasExtra("data")){
+                        Bitmap bitmap = data.getParcelableExtra("data");
+                        civ_addwishactivity_image.setImageBitmap(bitmap);
+                    }
+                    //获取图片的全路径uri
+                    photoUri = data.getData();
+                    Log.i("wwwwwwww","调用图库  uri="+photoUri);
+                    civ_addwishactivity_image.setImageURI(photoUri);
+                    iv_addwishactivity_photo.setVisibility(View.INVISIBLE);
+
+                }else{
+                    return;
+                }
+            }
+        }
+        //照相
+        if(requestCode==PHOTO_REQUEST_CAREMA){
+            if(resultCode==RESULT_OK){
+                civ_addwishactivity_image.setImageURI(photoUri);
+                iv_addwishactivity_photo.setVisibility(View.INVISIBLE);
+            }
+        }
+    }*/
 }
