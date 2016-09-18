@@ -2,6 +2,7 @@ package com.example.zs.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.Keyboard.Key;
 import android.inputmethodservice.KeyboardView;
@@ -9,8 +10,12 @@ import android.inputmethodservice.KeyboardView.OnKeyboardActionListener;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 
 import com.example.zs.myaccount.R;
 
@@ -30,13 +35,17 @@ public class KeyboardUtil {
 	private KeyBoardConfirmListener mKeyBoardConfirmListenerL;
 	private String rule;
 	private EditText ed;
+	private PopupWindow popupwindow;
+	private final View mView;
+
 	public KeyboardUtil(Activity act, Context ctx, EditText edit) {
 		this.act = act;
 		this.ctx = ctx;
 		this.ed = edit;
 		k1 = new Keyboard(ctx, R.xml.qwerty);
 		k2 = new Keyboard(ctx, R.xml.symbols);
-		keyboardView = (KeyboardView) act.findViewById(R.id.keyboard_view);
+		mView = View.inflate(ctx, R.layout.show_account_budget_sta_keybordview,null);
+		keyboardView = (KeyboardView) mView.findViewById(R.id.keyboard_view);
 		keyboardView.setKeyboard(k2);
 		keyboardView.setEnabled(true);
 		keyboardView.setPreviewEnabled(false);
@@ -155,20 +164,45 @@ public class KeyboardUtil {
 		}
 	}
 
-	public void showKeyboard() {
+	public void showKeyboard(View view) {
 		Log.i("haha","showKeyboard");
+
+
 		if(!TextUtils.isEmpty(ed.getText().toString())){
 			ed.setText("");
 		}
-		keyboardView.setVisibility(View.VISIBLE);
+		//弹出PopWindow供用户选择
+		View contentView= mView;
+
+		//初始化popupwindow
+		popupwindow = new PopupWindow();
+		//获得焦点
+		popupwindow.setFocusable(true);
+		popupwindow.setBackgroundDrawable(new BitmapDrawable());
+		//设置popupwindow弹出和退出时的动画效果
+		popupwindow.setAnimationStyle(R.style.AnimationBottomFade);
+		//将popup_view部署到popupWindow上
+		popupwindow.setContentView(contentView);
+		//设置popupWindow的宽高（必须要设置）
+		popupwindow.setHeight(RelativeLayout.LayoutParams.WRAP_CONTENT);
+		popupwindow.setWidth(RelativeLayout.LayoutParams.MATCH_PARENT);
+		//设置popupwindow显示的位置
+		popupwindow.showAtLocation(view, Gravity.BOTTOM,0,0);
+
+		//keyboardView.setVisibility(View.VISIBLE);
 
 	}
 
 	public void hideKeyboard() {
-		int visibility = keyboardView.getVisibility();
+/*		int visibility = keyboardView.getVisibility();
 		if (visibility == View.VISIBLE) {
 			keyboardView.setVisibility(View.GONE);
-		}
+		}*/
+
+			if (popupwindow != null) {
+				popupwindow.dismiss();//隐藏气泡
+				popupwindow = null;
+			}
 	}
 
 	private boolean isword(String str){

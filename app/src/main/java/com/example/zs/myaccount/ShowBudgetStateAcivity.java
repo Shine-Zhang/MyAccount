@@ -355,7 +355,8 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                et_show_budeget_sta_setbudget.setInputType(InputType.TYPE_NULL);
                KeyboardUtil keyboardUtil = new KeyboardUtil(this, this, et_show_budeget_sta_setbudget);
                keyboardUtil.setNumberFormat(7);
-               keyboardUtil.showKeyboard();
+              // RelativeLayout parentView = (RelativeLayout) findViewById(R.id.bt_show_budget_sta_parent);
+               keyboardUtil.showKeyboard(pagers.get(1));
                et_show_budeget_sta_setbudget.setInputType(inputback);
 
             break;

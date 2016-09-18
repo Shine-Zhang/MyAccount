@@ -104,7 +104,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         tv_addRecordActivity_inputNumber.setInputType(InputType.TYPE_NULL);
         keyboardUtil =  new KeyboardUtil(this, this, tv_addRecordActivity_inputNumber);
         keyboardUtil.setNumberFormat(7);
-        keyboardUtil.showKeyboard();
+        //keyboardUtil.showKeyboard();
         keyboardUtil.setOnkeyBoardConfirmListener(new KeyboardUtil.KeyBoardConfirmListener() {
             @Override
             public void toConfirm() {
@@ -257,7 +257,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
             case R.id.btn_addCategory_markConfirm:
                 //照相区显示，备注区隐藏
                 Log.i(TAG,stringNumber+"88");
-                keyboardUtil.showKeyboard();
+               // keyboardUtil.showKeyboard();
                 remarkContent = et_addCategory_markContent.getText().toString();
                 rl_addRecordActivity_remarklayout.setVisibility(View.GONE);
                 rl_addRecordActivity_photolayout.setVisibility(View.VISIBLE);
