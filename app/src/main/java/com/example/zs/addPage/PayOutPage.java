@@ -44,6 +44,9 @@ public class PayOutPage extends AddBasePage {
     private CircleImageView firstCircle;
     private boolean isFirstOnclick;
     private int jumpItemEnable;
+    private int previousHindKeyBClickItem ;
+    private int afterHindKeyBClickItem;
+    private boolean isTouchHindkeyBoard;
 
     public PayOutPage(Activity activity, boolean isJump) {
         super(activity, isJump);
@@ -74,19 +77,17 @@ public class PayOutPage extends AddBasePage {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //显示键盘区
-                // keyAnimationVisble();
+                Log.i(TAG,"onItemClick");
                 if (i == payoutCategoryToDB.size()) {
                     //跳转到addCategory页面
                     activity.startActivityForResult(new Intent(activity, AddCategoryActivity.class), 100);
                 } else {
                     //选中背景色变化
                     CircleImageView iv = (CircleImageView) view.findViewById(R.id.cv_addPage_recordIcon);
-
-
                         if (previous != null) {
 
                             Log.i(TAG,"previous="+previous.toString());
+                            Log.i(TAG,"current iv="+iv.toString());
                             previous.setEnabled(true);
                          } else {
                             Log.i(TAG, "first--");
@@ -97,13 +98,28 @@ public class PayOutPage extends AddBasePage {
 
                             //myGridViewAdapter.notifyDataSetChanged();
                     }
-                    iv.setEnabled(false);
-                    previous = iv;
+                    if (isTouchHindkeyBoard){
+                        //保存下滑消失键盘 后键盘出现时用户点击的item
+                        afterHindKeyBClickItem = i;
+                    }else {
+                        iv.setEnabled(false);
+                        previous = iv;
+                    }
                     selectResourceID = payoutCategoryToDB.get(i).getResourceID();
                     selectCategoryName = payoutCategoryToDB.get(i).getCategoryName();
                 }
+                //previous=com.example.zs.view.CircleImageView{3fed4c3d V..D.... ........ 68,53-147,132 #7f0e012b app:id/cv_addPage_recordIcon}
+                // current iv=com.example.zs.view.CircleImageView{4a70d83 V.ED.... ........ 68,53-147,132 #7f0e012b app:id/cv_addPage_recordIcon}
                 Log.i(TAG, "--" + i);
                 addRecordActivity.keyboardUtil.showKeyboard();
+            }
+        });
+        gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                //返回true则 点击事件会失效
+                return false;
             }
         });
         return gridView;
@@ -128,6 +144,7 @@ public class PayOutPage extends AddBasePage {
         gridView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                Log.i(TAG,"onTouch");
                 float rawY = motionEvent.getRawY();
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
@@ -139,6 +156,7 @@ public class PayOutPage extends AddBasePage {
                         if (Math.abs(endY - startY) > 100) {
                             //动画隐藏掉键盘
                           // keyAnimationInVisble();
+                            isTouchHindkeyBoard = true;
                             addRecordActivity.keyboardUtil.hideKeyboard();
                         }
                         break;
@@ -227,7 +245,7 @@ public class PayOutPage extends AddBasePage {
             View inflate = View.inflate(activity, R.layout.page_addrecord_detail, null);
             CircleImageView iv_addPage_catagoryIcon = (CircleImageView) inflate.findViewById(R.id.cv_addPage_recordIcon);
             TextView tv_addPage_catagoryContent = (TextView) inflate.findViewById(R.id.tv_addPage_catagoryContent);
-
+            Log.i(TAG, "getView: " + iv_addPage_catagoryIcon.toString());
             if (i < payoutCategoryToDB.size()) {
                 if (i==0){
                     //第一个item设置false
@@ -249,6 +267,13 @@ public class PayOutPage extends AddBasePage {
                 if (isJump&&jumpItemEnable ==i){
                     iv_addPage_catagoryIcon.setEnabled(false);
                      previous = iv_addPage_catagoryIcon;
+                }
+                //下滑 键盘消失布局，再次点击item键盘出现，布局会发生变化，
+                //gridview会重新刷新，获取的item对象会失效
+                if(isTouchHindkeyBoard){
+                    iv_addPage_catagoryIcon.setEnabled(false);
+                    previous = iv_addPage_catagoryIcon;
+                    isTouchHindkeyBoard = false;
                 }
                 iv_addPage_catagoryIcon.setImageResource(payoutCategoryToDB.get(i).getResourceID());
                 tv_addPage_catagoryContent.setText(payoutCategoryToDB.get(i).getCategoryName());

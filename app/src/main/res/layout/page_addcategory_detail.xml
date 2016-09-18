@@ -5,10 +5,10 @@
     android:layout_height="match_parent">
     <com.example.zs.view.CircleImageView
         android:id="@+id/iv_addCategory_catagoryIcon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:padding="5dp"
-        android:background="#31C9F2"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:padding="8dp"
+        android:background="@drawable/bg_categoryactivityitem"
         android:src="@drawable/ic_yiban_default"
         android:layout_marginTop="10dp"
         android:layout_gravity="center"/>

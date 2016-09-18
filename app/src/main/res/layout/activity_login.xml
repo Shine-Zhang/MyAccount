@@ -4,28 +4,25 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:background="#FFFFFF">
+    <ImageButton
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:scaleType="fitCenter"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_vertical"
+        android:id="@+id/iv_myinfoactivity_back"
+        android:background="@drawable/ic_arrow_default"
+        android:onClick="back"/>
     <ImageView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="180dp"
+        android:layout_height="40dp"
         android:layout_gravity="center"
-        android:background="@drawable/ic_launcher" >
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/ic_logo2" >
     </ImageView>
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:text="欢迎登录点滴记账"
-            android:textColor="#57647D"
-            android:textSize="20sp"
-            android:textStyle="bold" >
-        </TextView>
-    </LinearLayout>
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -35,6 +32,8 @@
             android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
             android:background="@drawable/ic_1_default"
             android:orientation="vertical" >
             <EditText
@@ -43,8 +42,6 @@
                 android:layout_height="45dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="1dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
                 android:background="#FFFFFF"
                 android:drawablePadding="10dp"
                 android:hint="请输入您的用户名"
@@ -65,8 +62,6 @@
                 android:layout_gravity="center_horizontal"
                 android:background="#FFFFFF"
                 android:drawablePadding="10dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
                 android:hint="请输入您的密码  "
                 android:inputType="textPassword"
                 android:textColorHint="#A3B1CA"
@@ -83,7 +78,7 @@
             android:layout_marginRight="50dp"
             android:gravity="center"
             android:text="登  录"
-            android:background="#20C9F5"
+            android:background="@color/pre_Button"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -100,11 +95,11 @@
                 android:id="@+id/bt_loginactivity_register"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
+                android:background="#00000000"
                 android:gravity="center"
                 android:layout_weight="1"
                 android:textSize="15sp"
-                android:textColor="@color/colorText"
+                android:textColor="@color/blueText"
                 android:onClick="register"
                 android:text="注册账户" />
 
@@ -112,7 +107,7 @@
                 android:id="@+id/btloginactivity_forgetPwd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
+                android:background="#00000000"
                 android:gravity="center"
                 android:layout_weight="1"
                 android:textSize="15sp"
@@ -120,37 +115,73 @@
                 android:onClick="forgetPwd"/>
         </LinearLayout>
     </LinearLayout>
-    <!--<RelativeLayout
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="40dp"
-        android:gravity="center"
-        android:orientation="vertical" >
+        android:orientation="horizontal"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:gravity="center_vertical">
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0.2dp"
+            android:background="@color/b2Color"
+            android:layout_weight="1"/>
         <TextView
-            android:id="@+id/tv_loginactivity_register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="5dp"
-            android:gravity="center"
-            android:text="啊，还没有账户？马上点击 "
-            android:textColor="#5E6A81"
-            android:textSize="14sp" >
-            "
-        </TextView>
-        <TextView
-            android:id="@+id/tv_loginactivity_registerLink"
+            android:text="使用第三方账户登录"
+            android:textSize="12sp"
+            android:textColor="@color/b2Color"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_gravity="center_horizontal"/>
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0.2dp"
+            android:background="@color/b2Color"
+            android:layout_weight="1"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp">
+        <LinearLayout
+            android:id="@+id/ll_loginactivity_weiboLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="5dp"
-            android:layout_toRightOf="@+id/tv_loginactivity_register"
-            android:textSize="15sp"
-            android:text="注册"
-            android:autoLink="all"
-            android:textStyle="bold"
-            android:onClick="register">
-        </TextView>
-    </RelativeLayout>-->
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_weibo"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="微博登录"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_loginactivity_QQLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_qq"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="QQ登录"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
 </LinearLayout>
