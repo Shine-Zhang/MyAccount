@@ -3,7 +3,6 @@ package com.example.zs.pager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -19,8 +18,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.zs.dao.IncomeContentDAO;
-import com.example.zs.dao.PayOutContentDAO;
 import com.example.zs.application.MyAplication;
 import com.example.zs.myaccount.AboutUsActivity;
 import com.example.zs.myaccount.FeedbackActivity;
@@ -116,16 +113,24 @@ public class OwnerPager extends BasePager {
 
         String username = MyAplication.getCurUsernameFromSp("username");
         Uri photoUri = Uri.parse(MyAplication.getCurUsernameFromSp("photoUri"));
-        Log.i(TAG,"photoUri ="+photoUri);
-        if(username!=null){
+        Log.i(TAG,"username ="+username+" photoUri ="+photoUri);
+        if(username!=""){
+            Log.i(TAG,"用户状态：当前有用户"+username);
             //当保存当前用户的username，不为空，直接用于回显
             rl_ownerpager_logined.setVisibility(View.VISIBLE);
             rl_ownerpager_unlogin.setVisibility(View.GONE);
             iv_ownerpager_username.setText(username);
             iv_ownerpager_loginIcon.setImageURI(photoUri);
             initLogined();
+        }else {
+            Log.i(TAG,"用户状态：当前没有用户");
+            //当前没有用户
+            rl_ownerpager_logined.setVisibility(View.GONE);
+            rl_ownerpager_unlogin.setVisibility(View.VISIBLE);
+            initLogin();        //登录
         }
         if (usernameStr!=null){
+            Log.i(TAG,"用户状态：当前是新注册用户"+usernameStr);
             //有用户名，说明登录成功，修改显示的布局
             rl_ownerpager_logined.setVisibility(View.VISIBLE);
             rl_ownerpager_unlogin.setVisibility(View.GONE);
@@ -135,8 +140,7 @@ public class OwnerPager extends BasePager {
             initLogined();
         }
 
-
-        initLogin();        //登录
+        //initLogin();        //登录
         initMyBalance();    //我的余额
         initShareApp();     //分享App
         initClearALl();     //初始化，最初状态
@@ -540,11 +544,11 @@ public class OwnerPager extends BasePager {
         // 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
         //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
         // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
-        oks.setTitle("MyAccount");
+        oks.setTitle("点滴记账");
         // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
         oks.setTitleUrl("http://shouji.baidu.com/");
         // text是分享文本，所有平台都需要这个字段
-        oks.setText("MyAccount，能够帮你更好的管理钱财，实现愿望记账！");
+        oks.setText("点滴记账，能够帮你更好的管理钱财，实现愿望记账！");
         //分享网络图片，新浪微博分享网络图片需要通过审核后申请高级写入接口，否则请注释掉测试新浪微博
         oks.setImageUrl("http://8.pic.pc6.com/thumb/up/2016-4/2016418105434764860_600_0.jpg");
         // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
