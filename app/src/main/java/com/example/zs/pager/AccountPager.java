@@ -87,6 +87,10 @@ public class AccountPager extends BasePager implements
     private int today;
     private TextView tvAccountPagerTotalIncome;
     private TextView tvAccountPagerTotalCost;
+    private float totalIncome;
+    private float totalCost;
+    private String myBudget;
+    private TextView tvAccountPagerBudget;
 
 
     public AccountPager(Activity activity) {
@@ -99,7 +103,7 @@ public class AccountPager extends BasePager implements
      */
     @Override
     public View initView() {
-        Log.i("jjjjjjjjjj","********************************");
+//        Log.i("jjjjjjjjjj","********************************");
         now = Calendar.getInstance();
         today = now.get(Calendar.DAY_OF_MONTH);
         mrootView = View.inflate(mActivity,R.layout.account_pager_layout,null);
@@ -122,25 +126,22 @@ public class AccountPager extends BasePager implements
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mActivity, ShowBudgetStateAcivity.class);
-                float currentHight = DensityUtil.dip2px(mActivity,150);
-                intent.putExtra("currentHight",0.5f);
+                float budget = Float.parseFloat(myBudget);
+                float balance = budget-totalCost;
+                float currentHight = balance/budget;
+                intent.putExtra("currentHight",0.45f);
+                intent.putExtra("balance",balance);
+                intent.putExtra("totalIncome",totalIncome);
                // Log.i("haha","&&&&&&&&&&&&&&&&&&&&:"+currentHight);
                 mActivity.startActivity(intent);
             }
         });
 
-        TextView tvAccountPagerBudget = (TextView) mrootView.findViewById(R.id.tv_account_pager_buget);
-/*        tvAccountPagerTotalIncome = (TextView) mrootView.findViewById(R.id.account_pager_total_income);
-        tvAccountPagerTotalCost = (TextView) mrootView.findViewById(R.id.tv_account_pager_month_cost);*/
-        String myBudget;
-        if((!TextUtils.isEmpty(MyAplication.getStringFromSp("myBudget"+".00")))) {
-            //Log.i("haha","***************************"+MyAplication.getStringFromSp("myBudget"));
-            myBudget =MyAplication.getStringFromSp("myBudget");
-            tvAccountPagerBudget.setText(myBudget);
-        }else{
+        tvAccountPagerBudget = (TextView) mrootView.findViewById(R.id.tv_account_pager_buget);
+        tvAccountPagerTotalIncome = (TextView) mrootView.findViewById(R.id.account_pager_total_income);
+        tvAccountPagerTotalCost = (TextView) mrootView.findViewById(R.id.tv_account_pager_month_cost);
 
-            tvAccountPagerBudget.setText("3000.00");
-        }
+
   /*      childItems = new  ArrayList<ArrayList<AccountChildItemBean>> ();
         groupItems = new ArrayList<>();*/
 
@@ -197,15 +198,23 @@ public class AccountPager extends BasePager implements
         childItems = timeDao.getTimeLinePayOutChildData(9);
         groupItems = timeDao.getTimeLineGroupData(9);
 
-        float totalIncome = 0;
-        float totalCost = 0;
-/*        for(int i=0;i<groupItems.size();i++){
+        if((!TextUtils.isEmpty(MyAplication.getStringFromSp("myBudget")))) {
+            //Log.i("haha","***************************"+MyAplication.getStringFromSp("myBudget"));
+            myBudget =MyAplication.getStringFromSp("myBudget");
+        }else{
+            myBudget ="3000.00";
+
+        }
+        tvAccountPagerBudget.setText(myBudget);
+        totalIncome = 0;
+        totalCost = 0;
+        for(int i=0;i<groupItems.size();i++){
             totalIncome +=groupItems.get(i).getTotalIncome();
             totalCost += groupItems.get(i).getTotalCosts();
-        }*/
+        }
 
-/*        tvAccountPagerTotalIncome.setText(String.format("%.2f",totalIncome));
-        tvAccountPagerTotalCost.setText(String.format("%.2f",totalCost));*/
+        tvAccountPagerTotalIncome.setText(String.format("%.2f", totalIncome));
+        tvAccountPagerTotalCost.setText(String.format("%.2f", totalCost));
 //        setDatasource();
        // Log.i("haha","************进入initData***********");
         //手动写的测试数据
@@ -247,8 +256,11 @@ public class AccountPager extends BasePager implements
         groupItems.add(groupItemBean3);*/
         //Log.i("haha","************初始化数据完毕***********");
 
-        adapter = new MyexpandableListAdapter(mActivity);
-        expandableListView.setAdapter(adapter);
+        if(adapter==null) {
+            adapter = new MyexpandableListAdapter(mActivity);
+        }
+
+            expandableListView.setAdapter(adapter);
 
 
 
@@ -257,13 +269,16 @@ public class AccountPager extends BasePager implements
             Log.i("haha","************展开所有数据完毕***********"+i);
             expandableListView.expandGroup(i);
         }*/
+        if(groupItems.size()!=0) {
+            expandableListView.expandGroup(0);
 
-        expandableListView.expandGroup(0);
+        }
+
         expandableListView.setOnHeaderUpdateListener(this);
+        //Log.i("huibuhui","**************************************************");
         expandableListView.setOnChildClickListener(this);
         expandableListView.setOnGroupClickListener(this);
         stickyLayout.setOnGiveUpTouchEventListener(this);
-
 
     }
 
@@ -356,7 +371,6 @@ public class AccountPager extends BasePager implements
 
         @Override
         public Object getGroup(int groupPosition) {
-
             return groupItems.get(groupPosition);
         }
 
@@ -630,7 +644,9 @@ public class AccountPager extends BasePager implements
             holder.ib_account_pager_item_edit.setVisibility(View.GONE);
             holder.ib_account_pager_item_delete.setVisibility(View.GONE);
             holder.tv_account_pager_word_describe.setVisibility(View.VISIBLE);
-            holder.iv_account_pager_item_photo.setVisibility(View.VISIBLE);
+            if( childItems.get(holder.group).get(holder.child).getPhotoResId()>0) {
+                holder.iv_account_pager_item_photo.setVisibility(View.VISIBLE);
+            }
             holder.tv_account_pager_how_much.setVisibility(View.VISIBLE);
 
         }
@@ -685,6 +701,7 @@ public class AccountPager extends BasePager implements
 
     @Override
     public View getPinnedHeader() {
+       // Log.i("xuanyuan","&*&&*&*&*&");
         View headerView = (ViewGroup) mActivity.getLayoutInflater().inflate(R.layout.groupitem, null);
         headerView.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -694,17 +711,20 @@ public class AccountPager extends BasePager implements
 
     @Override
     public void updatePinnedHeader(View headerView, int firstVisibleGroupPos) {
-        AccountGroupItemBean firstVisibleGroup = (AccountGroupItemBean) adapter.getGroup(firstVisibleGroupPos);
-        TextView MonthOfDay = (TextView) headerView.findViewById(R.id.iv_account_pager_item_img_describe);
-        TextView income = (TextView) headerView.findViewById(R.id.tv_account_pager_income_how_much);
-        TextView outcome = (TextView) headerView.findViewById(R.id.tv_account_pager_outcome_how_much);
-        MonthOfDay.setText(firstVisibleGroup.getDayOfMonth()+"号");
-        if(today==firstVisibleGroup.getDayOfMonth()){
-            MonthOfDay.setText("今天");
-            MonthOfDay.setBackground(mActivity.getResources().getDrawable(R.drawable.account_pager_group_today_icon));
+       // Log.i("xuanyuan","1212121212:"+firstVisibleGroupPos);
+        if(firstVisibleGroupPos!=-1) {
+            AccountGroupItemBean firstVisibleGroup = (AccountGroupItemBean) adapter.getGroup(firstVisibleGroupPos);
+            TextView MonthOfDay = (TextView) headerView.findViewById(R.id.iv_account_pager_item_img_describe);
+            TextView income = (TextView) headerView.findViewById(R.id.tv_account_pager_income_how_much);
+            TextView outcome = (TextView) headerView.findViewById(R.id.tv_account_pager_outcome_how_much);
+            MonthOfDay.setText(firstVisibleGroup.getDayOfMonth() + "号");
+            if (today == firstVisibleGroup.getDayOfMonth()) {
+                MonthOfDay.setText("今天");
+                MonthOfDay.setBackground(mActivity.getResources().getDrawable(R.drawable.account_pager_group_today_icon));
+            }
+            income.setText(String.format("%.2f", firstVisibleGroup.getTotalIncome()));
+            outcome.setText(String.format("%.2f", firstVisibleGroup.getTotalCosts()));
         }
-        income.setText(String.format("%.2f",firstVisibleGroup.getTotalIncome()));
-        outcome.setText(String.format("%.2f",firstVisibleGroup.getTotalCosts()));
     }
 
     @Override
@@ -724,7 +744,9 @@ public class AccountPager extends BasePager implements
     public void setChildItemBean(AccountChildItemBean childItemBean, ChildViewHolder holder){
         // Log.i("haha","**************************************");
         //首先设置，条目的图标，因为无论是收入还是支出，其位置都是不变的，都在正中间的位置
-        holder.ib_account_pager_item_img_describe.setBackground(mActivity.getResources().getDrawable(childItemBean.getIcon()));
+        /*holder.ib_account_pager_item_img_describe.setBackground(mActivity.getResources().getDrawable(childItemBean.getIcon()));*/
+        holder.ib_account_pager_item_img_describe.setImageResource(childItemBean.getIcon());
+        holder.ib_account_pager_item_img_describe.setBackgroundResource(R.drawable.account_pager_group_today_icon);
         if(childItemBean.isIncome()){
             //如果当前添加的条目是收入
             //  Log.i("haha","收入*************************");

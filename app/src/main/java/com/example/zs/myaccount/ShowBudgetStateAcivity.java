@@ -66,6 +66,8 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
     private String[] normal2Days;
     private String[] special2Days;
     private Calendar now;
+    private float income;
+    private float balance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +77,8 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
         Intent intent = getIntent();
         //如果没有拿到从
         currentRatio = intent.getFloatExtra("currentHight",-1);
+        income = intent.getFloatExtra("totalIncome",-1);
+        balance = intent.getFloatExtra("balance",0);
         // Log.i("haha","!!!!!!!!!!!!!!!!! :"+currentRatio);
 
 
@@ -327,6 +331,8 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                             Pattern p = Pattern.compile(rule);
                             Matcher m = p.matcher(budget);
                             if (m.matches()) {
+                                float tmp =Float.parseFloat(budget);
+                                budget = String.format("%.2f",tmp);
                                 MyAplication.saveStringToSp("myBudget", budget);
                                 mVpShowBudgetSta.setCurrentItem(0);
                             } else {
@@ -409,8 +415,13 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                     String from = year+"-"+month+"-"+day;
                     String to = year+"-"+month+"-"+1;
                     String span = getSpan(from,to);
-                    TextView text = (TextView) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.tv_show_budget_state_activity_deadSpan);
-                    text.setText(span);
+                    TextView text1 = (TextView) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.tv_show_budget_state_activity_deadSpan);
+                    text1.setText(span);
+                    TextView text2 = (TextView) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.tv_show_budget_state_activity);
+                    text2.setText(String.format("%.2f",balance));
+
+                    TextView text3 = (TextView) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.tv_show_budget_state_income);
+                    text3.setText(String.format("%.2f",income));
                     Log.i("hhhhhhh","************************"+span);
                   /*  if(!TextUtils.isEmpty(MyAplication.getStringFromSp("budget_deadline"))) {
                         String budget_deadline =MyAplication.getStringFromSp("budget_deadline");
