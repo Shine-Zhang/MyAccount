@@ -70,11 +70,23 @@
                 android:layout_gravity="center_horizontal">
                 <com.github.mikephil.charting.charts.PieChart
                     android:layout_width="match_parent"
-                    android:layout_height="380dp"
+                    android:layout_height="300dp"
                     android:layout_marginTop="10dp"
                     android:id="@+id/pc_reportform_piechart">
                 </com.github.mikephil.charting.charts.PieChart>
             </FrameLayout>
+            <!--<TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:id="@+id/tv_reportform_detail"
+                android:textColor="#f00"
+                android:textSize="30sp"/>-->
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rv_reportformpager_recyclerview">
+            </android.support.v7.widget.RecyclerView>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -85,7 +97,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:id="@+id/fl_reportform_shouru"
-                android:layout_height="380dp"
+                android:layout_height="300dp"
                 android:layout_gravity="center_horizontal">
             </FrameLayout>
         </LinearLayout>
