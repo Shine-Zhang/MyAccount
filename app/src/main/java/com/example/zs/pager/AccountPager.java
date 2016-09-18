@@ -644,7 +644,8 @@ public class AccountPager extends BasePager implements
             holder.ib_account_pager_item_edit.setVisibility(View.GONE);
             holder.ib_account_pager_item_delete.setVisibility(View.GONE);
             holder.tv_account_pager_word_describe.setVisibility(View.VISIBLE);
-            if( childItems.get(holder.group).get(holder.child).getPhotoResId()>0) {
+
+            if( holder.group>0&&holder.child>0&&childItems.get(holder.group).get(holder.child).getPhotoResId()>0) {
                 holder.iv_account_pager_item_photo.setVisibility(View.VISIBLE);
             }
             holder.tv_account_pager_how_much.setVisibility(View.VISIBLE);
