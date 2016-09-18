@@ -269,7 +269,7 @@ public class AccountPager extends BasePager implements
             Log.i("haha","************展开所有数据完毕***********"+i);
             expandableListView.expandGroup(i);
         }*/
-        if(groupItems.size()!=0) {
+        if(groupItems.size()!=0&&childItems.get(0).size()>0) {
             expandableListView.expandGroup(0);
 
         }
