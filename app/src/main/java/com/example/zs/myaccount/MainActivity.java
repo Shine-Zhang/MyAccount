@@ -229,6 +229,20 @@ public class MainActivity extends AppCompatActivity {
             //照相
             if(resultCode==RESULT_OK){
             }
+        }else if(requestCode==111){
+            Log.i("wwwwwwww","添加愿望onActivityResult---requestCode==111");
+            if (resultCode==112){
+                Log.i("wwwwwwww","添加愿望onActivityResult---resultCode==112");
+                Intent wishintent = getIntent();
+                boolean hasaddwish = wishintent.getBooleanExtra("hasaddwish", false);
+                Log.i("wwwwww", "hasaddwish===" + hasaddwish);
+
+                if (hasaddwish) {
+                    pageList.get(1).initView();
+                    Log.i("wwwwww", "mainActivity_contentAdapter==notifyDataSetChanged");
+
+                }
+            }
         }
         super.onActivityResult(requestCode, resultCode, intent);
     }

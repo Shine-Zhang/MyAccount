@@ -160,9 +160,6 @@ public class KeyboardUtil {
 
 	public void showKeyboard() {
 		Log.i("haha","showKeyboard");
-		if(!TextUtils.isEmpty(ed.getText().toString())){
-			ed.setText("");
-		}
 		keyboardView.setVisibility(View.VISIBLE);
 
 	}

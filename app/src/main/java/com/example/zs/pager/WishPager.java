@@ -1,6 +1,7 @@
 package com.example.zs.pager;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.ContentObserver;
@@ -38,11 +39,13 @@ import com.example.zs.utils.ScreenUtils;
 import com.example.zs.utils.ShowPopupWindowUtils;
 import com.example.zs.view.CircleImageView;
 import com.example.zs.view.RoundProgressBar;
+import com.kevin.wraprecyclerview.BaseRecyclerAdapter;
 
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -74,6 +77,7 @@ public class WishPager extends BasePager {
     private CompleteWishDAO completeWishDAO;
     private LinearLayout ll_showwish_ongoingwishes;
     private LinearLayout ll_showwish_noongoingwishes;
+    private LinearLayoutManager layoutManager;
 
 
     /**
@@ -86,14 +90,6 @@ public class WishPager extends BasePager {
     }
     @Override
     public View initView() {
-
-        //拿到传过来的数据
-        Intent intent = mActivity.getIntent();
-        boolean wishhaschange = intent.getBooleanExtra("wishhaschange", false);
-
-        /*if(wishhaschange){
-
-        }*/
 
         //获取数据库中愿望的数目
         //未完成愿望的数目和详细信息
@@ -152,8 +148,9 @@ public class WishPager extends BasePager {
                 //拿到RecyclerView
                 rcv_wishpager_wishes = (RecyclerView) view_wishpager.findViewById(R.id.rcv_wishpager_wishes);
                 //创建默认的线性LayoutManager
-                LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
-                rcv_wishpager_wishes.setLayoutManager(layoutManager);
+                layoutManager = new LinearLayoutManager(mActivity);
+                layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                //rcv_wishpager_wishes.setLayoutManager(layoutManager);
                 //如果可以确定每个item的高度是固定的，设置这个选项可以提高性能
                 rcv_wishpager_wishes.setHasFixedSize(true);
                 initData();
@@ -228,17 +225,20 @@ public class WishPager extends BasePager {
                 }
                 Log.i("wwwwww","chusheshi initdata()  process="+allOnGoingWishInfo.get(i).process);
             }
+            initRecyclerViewAdapter();
         }
-        initRecyclerViewAdapter();
     }
 
     private void initRecyclerViewAdapter() {
         //初始化自定义的适配器
         myAdapter = new MyOnGoingRecyclerViewAdapter(allOnGoingWishInfo);
+        LayoutInflater layoutInflater = mActivity.getLayoutInflater();
+        //为RecyclerView添加FooterView
+        View view_footer = layoutInflater.inflate(R.layout.item_wish_footer, null);
+        myAdapter.addFootView(view_footer);
+        rcv_wishpager_wishes.setLayoutManager(layoutManager);
         //为rcv_wishpager_wishes设置适配器
         rcv_wishpager_wishes.setAdapter(myAdapter);
-        //为RecyclerView添加FooterView
-        setFooterView(rcv_wishpager_wishes);
 
         //给拿到RecyclerView添加条目点击事件
         rcv_wishpager_wishes.addOnItemTouchListener(new OnItemTouchListener(rcv_wishpager_wishes) {
@@ -334,7 +334,7 @@ public class WishPager extends BasePager {
                                     ll_showwish_ongoingwishes.setVisibility(View.INVISIBLE);
                                     ll_showwish_noongoingwishes.setVisibility(View.VISIBLE);
                                 }
-                                myAdapter.notifyDataSetChanged();
+                                //myAdapter.notifyDataSetChanged();
                                 onGoingWishDAO.deleteOnGoingWishInfo(wishid);
                                 completeWishDAO.addCompleteWishInfo(compinfo);
 
@@ -411,7 +411,6 @@ public class WishPager extends BasePager {
                 //跳转到已完成愿望的页面
                 popupwindow_showcompletedialog.dismiss();
                 mActivity.startActivity(new Intent(mActivity,CompleteWishActivity.class));
-                popupwindow_showcompletedialog.dismiss();
             }
         });
 
@@ -445,7 +444,7 @@ public class WishPager extends BasePager {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //删除愿望
                         deleteWish(wishid,position);
-                        myAdapter.notifyItemRemoved(position);
+                        //myAdapter.notifyItemRemoved(position);
                     }
                 })
                 .show();
@@ -460,7 +459,7 @@ public class WishPager extends BasePager {
         //从数据库中删除
         onGoingWishDAO.deleteOnGoingWishInfo(wishid);
         //刷新
-        myAdapter.notifyItemRemoved(position);
+        //myAdapter.notifyItemRemoved(position);
     }
 
 
@@ -473,7 +472,8 @@ public class WishPager extends BasePager {
         Bundle bundle = new Bundle();
         bundle.putString("from",FROMADD);
         intent.putExtras(bundle);
-        mActivity.startActivity(intent);
+        mActivity.startActivityForResult(intent,111);
+        Log.i("wwwwwwww","跳转到添加愿望页面---startActivityForResult(intent,111)");
     }
 
     /**
@@ -519,10 +519,10 @@ public class WishPager extends BasePager {
      * 给RecyclerView设置footer
      * @param view
      */
-    private void setFooterView(RecyclerView view){
+    /*private void setFooterView(RecyclerView view){
         View footer = LayoutInflater.from(mActivity).inflate(R.layout.item_wish_footer, view, false);
         myAdapter.setFooterView(footer);
-    }
+    }*/
 
 }
 
@@ -531,6 +531,156 @@ public class WishPager extends BasePager {
  * RecyclerView与ListView类似，都需要Adapter
  */
 class MyOnGoingRecyclerViewAdapter extends RecyclerView.Adapter<MyOnGoingRecyclerViewAdapter.MyViewHolder>{
+
+
+    private View mFooterView;
+    public List<WishInfo> wishInfos;
+    //item类型
+    public static final int ITEM_TYPE_CONTENT = 1;
+    public static final int ITEM_TYPE_BOTTOM = 2;
+    private int footViewSize = 0;
+    private boolean isAddFoot = false;
+
+
+    //构造方法
+    public MyOnGoingRecyclerViewAdapter(List<WishInfo> wishInfos) {
+        this.wishInfos = wishInfos;
+    }
+
+    public void addFootView(View view) {
+        mFooterView = view;
+        footViewSize = 1;
+        isAddFoot = true;
+    }
+
+
+    /**
+     * 重写这个方法，很重要，是加入Header和Footer的关键，我们通过判断item的类型，从而绑定不同的view
+     * @param position
+     * @return
+     */
+    @Override
+    public int getItemViewType(int position) {
+        if (footViewSize == 0){
+            return ITEM_TYPE_CONTENT;
+        }
+        if (position == getItemCount()-1){
+            //最后一个,应该加载Footer
+            return ITEM_TYPE_BOTTOM;
+        }
+        return ITEM_TYPE_CONTENT;
+    }
+
+    //创建新View，被LayoutManager所调用
+    //如果是HeaderView或者是FooterView，直接在Holder中返回
+    @Override
+    public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        View view = null;
+        switch (viewType) {
+            case ITEM_TYPE_CONTENT:
+                view = View.inflate(viewGroup.getContext(), R.layout.item_wish, null);
+                break;
+
+            case ITEM_TYPE_BOTTOM:
+                view = mFooterView;
+                break;
+        }
+        MyViewHolder viewHolder = new MyViewHolder(view);
+        return viewHolder;
+    }
+
+
+    //将数据与界面进行绑定的操作
+    //绑定View，这里是根据返回的这个position的类型，从而进行绑定的，   HeaderView和FooterView, 就不同绑定了
+    @Override
+    public void onBindViewHolder(final MyViewHolder viewHolder, int position) {
+
+        if(getItemViewType(position) == ITEM_TYPE_CONTENT){
+
+            if(viewHolder instanceof MyViewHolder) {
+                WishInfo wishInfo = wishInfos.get(position);
+                Log.i("wwwww"," item wishinfo = "+wishInfo.toString());
+                //愿望标题
+                viewHolder.tv_itemwish_title.setText(wishInfo.wishTitle);
+                //愿望备注
+                if(wishInfo.wishDescription.isEmpty()){
+                    viewHolder.tv_itemwish_description.setVisibility(View.GONE);
+                }else {
+                    viewHolder.tv_itemwish_description.setVisibility(View.VISIBLE);
+                    viewHolder.tv_itemwish_description.setText(wishInfo.wishDescription);
+                }
+                //愿望资金
+                viewHolder.tv_itemwish_amount.setText(wishInfo.wishFund);
+                //愿望图片
+                Log.i("wwwww","Item photouri="+wishInfo.wishphotoUri);
+                if(wishInfo.wishphotoUri.equals("null") || wishInfo.wishphotoUri.equals("0") || wishInfo.wishphotoUri.isEmpty()){
+                    Log.i("wwww","Item photoset null");
+                    viewHolder.iv_itemwish_pic.setImageResource(R.drawable.ic_default_wish);
+                }else {
+                    viewHolder.iv_itemwish_pic.setImageURI(Uri.parse(wishInfo.wishphotoUri));
+                }
+                //愿望进度文本
+                viewHolder.tv_itemwish_progresstip.setText("愿望进度"+wishInfo.process+"%");
+                //愿望进度条
+                viewHolder.pb_itemwish_progress.setMax(100);
+                viewHolder.pb_itemwish_progress.setProgress(wishInfo.process);
+                Log.i("wwww","item process="+wishInfo.process);
+                viewHolder.pb_itemwish_progress.getProgress();
+
+                //“完成字体颜色”，进度100%，为蓝色，否则为灰色。
+                if(wishInfo.process==100){
+                    viewHolder.tv_itemwish_complete.setTextColor(Color.rgb(31,185,236));
+                }else{
+                    viewHolder.tv_itemwish_complete.setTextColor(Color.GRAY);
+                }
+                return;
+            }
+            return;
+        }else{
+            return;
+        }
+
+    }
+
+    //获取数据的数量
+    //返回View中Item的个数，这个时候，总的个数应该是ListView中Item的个数加上HeaderView和FooterView
+    @Override
+    public int getItemCount() {
+       return wishInfos.size()+footViewSize;
+    }
+
+    //自定义的ViewHolder，持有每个Item的的所有界面元素
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        public TextView tv_itemwish_title;
+        public TextView tv_itemwish_amount;
+        public TextView tv_itemwish_description;
+        public ImageView iv_itemwish_pic;
+        public ImageView iv_itemwish_delete;
+        public TextView tv_itemwish_complete;
+        public ProgressBar pb_itemwish_progress;
+        public TextView tv_itemwish_progresstip;
+
+        public MyViewHolder(View view){
+            super(view);
+            //如果是footerview,直接返回
+            if (view == mFooterView){
+                return;
+            }
+            tv_itemwish_title = (TextView) view.findViewById(R.id.tv_itemwish_title);
+            tv_itemwish_amount =  (TextView) view.findViewById(R.id.tv_itemwish_amount);
+            tv_itemwish_description = (TextView) view.findViewById(R.id.tv_itemwish_description);
+            iv_itemwish_pic = (ImageView) view.findViewById(R.id.iv_itemwish_pic);
+            iv_itemwish_delete = (ImageView) view.findViewById(R.id.iv_itemwish_delete);
+            tv_itemwish_complete = (TextView) view.findViewById(R.id.tv_itemwish_complete);
+            pb_itemwish_progress = (ProgressBar) view.findViewById(R.id.pb_itemwish_progress);
+            tv_itemwish_progresstip =  (TextView) view.findViewById(R.id.tv_itemwish_progresstip);
+        }
+    }
+
+}
+
+
+/*class MyOnGoingRecyclerViewAdapter extends RecyclerView.Adapter<MyOnGoingRecyclerViewAdapter.MyViewHolder>{
 
     //item类型
     public static final int ITEM_TYPE_CONTENT = 1;
@@ -553,9 +703,12 @@ class MyOnGoingRecyclerViewAdapter extends RecyclerView.Adapter<MyOnGoingRecycle
         notifyItemInserted(getItemCount()-1);
     }
 
-    /**
+
+    *//**
      * 重写这个方法，很重要，是加入Header和Footer的关键，我们通过判断item的类型，从而绑定不同的view
-     * */
+     * @param position
+     * @return
+     *//*
     @Override
     public int getItemViewType(int position) {
         if (mFooterView == null){
@@ -673,7 +826,7 @@ class MyOnGoingRecyclerViewAdapter extends RecyclerView.Adapter<MyOnGoingRecycle
         }
     }
 
-}
+}*/
 
 
 /**
@@ -710,9 +863,7 @@ abstract class OnItemTouchListener implements RecyclerView.OnItemTouchListener {
 
     public abstract void onItemClick(RecyclerView.ViewHolder vh);
 
-    /**
-     * 手势判断
-     */
+
     class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
