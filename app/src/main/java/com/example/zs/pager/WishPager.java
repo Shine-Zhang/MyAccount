@@ -39,7 +39,6 @@ import com.example.zs.utils.ScreenUtils;
 import com.example.zs.utils.ShowPopupWindowUtils;
 import com.example.zs.view.CircleImageView;
 import com.example.zs.view.RoundProgressBar;
-import com.kevin.wraprecyclerview.BaseRecyclerAdapter;
 
 
 import java.text.DecimalFormat;
