@@ -74,7 +74,6 @@ public class AccountPager extends BasePager implements
     private StickyLayout stickyLayout;
     private  ArrayList<ArrayList<AccountChildItemBean>> childItems;
     private  ArrayList<AccountGroupItemBean> groupItems;
-    private  ArrayList<AccountGroupItemBean> groupItemsSta;
     private MyexpandableListAdapter adapter;
     private RelativeLayout accountPagerBudgetSta;
 
@@ -91,10 +90,17 @@ public class AccountPager extends BasePager implements
     private float totalCost;
     private String myBudget;
     private TextView tvAccountPagerBudget;
+    private boolean[] groupExpandSta;
 
 
     public AccountPager(Activity activity) {
         super(activity);
+        groupExpandSta = new boolean[31];
+        for(int i = 0;i<groupExpandSta.length;i++){
+            groupExpandSta[i] = true;
+        }
+        now = Calendar.getInstance();
+        today = now.get(Calendar.DAY_OF_MONTH);
     }
 
     /**
@@ -104,8 +110,7 @@ public class AccountPager extends BasePager implements
     @Override
     public View initView() {
 //        Log.i("jjjjjjjjjj","********************************");
-        now = Calendar.getInstance();
-        today = now.get(Calendar.DAY_OF_MONTH);
+
         mrootView = View.inflate(mActivity,R.layout.account_pager_layout,null);
         expandableListView = (PinnedHeaderExpandableListView) mrootView.findViewById(R.id.expandablelist);
         stickyLayout = (StickyLayout) mrootView.findViewById(R.id.sticky_layout);
@@ -113,7 +118,19 @@ public class AccountPager extends BasePager implements
 
         View footView = View.inflate(mActivity,R.layout.account_pager_footview,null);
         expandableListView.initFootView(footView);
+        expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            @Override
+            public void onGroupExpand(int i) {
+                groupExpandSta[groupItems.get(i).getDayOfMonth()] = true;
+            }
+        });
 
+        expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
+            @Override
+            public void onGroupCollapse(int i) {
+                groupExpandSta[groupItems.get(i).getDayOfMonth()] = false;
+            }
+        });
         accountPagerBudgetSta = (RelativeLayout) mrootView.findViewById(R.id.rl_account_pager_budget_state);
         ImageButton ib_account_pager_camera = (ImageButton) mrootView.findViewById(R.id.ib_account_pager_camera);
         ib_account_pager_camera.setOnClickListener(new View.OnClickListener() {
@@ -203,7 +220,6 @@ public class AccountPager extends BasePager implements
             myBudget =MyAplication.getStringFromSp("myBudget");
         }else{
             myBudget ="3000.00";
-
         }
         tvAccountPagerBudget.setText(myBudget);
         totalIncome = 0;
@@ -263,11 +279,17 @@ public class AccountPager extends BasePager implements
             expandableListView.setAdapter(adapter);
 
 
-
+        Log.i("haha","******groupItems.size(): "+groupItems.size());
+        Log.i("haha","******childItems.size(): "+childItems.size());
         // 展开所有group
         for ( int i = 0;i<groupItems.size(); i++) {
             Log.i("haha","************展开所有数据完毕***********"+i);
-            expandableListView.expandGroup(i);
+            if(groupExpandSta[groupItems.get(i).getDayOfMonth()-1]){
+                expandableListView.expandGroup(i);
+            }else{
+                expandableListView.collapseGroup(i);
+            }
+
             //expandableListView.get
         }
 

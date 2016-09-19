@@ -651,10 +651,12 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
     protected void onDestroy() {
         if(keyboardUtil!=null) {
             if (!keyboardUtil.isNormal) {
-                keyboardUtil.hideKeyboard();
+                keyboardUtil.hideKeyboardAsNormal();
                 }
             }else{
-                keyboardUtil.hideKeyboardAsNormal();
+                if(keyboardUtil!=null) {
+                    keyboardUtil.hideKeyboardAsNormal();
+                }
             }
         super.onDestroy();
         }

@@ -418,7 +418,37 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
 
     public void setDate(boolean b) {
         datePicker = new DatePicker(this);
-        //Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+       // datePicker.init(year, month, day,null);
+/*        datePicker.init(year, month, day, new DatePicker.OnDateChangedListener() {
+
+            @Override
+            public void onDateChanged(DatePicker view, int year,
+                                      int monthOfYear, int dayOfMonth) {
+
+                if (isDateAfter(view)) {
+                    Calendar mCalendar = Calendar.getInstance();
+                    view.init(mCalendar.get(Calendar.YEAR),
+                            mCalendar.get(Calendar.MONTH),
+                            mCalendar.get(Calendar.DAY_OF_MONTH), this);
+                }
+            }
+
+            private boolean isDateAfter(DatePicker tempView) {
+                Calendar mCalendar = Calendar.getInstance();
+                Calendar tempCalendar = Calendar.getInstance();
+                tempCalendar.set(tempView.getYear(), tempView.getMonth(),
+                        tempView.getDayOfMonth(), 0, 0, 0);
+                if (tempCalendar.after(mCalendar))
+                    return true;
+                else
+                    return false;
+            }
+        });*/
+
         if (!b){
             //从+号加入此activity
             //得到当日的日期
