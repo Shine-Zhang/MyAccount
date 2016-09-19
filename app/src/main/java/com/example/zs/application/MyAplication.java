@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.SharedPreferences;
 
 import com.example.zs.bean.WishInfo;
+import com.example.zs.pager.BasePager;
+import com.example.zs.pager.OwnerPager;
 
 /**
  * Created by wuqi on 2016/9/4 0004.
@@ -16,6 +18,7 @@ public class MyAplication extends Application{
     public static WishInfo wishInfo;
     public static SharedPreferences UserInfosp;
     public static SharedPreferences CurUsersp;
+    private BasePager ownerPager;
 
     /**
      * 应用创建时调用oncreate（）
@@ -24,7 +27,7 @@ public class MyAplication extends Application{
     public void onCreate() {
         sp = getSharedPreferences("MyAccount", MODE_PRIVATE);
         UserInfosp = getSharedPreferences("config",MODE_PRIVATE);
-        CurUsersp = getSharedPreferences("currentUsername",MODE_PRIVATE);
+        CurUsersp = getSharedPreferences("currentUser",MODE_PRIVATE);
         super.onCreate();
     }
 
@@ -90,6 +93,8 @@ public class MyAplication extends Application{
 
 
 
+
+
     /**
      * 保存用户名和密码到SharedPreferences,用户名为键，密码为值
      * @param username  用户名
@@ -112,22 +117,41 @@ public class MyAplication extends Application{
 
     /**
      * 保存当前用户名到sp
-     * @param username  用户名
-     * @param password  密码
+     * @param key  用户名
+     * @param value  密码
      */
-    public static void saveCurUsernaemToSp(String username,String password){
+    public static void saveCurUsernaemToSp(String key,String value){
         SharedPreferences.Editor edit = CurUsersp.edit();
-        edit.putString(username,password);
+        edit.putString(key,value);
         edit.commit();
     }
 
     /**
      * 获取当前用户名
-     * @param username
+     * @param key
      * @return
      */
-    public static String getCurUsernameFromSp(String username){
-        return   CurUsersp.getString(username,"");
+    public static String getCurUsernameFromSp(String key){
+        return   CurUsersp.getString(key,"");
+    }
+
+    /**
+     * 清除当前CurUsersp对象的Sharepreferences文件数据
+     * @return
+     */
+    public static boolean clearData(){
+        SharedPreferences.Editor edit = CurUsersp.edit();
+        edit.clear();
+        edit.commit();
+        return true;
+    }
+
+    public BasePager getOwnerPager() {
+        return ownerPager;
+    }
+
+    public void setOwnerPager(BasePager ownerPager) {
+        this.ownerPager = ownerPager;
     }
 
 }

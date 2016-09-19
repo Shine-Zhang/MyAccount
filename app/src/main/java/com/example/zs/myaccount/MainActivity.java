@@ -1,5 +1,6 @@
 package com.example.zs.myaccount;
 
+import android.app.Application;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.example.zs.application.MyAplication;
 import com.example.zs.bean.PayoutContentInfo;
 import com.example.zs.pager.AccountPager;
 import com.example.zs.pager.BasePager;
@@ -100,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.rb_mainactivity_mine:
                         vp_mainactivity.setCurrentItem(3);
                         pageList.get(3).initData();
+                        MyAplication application = (MyAplication) getApplication();
+                        application.setOwnerPager(pageList.get(3));
                         break;
                 }
             }
@@ -111,12 +115,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //新建Adapter用于每个RadioButton点击显示不同页面
-    class MainActivity_ContentAdapter extends PagerAdapter{
+   public class MainActivity_ContentAdapter extends PagerAdapter{
 
         @Override
         public int getCount() {
+
             return pageList.size();
             //return 0;
+        }
+
+        public BasePager getRefreshTarget(){
+            if(pageList!=null&&pageList.get(3)!=null){
+                return pageList.get(3);
+            }
+            return null;
         }
 
         @Override
