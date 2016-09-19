@@ -225,9 +225,9 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
                     //显示自定义键盘
                     int inputback = et_addwishactivity_wishfund.getInputType();
                     et_addwishactivity_wishfund.setInputType(InputType.TYPE_NULL);
-                    KeyboardUtil keyboardUtil = new KeyboardUtil(AddWishActivity.this, AddWishActivity.this, et_addwishactivity_wishfund);
-                    keyboardUtil.setNumberFormat(7);
-                    keyboardUtil.showKeyboard();
+                   // KeyboardUtil keyboardUtil = new KeyboardUtil(AddWishActivity.this, AddWishActivity.this, et_addwishactivity_wishfund);
+                   // keyboardUtil.setNumberFormat(7);
+                   // keyboardUtil.showKeyboard();
                     et_addwishactivity_wishfund.setInputType(inputback);
 
                 }
