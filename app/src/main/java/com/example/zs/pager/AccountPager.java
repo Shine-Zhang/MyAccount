@@ -265,14 +265,11 @@ public class AccountPager extends BasePager implements
 
 
         // 展开所有group
-/*        for (int i = 0, count = expandableListView.getCount(); i < count; i++) {
+        for ( int i = 0;i<groupItems.size(); i++) {
             Log.i("haha","************展开所有数据完毕***********"+i);
             expandableListView.expandGroup(i);
-        }*/
-        if(groupItems.size()!=0&&childItems.get(0).size()>0) {
-            expandableListView.expandGroup(0);
-
         }
+
 
         expandableListView.setOnHeaderUpdateListener(this);
         //Log.i("huibuhui","**************************************************");
@@ -493,10 +490,23 @@ public class AccountPager extends BasePager implements
                             int child = tmpHolder.child;
                             Log.i("nima","goup : "+ group +"child: "+ child);
                            // Log.i("nima","*****************content: "+ childItems.get(group).get(child).getId()+":::::"+childItems.get(group).remove(child).getHowmuch());
+
+
+                            unFold(tmpHolder);
+                            if(childItems.get(group).get(child).isIncome()){
+                                new IncomeContentDAO(mActivity).deleteIncomeContentItemFromDB(childItems.get(group).get(child).getId());
+
+                                Log.i("lalalala","outid: "+childItems.get(group).get(child).getId());
+                            }else{
+                                new PayOutContentDAO(mActivity).deletePayoutContentItemFromDB(childItems.get(group).get(child).getId());
+                                Log.i("lalalala","inid: "+childItems.get(group).get(child).getId());
+                            }
                             childItems.get(group).remove(child);
+                            if(childItems.get(group).size()==0){
+                                groupItems.remove(group);
+                            }
                             //通知更新
                             adapter.notifyDataSetChanged();
-                            unFold(tmpHolder);
                             preHolder = null;
                         }
                     });
@@ -722,6 +732,8 @@ public class AccountPager extends BasePager implements
             if (today == firstVisibleGroup.getDayOfMonth()) {
                 MonthOfDay.setText("今天");
                 MonthOfDay.setBackground(mActivity.getResources().getDrawable(R.drawable.account_pager_group_today_icon));
+            }else{
+                MonthOfDay.setBackground(mActivity.getResources().getDrawable(R.drawable.account_pager_group_icon));
             }
             income.setText(String.format("%.2f", firstVisibleGroup.getTotalIncome()));
             outcome.setText(String.format("%.2f", firstVisibleGroup.getTotalCosts()));

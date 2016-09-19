@@ -35,16 +35,20 @@ public class KeyboardUtil {
 	private KeyBoardConfirmListener mKeyBoardConfirmListenerL;
 	private String rule;
 	private EditText ed;
-	private PopupWindow popupwindow;
+	public PopupWindow popupwindow;
 	private final View mView;
-
-	public KeyboardUtil(Activity act, Context ctx, EditText edit) {
+	public boolean isNormal = false;
+	public KeyboardUtil(Activity act, Context ctx, EditText edit,boolean isPop) {
 		this.act = act;
 		this.ctx = ctx;
 		this.ed = edit;
 		k1 = new Keyboard(ctx, R.xml.qwerty);
 		k2 = new Keyboard(ctx, R.xml.symbols);
-		mView = View.inflate(ctx, R.layout.show_account_budget_sta_keybordview,null);
+		if(isPop) {
+			mView = View.inflate(ctx, R.layout.show_account_budget_sta_keybordview, null);
+		}else{
+			mView = act.findViewById(R.id.keyboard_view);
+		}
 		keyboardView = (KeyboardView) mView.findViewById(R.id.keyboard_view);
 		keyboardView.setKeyboard(k2);
 		keyboardView.setEnabled(true);
@@ -101,7 +105,11 @@ public class KeyboardUtil {
 				if(mKeyBoardConfirmListenerL!=null){
 					mKeyBoardConfirmListenerL.toConfirm();
 				}
-				hideKeyboard();
+				if(isNormal) {
+					hideKeyboardAsNormal();
+				}else{
+					hideKeyboard();
+				}
 			} else if (primaryCode == Keyboard.KEYCODE_DELETE) {// 回退
 				if (editable != null && editable.length() > 0) {
 					if (start >= 0) {
@@ -166,7 +174,7 @@ public class KeyboardUtil {
 
 	public void showKeyboard(View view) {
 		Log.i("haha","showKeyboard");
-
+		isNormal=false;
 
 		if(!TextUtils.isEmpty(ed.getText().toString())){
 			ed.setText("");
@@ -189,15 +197,32 @@ public class KeyboardUtil {
 		//设置popupwindow显示的位置
 		popupwindow.showAtLocation(view, Gravity.BOTTOM,0,0);
 
-		//keyboardView.setVisibility(View.VISIBLE);
+		//
+
+	}
+	public void showKeyboardAsNormal(){
+		Log.i("gggggg","*(*(*(*(*(*(*(*(*(*(*(*");
+		if(!TextUtils.isEmpty(ed.getText().toString())){
+			ed.setText("");
+		}
+		isNormal=true;
+		int visibility = keyboardView.getVisibility();
+		if (visibility == View.INVISIBLE||visibility == View.GONE) {
+			keyboardView.setVisibility(View.VISIBLE);
+		}
+	}
+
+	public void hideKeyboardAsNormal(){
+
+		int visibility = keyboardView.getVisibility();
+		if (visibility == View.VISIBLE) {
+			keyboardView.setVisibility(View.GONE);
+		}
 
 	}
 
 	public void hideKeyboard() {
-/*		int visibility = keyboardView.getVisibility();
-		if (visibility == View.VISIBLE) {
-			keyboardView.setVisibility(View.GONE);
-		}*/
+
 
 			if (popupwindow != null) {
 				popupwindow.dismiss();//隐藏气泡

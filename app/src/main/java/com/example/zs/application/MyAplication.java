@@ -17,6 +17,7 @@ public class MyAplication extends Application{
     public static WishInfo wishInfo;
     public static SharedPreferences UserInfosp;
     public static SharedPreferences CurUsersp;
+    private BasePager accountPager;
     /**
      * 应用创建时调用oncreate（）
      */
@@ -129,5 +130,15 @@ public class MyAplication extends Application{
     public static String getCurUsernameFromSp(String username){
         return   CurUsersp.getString(username,"");
     }
+
+
+    public BasePager getAccountPager() {
+        return accountPager;
+    }
+
+    public void setAccountPager(BasePager accountPager) {
+        this.accountPager = accountPager;
+    }
+
 
 }

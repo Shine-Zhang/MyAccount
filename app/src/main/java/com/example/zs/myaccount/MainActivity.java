@@ -1,5 +1,6 @@
 package com.example.zs.myaccount;
 
+import android.app.Application;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.example.zs.application.MyAplication;
 import com.example.zs.bean.PayoutContentInfo;
 import com.example.zs.pager.AccountPager;
 import com.example.zs.pager.BasePager;
@@ -85,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.rb_mainactivity_detail:
                         vp_mainactivity.setCurrentItem(0);
                         pageList.get(0).initData();
+                        MyAplication application = (MyAplication) getApplication();
+                        if(application.getAccountPager()==null) {
+                            application.setAccountPager(pageList.get(0));
+                        }
                         break;
 
                     case R.id.rb_mainactivity_wish:
@@ -107,6 +113,10 @@ public class MainActivity extends AppCompatActivity {
 
         vp_mainactivity.setCurrentItem(0);
         pageList.get(0).initData();
+        MyAplication application = (MyAplication) getApplication();
+        if(application.getAccountPager()==null) {
+            application.setAccountPager(pageList.get(0));
+        }
         Log.i(tag,"wennm");
     }
 
