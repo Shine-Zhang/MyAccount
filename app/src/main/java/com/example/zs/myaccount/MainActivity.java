@@ -1,5 +1,6 @@
 package com.example.zs.myaccount;
 
+import android.app.Application;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.example.zs.application.MyAplication;
 import com.example.zs.bean.PayoutContentInfo;
 import com.example.zs.pager.AccountPager;
 import com.example.zs.pager.BasePager;
@@ -27,7 +29,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private String tag="MainActivity";
-    public ViewPager vp_mainactivity;
+    public static ViewPager vp_mainactivity;
     public RadioGroup rg_mainactivity_bottom;
     public RadioButton rb_mainactivity_detail;
     public RadioButton rb_mainactivity_wish;
@@ -85,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.rb_mainactivity_detail:
                         vp_mainactivity.setCurrentItem(0);
                         pageList.get(0).initData();
+                        MyAplication application = (MyAplication) getApplication();
+                        if(application.getAccountPager()==null) {
+                            application.setAccountPager(pageList.get(0));
+                        }
                         break;
 
                     case R.id.rb_mainactivity_wish:
@@ -94,12 +100,12 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.rb_mainactivity_list:
                         vp_mainactivity.setCurrentItem(2);
-                        pageList.get(1).initData();
+                        pageList.get(2).initData();
                         break;
 
                     case R.id.rb_mainactivity_mine:
                         vp_mainactivity.setCurrentItem(3);
-                        pageList.get(1).initData();
+                        pageList.get(3).initData();
                         break;
                 }
             }
@@ -107,6 +113,10 @@ public class MainActivity extends AppCompatActivity {
 
         vp_mainactivity.setCurrentItem(0);
         pageList.get(0).initData();
+        MyAplication application = (MyAplication) getApplication();
+        if(application.getAccountPager()==null) {
+            application.setAccountPager(pageList.get(0));
+        }
         Log.i(tag,"wennm");
     }
 
@@ -184,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("resourceID",2130837665);
         intent.putExtra("categoryName","红包");
         startActivityForResult(intent,110);*/
-        startActivity(new Intent(MainActivity.this,AddRecordActivity.class));
+      startActivity(new Intent(MainActivity.this,AddRecordActivity.class));
     }
 
     @Override
@@ -205,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
             String photo = intent.getStringExtra("photo");
             PayoutContentInfo payouContentInfo = new PayoutContentInfo(id, resourceID, categoryName, year, mouth, day, money, marks, photo);
             Log.i(tag,payouContentInfo.toString());
+
             //super无法执行到
             // return;
         }else if(resultCode==444){

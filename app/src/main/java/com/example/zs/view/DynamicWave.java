@@ -52,6 +52,10 @@ public class DynamicWave extends View {
     private float mRadius;
     private int start;
     private int end;
+    private float[] mWaveEnd;
+    private float[] mSkeleton;
+    private int upStart;
+    private int upEnd;
 
     public DynamicWave(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -91,14 +95,58 @@ public class DynamicWave extends View {
                     mTotalHeight,
                     mWavePaint);
         }*/
-
-        for(int i=start,j=start,k=start;i<=end;i++){
-            if(i+mXOneOffset<end){
-                canvas.drawLine(i,mYPositions[mXOneOffset+i],i,OFFSET_Y+20,mWavePaint);
-            }else {
-                   canvas.drawLine(i,mYPositions[j],i,OFFSET_Y+20,mWavePaint);
-                j++;
+       // Log.i("hhh","span: "+(upEnd-upStart+1));
+        if(!isUpHomisphere){
+        for(int i=upStart,j=upStart,k=upStart;i<upEnd;i++) {
+                if (i + mXOneOffset < upEnd) {
+                    canvas.drawLine(i, mYPositions[mXOneOffset + i - upStart], i, mWaveEnd[i - upStart], mWavePaint);
+                 /*   canvas.drawLine(i,mYPositions[mXOneOffset+i-upStart],i,OFFSET_Y+STRETCH_FACTOR_A,mWavePaint);*/
+                    // Log.i("hhh",(i-upStart)+"start: "+mYPositions[mXOneOffset+i-upStart]+" end: "+mWaveEnd[i-upStart]);
+                    //  Log.i("hhh","i: "+i);
+                    //  Log.i("hhh","mXOneOffset+i: "+(mXOneOffset+i));
+                } else {
+                    canvas.drawLine(i, mYPositions[j - upStart], i, mWaveEnd[j - upStart], mWavePaint);
+                   /* canvas.drawLine(i,mYPositions[j-upStart],i,OFFSET_Y+STRETCH_FACTOR_A,mWavePaint);*/
+                    j++;
+                }
             }
+        }else{
+
+/*            for(int i=start;i<upStart;i++){
+
+                canvas.drawLine(i,OFFSET_Y, i, mSkeleton[i] , mWavePaint);
+                canvas.drawLine(end-i+start,mSkeleton[i], end-i+start, OFFSET_Y+STRETCH_FACTOR_A, mWavePaint);
+            }*/
+            float tmp=-1;
+            for(int i=start,j=start,k=start;i<end;i++) {
+
+                if (i + mXOneOffset < end) {
+
+                    if( mYPositions[mXOneOffset + i - start]<mSkeleton[i]){
+                        tmp = mSkeleton[i];
+                    }else{
+                        tmp =  mYPositions[mXOneOffset + i - start];
+                    }
+                    canvas.drawLine(i,tmp, i, OFFSET_Y+STRETCH_FACTOR_A, mWavePaint);
+                   // Log.i("hhh","mXOneOffset + i - upStart: "+(mXOneOffset + i - upStart));
+                 /*   canvas.drawLine(i,mYPositions[mXOneOffset+i-upStart],i,OFFSET_Y+STRETCH_FACTOR_A,mWavePaint);*/
+                    // Log.i("hhh",(i-upStart)+"start: "+mYPositions[mXOneOffset+i-upStart]+" end: "+mWaveEnd[i-upStart]);
+                    //  Log.i("hhh","i: "+i);
+                    //  Log.i("hhh","mXOneOffset+i: "+(mXOneOffset+i));
+                } else {
+
+
+                    if( mYPositions[j - start]<mSkeleton[i]){
+                        tmp = mSkeleton[i];
+                    }else{
+                        tmp =  mYPositions[j - start];
+                    }
+                    canvas.drawLine(i, tmp, i, OFFSET_Y+STRETCH_FACTOR_A, mWavePaint);
+                   /* canvas.drawLine(i,mYPositions[j-upStart],i,OFFSET_Y+STRETCH_FACTOR_A,mWavePaint);*/
+                    j++;
+                }
+            }
+
 
 /*            if(i+mXTwoOffset<end){
                 canvas.drawLine(i,mYPositions[mXTwoOffset+i],i,OFFSET_Y+20,mWavePaint);
@@ -117,7 +165,7 @@ public class DynamicWave extends View {
         if (mXOneOffset >= end) {
             mXOneOffset = 0;
         }
-        if (mXTwoOffset > end) {
+        if (mXTwoOffset >=end) {
             mXTwoOffset = 0;
         }
 
@@ -127,6 +175,7 @@ public class DynamicWave extends View {
     }
 
     private void doneInflate(Canvas canvas) {
+
        if(isUpHomisphere){
 
            for(int i=0;i<mTotalWidth;i++){
@@ -162,38 +211,47 @@ public class DynamicWave extends View {
         // 记录下view的宽高
 
         //四舍五入求得半径
-        mRadius = (float) (w*1.0/2);
-        Log.i("haha","*&*&*&*&*mRadius:"+mRadius);
+        mRadius = (float) (h*1.0/2);
+       // Log.i("haha","*&*&*&*&*mRadius:"+mRadius);
         mTotalWidth =w;
-        Log.i("haha","*&*&*&*&*:mTotalWidth"+mTotalWidth);
+       // Log.i("haha","*&*&*&*&*:mTotalWidth"+mTotalWidth);
         mTotalHeight = h;
-        Log.i("haha","*&*&*&*&*:mTotalHeight"+mTotalHeight);
+       // Log.i("haha","*&*&*&*&*:mTotalHeight"+mTotalHeight);
         if(mCurentRatio>=0) {
-            Log.i("haha","**********************************");
+         //   Log.i("haha","**********************************");
             mWaveHight = getCorrespondingHeight(mCurentRatio);
+            if(mCurentRatio<0.5) {
+                float yDistance = Math.abs(mRadius - mWaveHight);
+                mWaveWidth = (int) Math.sqrt(mRadius * mRadius - yDistance * yDistance);
+            }else{
+                float yDistance = Math.abs(mRadius - mWaveHight)-STRETCH_FACTOR_A;
+                mWaveWidth = (int) Math.sqrt(mRadius * mRadius - yDistance * yDistance);
+            }
+            Log.i("hhhh","mWaveWidth: "+mWaveWidth);
             STRETCH_FACTOR_A = mWaveHight/15;
             OFFSET_Y = mTotalHeight-mWaveHight;
             Log.i("haha","*&*&*&*&*:mCurentRatio"+mCurentRatio);
             // 用于保存原始波纹的y值
-            mYPositions = new float[mTotalWidth];
+            mYPositions = new float[2*mWaveWidth];
             // 用于保存波纹一的y值
-            mResetOneYPositions = new float[mTotalWidth];
+            mResetOneYPositions = new float[2*mWaveWidth];
             // 用于保存波纹二的y值
-            mResetTwoYPositions = new float[mTotalWidth];
+            mResetTwoYPositions = new float[2*mWaveWidth];
 
             // 将周期定为view总宽度
-            mCycleFactorW = (float) (2 * Math.PI / mTotalWidth);
+            mCycleFactorW = (float) (2 * Math.PI / (2*mWaveWidth));
 
-            mYStart = new float[mTotalWidth];
-            mYEnd = new float[mTotalWidth];
+            mYStart = new float[2*mTotalWidth];
+            mYEnd = new float[2*mTotalWidth];
             // 根据view总宽度得出所有对应的y值
-            for (int i = 0; i < mTotalWidth; i++) {
+            for (int i = 0; i < 2*mWaveWidth; i++) {
                 mYPositions[i] = (float) (STRETCH_FACTOR_A * Math.sin(mCycleFactorW * i) + OFFSET_Y);
             }
 
             //由于不同于矩形，每一点的高度并非定值，因此也必须计算画出的每一条直线的高度
             initWave();
         }else{
+
             //如果没有接受到相应的参数，就打Toasst
             Toast.makeText(context,"没有接受到正确的Ratio参数",Toast.LENGTH_LONG).show();
         }
@@ -207,46 +265,87 @@ public class DynamicWave extends View {
         //下面就需要分情况讨论了
         //1.当mWaveHight<R
         float yDistance;
-        if(OFFSET_Y+20<mRadius){
+        float currentWaveWidth;
+
+        if(OFFSET_Y>mRadius){
+            Log.i("cacaca","***********下半************");
             isUpHomisphere = false;
-            yDistance = mRadius - (OFFSET_Y+20);
-            float xDistance = (float) Math.sqrt(mRadius*mRadius-yDistance*yDistance);
-            start = (int) (mRadius-xDistance);
-            end = (int) (mRadius+xDistance);
+            float downSide = OFFSET_Y+STRETCH_FACTOR_A;
+            currentWaveWidth = (float) Math.sqrt(mRadius*mRadius-(downSide-mRadius)*(downSide-mRadius));
+           /* yDistance = mRadius - (mWaveHight);*/
+            /*float xDistance = (float) Math.sqrt(mRadius*mRadius-yDistance*yDistance);*/
+            float xDistance = mWaveWidth;
+            mWaveEnd = new float[mWaveWidth*2];
+            start = (int) (mRadius-currentWaveWidth);
+            end = (int) (mRadius+currentWaveWidth);
+            upStart = (int) (mRadius-mWaveWidth);
+           // Log.i("hhhh","upStart: "+upStart);
+
+           // Log.i("hhhh","mTotalWidth: "+mTotalWidth);
+            upEnd = (int) (mRadius+mWaveWidth);
+           // Log.i("hhhh","upStart: "+upStart+" upEnd: "+upEnd+"  "+"mRadius: "+mRadius+" start: "+start);
+            for(int i = upStart; i<=mRadius; i++){
+                if(i<start){
+                    mWaveEnd[i-upStart] = mRadius+(float) Math.sqrt(mRadius*mRadius-((mRadius-i)*(mRadius-i)));
+                  //  Log.i("hhh",""+(i-upStart)+": "+mWaveEnd[i-upStart]);
+                    mWaveEnd[upEnd-i-1] = mWaveEnd[i-upStart];
+                   // Log.i("hhh",""+(upEnd-i-1)+": "+mWaveEnd[upEnd-i-1]);
+                }else{
+                    mWaveEnd[i-upStart]=OFFSET_Y+STRETCH_FACTOR_A;
+                   // Log.i("hhh",""+(i-upStart)+": "+mWaveEnd[i-upStart]);
+                    mWaveEnd[upEnd-i-1]=mWaveEnd[i-upStart];
+                   // Log.i("hhh",""+(upEnd-i-1)+": "+mWaveEnd[upEnd-i-1]);
+                }
+            }
             int i;
             for(i=start; i<= mRadius; i++){
                 float tmp = (float) Math.sqrt(mRadius*mRadius-((mRadius-i)*(mRadius-i)));
-                mYStart[i] = OFFSET_Y+20;
-                mYStart[end-i]=mYStart[i];
-                mYEnd[i] =tmp+mRadius ;
-                mYEnd[mTotalWidth-i]=mYEnd[i];
+                mYStart[i] = OFFSET_Y+STRETCH_FACTOR_A;
+                mYStart[end-i+start]=mYStart[i];
+                mYEnd[i] =tmp+mRadius;
+                mYEnd[end-i+start]=mYEnd[i];
             }
 
         }else {
+            Log.i("cacaca","***********上半************");
             isUpHomisphere = true;
-            yDistance =   (OFFSET_Y+20)-mRadius;
-            float xDistance = (float) Math.sqrt(mRadius*mRadius-yDistance*yDistance);
-             start = (int) (mRadius-xDistance);
-             end = (int) (mRadius+xDistance);
+            mSkeleton = new float[mTotalWidth];
+            //计算上半圆的轮廓
+            for(int i=0;i<mRadius;i++){
+                mSkeleton[i] =mRadius- (float) Math.sqrt(mRadius*mRadius-((mRadius-i)*(mRadius-i)));
+                mSkeleton[mTotalWidth-i-1] = mSkeleton[i];
+            }
+/*            yDistance = mWaveHight-mRadius;
+            float xDistance = (float) Math.sqrt(mRadius*mRadius-yDistance*yDistance);*/
+            float downSide = OFFSET_Y+STRETCH_FACTOR_A;
+            currentWaveWidth = (float) Math.sqrt(mRadius*mRadius-(mRadius-downSide)*(mRadius-downSide));
+            float tmps = (float) Math.sqrt(mRadius*mRadius-(mRadius-OFFSET_Y)*(mRadius-OFFSET_Y));
+            upStart = (int) (mRadius-tmps);
+            upEnd = (int) (mRadius+tmps);
+            start = (int) (mRadius-currentWaveWidth);
+             end = (int) (mRadius+currentWaveWidth);
+            Log.i("hghghg","upStart: "+upStart+" start: "+start);
+
+
             int i;
             for( i=0;i<start;i++){
-                float tmp = (float) Math.sqrt(mRadius*mRadius-((mRadius-i)*(mRadius-i)));
-                mYStart[i] = mRadius-tmp;
+                /*float tmp = (float) Math.sqrt(mRadius*mRadius-((mRadius-i)*(mRadius-i)));*/
+                float tmp = mSkeleton[i];
+                mYStart[i] = tmp;
                 mYStart[mTotalWidth-1-i]=mYStart[i];
-                mYEnd[i] = mRadius+tmp;
+                mYEnd[i] = mTotalHeight-tmp;
                 mYEnd[mTotalWidth-1-i]=mYEnd[i];
             }
 
             for(;i<=mRadius;i++){
-                float tmp = (float) Math.sqrt(mRadius*mRadius-((mRadius-i)*(mRadius-i)));
-                mYStart[i] =  OFFSET_Y+20;
+             /*   float tmp = (float) Math.sqrt(mRadius*mRadius-((mRadius-i)*(mRadius-i)));*/
+                float tmp = mSkeleton[i];
+                mYStart[i] =  OFFSET_Y+STRETCH_FACTOR_A;
                 mYStart[mTotalWidth-1-i]=mYStart[i];
-                mYEnd[i] = tmp+mRadius;
+                mYEnd[i] = mTotalHeight-tmp;
                 mYEnd[mTotalWidth-1-i]=mYEnd[i];
             }
         }
-
-
     }
 
     public static int getWavePaintColor() {

@@ -101,7 +101,7 @@ public class IncomePage extends AddBasePage {
                     selectResourceID = incomeCategoryToDB.get(i).getResourceID();
                     selectCategoryName = incomeCategoryToDB.get(i).getCategoryName();
                 }
-                addRecordActivity.keyboardUtil.showKeyboard();
+               // addRecordActivity.keyboardUtil.showKeyboard();
                 Log.i(TAG, "--" + i);
             }
         });
@@ -230,7 +230,7 @@ public class IncomePage extends AddBasePage {
             if (i < incomeCategoryToDB.size()) {
                 if (i==0){
                     //第一个item设置false
-                    if (!isFirstOnclick) {
+                    if (!isFirstOnclick&&!isJump) {
                         Log.i(TAG, "---");
                         iv_addPage_catagoryIcon.setEnabled(false);
                     }

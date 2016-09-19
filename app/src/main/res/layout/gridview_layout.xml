@@ -6,6 +6,7 @@
         android:id="@+id/gv_addRecord_gridView"
         android:layout_width="match_parent"
         android:numColumns="5"
+        android:background="@color/white"
         android:layout_height="match_parent"></GridView>
 
 </LinearLayout>

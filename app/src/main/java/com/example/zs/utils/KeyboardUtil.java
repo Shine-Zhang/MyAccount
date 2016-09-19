@@ -2,6 +2,7 @@ package com.example.zs.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.Keyboard.Key;
 import android.inputmethodservice.KeyboardView;
@@ -9,8 +10,12 @@ import android.inputmethodservice.KeyboardView.OnKeyboardActionListener;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 
 import com.example.zs.myaccount.R;
 
@@ -28,18 +33,23 @@ public class KeyboardUtil {
 	public boolean isnun = false;// 是否数据键盘
 	public boolean isupper = false;// 是否大写
 	private KeyBoardConfirmListener mKeyBoardConfirmListenerL;
-
-
 	private String rule;
 	private EditText ed;
-
-	public KeyboardUtil(Activity act, Context ctx, EditText edit) {
+	public PopupWindow popupwindow;
+	private final View mView;
+	public boolean isNormal = false;
+	public KeyboardUtil(Activity act, Context ctx, EditText edit,boolean isPop) {
 		this.act = act;
 		this.ctx = ctx;
 		this.ed = edit;
 		k1 = new Keyboard(ctx, R.xml.qwerty);
 		k2 = new Keyboard(ctx, R.xml.symbols);
-		keyboardView = (KeyboardView) act.findViewById(R.id.keyboard_view);
+		if(isPop) {
+			mView = View.inflate(ctx, R.layout.show_account_budget_sta_keybordview, null);
+		}else{
+			mView = act.findViewById(R.id.keyboard_view);
+		}
+		keyboardView = (KeyboardView) mView.findViewById(R.id.keyboard_view);
 		keyboardView.setKeyboard(k2);
 		keyboardView.setEnabled(true);
 		keyboardView.setPreviewEnabled(false);
@@ -95,7 +105,11 @@ public class KeyboardUtil {
 				if(mKeyBoardConfirmListenerL!=null){
 					mKeyBoardConfirmListenerL.toConfirm();
 				}
-				hideKeyboard();
+				if(isNormal) {
+					hideKeyboardAsNormal();
+				}else{
+					hideKeyboard();
+				}
 			} else if (primaryCode == Keyboard.KEYCODE_DELETE) {// 回退
 				if (editable != null && editable.length() > 0) {
 					if (start >= 0) {
@@ -158,17 +172,31 @@ public class KeyboardUtil {
 		}
 	}
 
-	public void showKeyboard() {
+	public void showKeyboard(View view) {
 		Log.i("haha","showKeyboard");
+		if(!TextUtils.isEmpty(ed.getText().toString())){
+			ed.setText("");
+		}
 		keyboardView.setVisibility(View.VISIBLE);
 
 	}
 
-	public void hideKeyboard() {
+	public void hideKeyboardAsNormal(){
+
 		int visibility = keyboardView.getVisibility();
 		if (visibility == View.VISIBLE) {
 			keyboardView.setVisibility(View.GONE);
 		}
+
+	}
+
+	public void hideKeyboard() {
+
+
+			if (popupwindow != null) {
+				popupwindow.dismiss();//隐藏气泡
+				popupwindow = null;
+			}
 	}
 
 	private boolean isword(String str){

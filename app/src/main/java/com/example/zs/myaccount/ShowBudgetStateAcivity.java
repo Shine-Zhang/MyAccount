@@ -65,6 +65,10 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
     private String[] abNormalDays;
     private String[] normal2Days;
     private String[] special2Days;
+    private Calendar now;
+    private float income;
+    private float balance;
+    public KeyboardUtil keyboardUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +78,8 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
         Intent intent = getIntent();
         //如果没有拿到从
         currentRatio = intent.getFloatExtra("currentHight",-1);
+        income = intent.getFloatExtra("totalIncome",-1);
+        balance = intent.getFloatExtra("balance",0);
         // Log.i("haha","!!!!!!!!!!!!!!!!! :"+currentRatio);
 
 
@@ -130,7 +136,7 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                 if(position==0){
                     String myBudget;
                    if((!TextUtils.isEmpty(MyAplication.getStringFromSp("myBudget")))) {
-                       Log.i("haha","***************************"+MyAplication.getStringFromSp("myBudget"));
+                       //Log.i("haha","***************************"+MyAplication.getStringFromSp("myBudget"));
                        myBudget =MyAplication.getStringFromSp("myBudget");
                        TextView text = (TextView) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.tv_show_budget_state_activity_num_tip);
                        text.setText(myBudget);
@@ -140,7 +146,15 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                        text.setText("3000");
                    }
 
-                    if(!TextUtils.isEmpty(MyAplication.getStringFromSp("budget_deadline"))) {
+                       int year = now.get(Calendar.YEAR);
+                       int month = now.get(Calendar.MONTH);
+                       int day = now.get(Calendar.DAY_OF_MONTH);
+                        String from = year+"-"+month+"-"+day;
+                        String to = year+"-"+month+"-"+1;
+                        String span = getSpan(from,to);
+                         TextView text = (TextView) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.tv_show_budget_state_activity_deadSpan);
+                        text.setText(span);
+             /*       if(!TextUtils.isEmpty(MyAplication.getStringFromSp("budget_deadline"))) {
                         String budget_deadline =MyAplication.getStringFromSp("budget_deadline");
 
 
@@ -164,7 +178,7 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                         TextView text = (TextView) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.tv_show_budget_state_activity_deadSpan);
                         text.setText("未知");
 
-                    }
+                    }*/
 
                 }
 
@@ -181,7 +195,9 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                         text.setText("3000");
                     }
 
-                    if(!TextUtils.isEmpty(MyAplication.getStringFromSp("budget_deadline"))) {
+
+
+                   /* if(!TextUtils.isEmpty(MyAplication.getStringFromSp("budget_deadline"))) {
                         String budget_deadline =MyAplication.getStringFromSp("budget_deadline");
 
 
@@ -192,7 +208,7 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                         TextView text = (TextView) mVpShowBudgetSta.getChildAt(1).findViewById(R.id.et_show_budeget_sta_set_deadline);
                         text.setText("1");
 
-                    }
+                    }*/
 
                     }
 
@@ -278,6 +294,7 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
 
             case R.id.ib_show_budeget_sta_setting_back:
 
+/*
                     MyAplication.saveStringToSp("budget_deadline",et_show_budeget_sta_set_deadline.getText().toString());
 
                 budget =  et_show_budeget_sta_setbudget.getText().toString(); ;
@@ -289,20 +306,21 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                     Matcher m = p.matcher(budget);
                     if (m.matches()) {
                         MyAplication.saveStringToSp("myBudget", budget);
-                        mVpShowBudgetSta.setCurrentItem(0);
+
                     } else {
 
                         Toast.makeText(ShowBudgetStateAcivity.this, "请设置正确的预算!", Toast.LENGTH_SHORT).show();
                     }
                 }
+*/
 
-
+                    mVpShowBudgetSta.setCurrentItem(0);
                     break;
 
 
                     case R.id.bt_show_budget_sta_finish:
 
-                        MyAplication.saveStringToSp("budget_deadline",et_show_budeget_sta_set_deadline.getText().toString());
+                       // MyAplication.saveStringToSp("budget_deadline",et_show_budeget_sta_set_deadline.getText().toString());
 
                         budget = et_show_budeget_sta_setbudget.getText().toString();
                         Log.i("xuxu",budget);
@@ -314,6 +332,8 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                             Pattern p = Pattern.compile(rule);
                             Matcher m = p.matcher(budget);
                             if (m.matches()) {
+                                float tmp =Float.parseFloat(budget);
+                                budget = String.format("%.2f",tmp);
                                 MyAplication.saveStringToSp("myBudget", budget);
                                 mVpShowBudgetSta.setCurrentItem(0);
                             } else {
@@ -334,9 +354,10 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                }
                int inputback = et_show_budeget_sta_setbudget.getInputType();
                et_show_budeget_sta_setbudget.setInputType(InputType.TYPE_NULL);
-               KeyboardUtil keyboardUtil = new KeyboardUtil(this, this, et_show_budeget_sta_setbudget);
+               keyboardUtil = new KeyboardUtil(this, this, et_show_budeget_sta_setbudget,true);
                keyboardUtil.setNumberFormat(7);
-               keyboardUtil.showKeyboard();
+              // RelativeLayout parentView = (RelativeLayout) findViewById(R.id.bt_show_budget_sta_parent);
+               keyboardUtil.showKeyboard(pagers.get(1));
                et_show_budeget_sta_setbudget.setInputType(inputback);
 
             break;
@@ -389,8 +410,22 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
 
                         tvShowBudgetStateActivityNumTip.setText(MyAplication.getStringFromSp("myBudget"));
                     }
+                    now = Calendar.getInstance();
+                    int year = now.get(Calendar.YEAR);
+                    int month = now.get(Calendar.MONTH);
+                    int day = now.get(Calendar.DAY_OF_MONTH);
+                    String from = year+"-"+month+"-"+day;
+                    String to = year+"-"+month+"-"+1;
+                    String span = getSpan(from,to);
+                    TextView text1 = (TextView) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.tv_show_budget_state_activity_deadSpan);
+                    text1.setText(span);
+                    TextView text2 = (TextView) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.tv_show_budget_state_activity);
+                    text2.setText(String.format("%.2f",balance));
 
-                    if(!TextUtils.isEmpty(MyAplication.getStringFromSp("budget_deadline"))) {
+                    TextView text3 = (TextView) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.tv_show_budget_state_income);
+                    text3.setText(String.format("%.2f",income));
+                    Log.i("hhhhhhh","************************"+span);
+                  /*  if(!TextUtils.isEmpty(MyAplication.getStringFromSp("budget_deadline"))) {
                         String budget_deadline =MyAplication.getStringFromSp("budget_deadline");
 
 
@@ -414,7 +449,7 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                         TextView text = (TextView) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.tv_show_budget_state_activity_deadSpan);
                         text.setText("未知");
 
-                    }
+                    }*/
 
 
                     ibShowBudgetStaBack.setOnClickListener(new View.OnClickListener() {
@@ -447,15 +482,15 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                     ib_show_budeget_sta_setting_back.setOnClickListener(ShowBudgetStateAcivity.this);
                     bt_show_budget_sta_finish.setOnClickListener(ShowBudgetStateAcivity.this);
                     rl_show_budget_sta_set_budget.setOnClickListener(ShowBudgetStateAcivity.this);
-                    rl_show_budeget_sta_set_deadline.setOnClickListener(ShowBudgetStateAcivity.this);
+                    //rl_show_budeget_sta_set_deadline.setOnClickListener(ShowBudgetStateAcivity.this);
                     et_show_budeget_sta_setbudget.setOnClickListener(ShowBudgetStateAcivity.this);
                     et_show_budeget_sta_set_deadline.setOnClickListener(ShowBudgetStateAcivity.this);
-                     String deadLine = MyAplication.getStringFromSp("budget_deadline");
+/*                     String deadLine = MyAplication.getStringFromSp("budget_deadline");
                     if(TextUtils.isEmpty(deadLine)){
                         et_show_budeget_sta_set_deadline.setText("1");
                     }else{
                         et_show_budeget_sta_set_deadline.setText(deadLine+"");
-                    }
+                    }*/
 //                    et_show_budeget_sta_setbudget.
                     //创建默认的线性LayoutManager
                     LinearLayoutManager layoutManager = new LinearLayoutManager(ShowBudgetStateAcivity.this);
@@ -585,7 +620,21 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
 
     }
 
-    public static String getTwoDay(String sj1, String sj2) {
+/*    public static String getTwoDay(String sj1, String sj2) {
+        SimpleDateFormat myFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        long day = 0;
+        try {
+            java.util.Date date = myFormatter.parse(sj1);
+            java.util.Date mydate = myFormatter.parse(sj2);
+            day = (date.getTime() - mydate.getTime()) / (24 * 60 * 60 * 1000);
+        } catch (Exception e) {
+            return "";
+        }
+        return day + "";
+    }*/
+
+
+    public static  String  getSpan(String sj1, String sj2) {
         SimpleDateFormat myFormatter = new SimpleDateFormat("yyyy-MM-dd");
         long day = 0;
         try {
@@ -598,22 +647,20 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
         return day + "";
     }
 
-
-    public  String  getSpan(String sj1, String sj2) {
-        SimpleDateFormat myFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        long day = 0;
-        try {
-            java.util.Date date = myFormatter.parse(sj1);
-            java.util.Date mydate = myFormatter.parse(sj2);
-            day = (date.getTime() - mydate.getTime()) / (24 * 60 * 60 * 1000);
-        } catch (Exception e) {
-            return "";
+    @Override
+    protected void onDestroy() {
+        if(keyboardUtil!=null) {
+            if (!keyboardUtil.isNormal) {
+                keyboardUtil.hideKeyboard();
+                }
+            }else{
+                keyboardUtil.hideKeyboardAsNormal();
+            }
+        super.onDestroy();
         }
-        return day + "";
+
     }
 
-
-}
 
 /**
  * RecyclerView的触摸监听
@@ -672,6 +719,7 @@ abstract class ShowBudgetStateOnItemTouchListener implements RecyclerView.OnItem
             }
         }
     }
+
 }
 
 

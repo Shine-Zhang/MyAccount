@@ -9,7 +9,6 @@ package com.example.zs.bean;
 public class AccountChildItemBean {
 
 
-
     int id;
     int month;
     int dayOfMonth;
@@ -20,8 +19,6 @@ public class AccountChildItemBean {
     String howmuch;
     boolean isIncome;
     boolean isFold=true;
-
-
     /**
      *全参构造函数主要是为了方便封装bean类
      * @param month 添加该条目到帐薄中时的月份
@@ -115,6 +112,21 @@ public class AccountChildItemBean {
         this.id = id;
     }
 
+
+    @Override
+    public String toString() {
+        return "AccountChildItemBean{" +
+                "id=" + id +
+                ", month=" + month +
+                ", dayOfMonth=" + dayOfMonth +
+                ", icon=" + icon +
+                ", photoResId=" + photoResId +
+                ", itemDescribe='" + itemDescribe + '\'' +
+                ", howmuch='" + howmuch + '\'' +
+                ", isIncome=" + isIncome +
+                ", isFold=" + isFold +
+                '}';
+    }
 
 
 }

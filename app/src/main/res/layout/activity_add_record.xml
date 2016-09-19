@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_addRecordActivity_keyboard_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -118,11 +119,11 @@
                 android:textSize="10sp"/>
             <EditText
                 android:id="@+id/et_addCategory_markContent"
-                android:layout_width="300dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:layout_centerVertical="true"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:gravity="right"
                 android:background="@null"
                 android:layout_toRightOf="@+id/tv_addCategory_markTitle"
@@ -151,7 +152,7 @@
             <TextView
                 android:id="@+id/tv_addRecordActivity_jumpRemark"
                 android:layout_width="300dp"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:textSize="12sp"
                 android:visibility="gone"
                 android:layout_centerVertical="true"
