@@ -113,6 +113,8 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 if (stringNumber.isEmpty()){
                     //为空
                 }
+
+
                 commitAndsave();
             }
         });
