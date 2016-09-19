@@ -74,7 +74,7 @@ public class AccountPager extends BasePager implements
     private StickyLayout stickyLayout;
     private  ArrayList<ArrayList<AccountChildItemBean>> childItems;
     private  ArrayList<AccountGroupItemBean> groupItems;
-
+    private  ArrayList<AccountGroupItemBean> groupItemsSta;
     private MyexpandableListAdapter adapter;
     private RelativeLayout accountPagerBudgetSta;
 
@@ -268,6 +268,7 @@ public class AccountPager extends BasePager implements
         for ( int i = 0;i<groupItems.size(); i++) {
             Log.i("haha","************展开所有数据完毕***********"+i);
             expandableListView.expandGroup(i);
+            //expandableListView.get
         }
 
 
@@ -672,7 +673,7 @@ public class AccountPager extends BasePager implements
     @Override
     public boolean onGroupClick(final ExpandableListView parent, final View v,
                                 int groupPosition, final long id) {
-
+        Log.i("hahaha","&*&&*&*&*&*&*&*&*&*&*&*");
         return false;
     }
 
