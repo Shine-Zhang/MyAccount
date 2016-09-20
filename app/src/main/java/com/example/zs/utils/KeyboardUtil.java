@@ -172,7 +172,7 @@ public class KeyboardUtil {
 		}
 	}
 
-	public void showKeyboard(View view) {
+	public void showKeyboardAsNormal() {
 		Log.i("haha","showKeyboard");
 		if(!TextUtils.isEmpty(ed.getText().toString())){
 			ed.setText("");
@@ -229,6 +229,22 @@ public class KeyboardUtil {
 
 		public void toConfirm();
 
+	}
+
+	public void showKeyboard(View view){
+		popupwindow = new PopupWindow();
+		//获得焦点
+		popupwindow.setFocusable(true);
+		popupwindow.setBackgroundDrawable(new BitmapDrawable());
+		//设置popupwindow弹出和退出时的动画效果
+		popupwindow.setAnimationStyle(R.style.AnimationBottomFade);
+		//将popup_view部署到popupWindow上
+		popupwindow.setContentView(mView);
+		//设置popupWindow的宽高（必须要设置）
+		popupwindow.setHeight(RelativeLayout.LayoutParams.WRAP_CONTENT);
+		popupwindow.setWidth(RelativeLayout.LayoutParams.MATCH_PARENT);
+		//设置popupwindow显示的位置
+		popupwindow.showAtLocation(view,Gravity.BOTTOM,0,0);
 	}
 
 }

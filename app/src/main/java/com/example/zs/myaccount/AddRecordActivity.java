@@ -105,8 +105,8 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         tv_addRecordActivity_inputNumber.setInputType(InputType.TYPE_NULL);
         keyboardUtil =  new KeyboardUtil(this, this, tv_addRecordActivity_inputNumber,false);
         keyboardUtil.setNumberFormat(7);
-       // showPopwindow();
-        //keyboardUtil;
+        // showPopwindow();
+        keyboardUtil.showKeyboardAsNormal();
         keyboardUtil.setOnkeyBoardConfirmListener(new KeyboardUtil.KeyBoardConfirmListener() {
             @Override
             public void toConfirm() {
