@@ -1,10 +1,6 @@
 package com.example.zs.myaccount;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -15,10 +11,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -28,19 +24,13 @@ import android.widget.Toast;
 
 import com.example.zs.addPage.AddBasePage;
 import com.example.zs.addPage.IncomePage;
-import com.example.zs.addPage.PayOutPage;
-import com.example.zs.application.MyAplication;
+import com.example.zs.addPage.PayOutPage;;
 import com.example.zs.bean.IncomeContentInfo;
 import com.example.zs.bean.PayoutContentInfo;
-import com.example.zs.bean.UserAddCategoryInfo;
 import com.example.zs.dao.IncomeContentDAO;
 import com.example.zs.dao.PayOutContentDAO;
 import com.example.zs.utils.KeyboardUtil;
-
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -81,6 +71,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private ImageView iv_addRecordActivity_remarkIcon;
     private TextView tv_addRecordActivity_jumpRemark;
     public KeyboardUtil keyboardUtil;
+    private String beforeHindBoardNumber;
 
 
     @Override
@@ -499,5 +490,14 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 })
         .show();*/
     }
+    public void saveuserInputNumberBeforeHindKeyBoard(){
+        beforeHindBoardNumber = tv_addRecordActivity_inputNumber.getText().toString();
+        Log.i(TAG,"saveuserInputNumberPreviousHindKeyBoard--"+ beforeHindBoardNumber);
+    }
+    public void showUserInputNumber(){
+        //键盘的原因 隐藏后出现吧editText的值变为0了
+        String s = tv_addRecordActivity_inputNumber.getText().toString();
+        Log.i(TAG,s);
+        tv_addRecordActivity_inputNumber.setText(beforeHindBoardNumber);
+    }
 }
-
