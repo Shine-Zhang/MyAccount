@@ -12,6 +12,8 @@ import com.example.zs.dataBase.PayOutContentDB;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.TreeSet;
 
 /**
  * Created by Administrator on 2016/9/17 0017.
@@ -72,26 +74,49 @@ public class TimeLineDAO {
     public ArrayList<ArrayList<AccountChildItemBean>> getTimeLinePayOutChildData(int month){
 
         ArrayList<ArrayList<AccountChildItemBean>> children = new ArrayList<ArrayList<AccountChildItemBean>>();
-        Cursor dayCursor = outdb.rawQuery("select day from payouContent where month=?group by day order by day DESC",new String[]{month+""});
+        TreeSet<Integer> alldays = new TreeSet<>();
+
+        Cursor costDayCursor = outdb.rawQuery("select day from payouContent where month=?group by day order by day DESC",new String[]{month+""});
+        Cursor incomeDayCursor = indb.rawQuery("select day from incomeContent where month=?group by day order by day DESC",new String[]{month+""});
+        while(costDayCursor.moveToNext()){
+            int day = costDayCursor.getInt(costDayCursor.getColumnIndex("day"));
+            alldays.add(day);
+            //costDayCursor.close();
+        }
+
+        while(incomeDayCursor.moveToNext()){
+            int day = incomeDayCursor.getInt(incomeDayCursor.getColumnIndex("day"));
+            alldays.add(day);
+            //incomeDayCursor.close();
+        }
+
+        alldays = (TreeSet<Integer>) alldays.descendingSet();
         // Log.i("nimama","&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"+dayCursor.getCount());
         ArrayList<AccountChildItemBean> child=null;
-        while(dayCursor.moveToNext()){
+        for (Integer x:alldays) {
             child = new ArrayList<AccountChildItemBean>();
-            int day = dayCursor.getInt(dayCursor.getColumnIndex("day"));
-            Cursor itemsCursor = outdb.rawQuery("select * from payouContent where month=? and day=?",new String[]{month+"",day+""});
+            Cursor dayCosts = outdb.rawQuery("select * from payouContent where month=? and day=?",new String[]{month+"",x+""});
+            Cursor dayIncomes = indb.rawQuery("select * from incomeContent where month=? and day=?",new String[]{month+"",x+""});
             AccountChildItemBean item = null;
-            // Log.i("child","***************************************************");
-            while(itemsCursor.moveToNext()){
-                int id = itemsCursor.getInt(itemsCursor.getColumnIndex("id"));
-                int icon = itemsCursor.getInt(itemsCursor.getColumnIndex("resourceID"));
-                int dayOfMonth = itemsCursor.getInt(itemsCursor.getColumnIndex("day"));
-                String itemDescribe = itemsCursor.getString(itemsCursor.getColumnIndex("category"));
-                String howmuch = itemsCursor.getString(itemsCursor.getColumnIndex("money"));
+
+            while(dayCosts.moveToNext()){
+                int id = dayCosts.getInt(dayCosts.getColumnIndex("id"));
+                int icon = dayCosts.getInt(dayCosts.getColumnIndex("resourceID"));
+                int dayOfMonth = dayCosts.getInt(dayCosts.getColumnIndex("day"));
+                String itemDescribe = dayCosts.getString(dayCosts.getColumnIndex("category"));
+                String howmuch = dayCosts.getString(dayCosts.getColumnIndex("money"));
                 item = new AccountChildItemBean(month,dayOfMonth,icon,-1,itemDescribe,howmuch,false,id);
-                // Log.i("child","hahahahahahah: "+item.toString());
-                // Log.i("child","***************************************************");
                 child.add(item);
-                child.addAll(getIncomeOfDay(month,day));
+            }
+
+            while(dayIncomes.moveToNext()){
+                int id = dayIncomes.getInt(dayIncomes.getColumnIndex("id"));
+                int icon = dayIncomes.getInt(dayIncomes.getColumnIndex("resourceID"));
+                int dayOfMonth = dayIncomes.getInt(dayIncomes.getColumnIndex("day"));
+                String itemDescribe = dayIncomes.getString(dayIncomes.getColumnIndex("category"));
+                String howmuch = dayIncomes.getString(dayIncomes.getColumnIndex("money"));
+                item = new AccountChildItemBean(month,dayOfMonth,icon,-1,itemDescribe,howmuch,true,id);
+                child.add(item);
             }
             children.add(child);
         }
@@ -100,25 +125,5 @@ public class TimeLineDAO {
     }
 
 
-    public ArrayList<AccountChildItemBean> getIncomeOfDay(int month,int day){
 
-
-            ArrayList<AccountChildItemBean> child = new ArrayList<AccountChildItemBean>();
-            Cursor itemsCursor = indb.rawQuery("select * from incomeContent where month=? and day=?", new String[]{month + "", day + ""});
-             AccountChildItemBean item = null;
-            // Log.i("child","***************************************************");
-            while (itemsCursor.moveToNext()) {
-                int id = itemsCursor.getInt(itemsCursor.getColumnIndex("id"));
-                int icon = itemsCursor.getInt(itemsCursor.getColumnIndex("resourceID"));
-                int dayOfMonth = itemsCursor.getInt(itemsCursor.getColumnIndex("day"));
-                String itemDescribe = itemsCursor.getString(itemsCursor.getColumnIndex("category"));
-                String howmuch = itemsCursor.getString(itemsCursor.getColumnIndex("money"));
-                item = new AccountChildItemBean(month, dayOfMonth, icon, -1, itemDescribe, howmuch, true, id);
-                // Log.i("child","hahahahahahah: "+item.toString());
-                // Log.i("child","***************************************************");
-                child.add(item);
-        }
-
-        return child;
-    }
 }

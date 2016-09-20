@@ -19,6 +19,7 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
@@ -42,6 +43,7 @@ public class ReportFormIncome {
     public PieChart pieChart;
     public int[] shourLeixing;
     private IncomeNumAndAccount incomeNumAndAccount;
+    private float[] allAccountDDIncome;
 
     public ReportFormIncome(Activity activity) {
         this.activity = activity;
@@ -99,7 +101,7 @@ public class ReportFormIncome {
         //绑定数据,括号中的内容代表的饼状图将被分为几部分
         bindData(allShouRuNumber);
         // 设置一个选中区域监听
-        pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+       /* pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
                 //pieChart.setDescription(shouruDataType[e.getXIndex()] + " " + (int) e.getVal() + "元");
@@ -110,62 +112,17 @@ public class ReportFormIncome {
             public void onNothingSelected() {
 
             }
-        });
+        });*/
     }
 
     public void bindData(int count){
-        ArrayList<String> shouruNameList = new ArrayList<String>();
-        for (int i = 0; i < 5; i++) {
-            if(shourLeixing[i] == 1){
-                switch (shouruDataType[i]){
-                    case "工资":
-                        shouruNameList.add(shouruDataType[i]);
-                        break;
-                    case "兼职":
-                        shouruNameList.add(shouruDataType[i]);
-                        break;
-                    case "零花钱":
-                        shouruNameList.add(shouruDataType[i]);
-                        break;
-                    case "红包":
-                        shouruNameList.add(shouruDataType[i]);
-                        break;
-                    case "理财收益":
-                        shouruNameList.add(shouruDataType[i]);
-                        break;
-                }
-            }else {
-                continue;
-            }
-        }
-
-        shouruValueList = new ArrayList<Entry>();
-        for(int i = 0;i < 5; i ++){
-            if(shourLeixing[i] == 1){
-                switch (shouruDataType[i]){
-                    case "工资":
-                        shouruValueList.add(new Entry(incomeNumAndAccount.salaryAccount,0));
-                        break;
-                    case "兼职":
-                        shouruValueList.add(new Entry(incomeNumAndAccount.jianzhiAccount,1));
-                        break;
-                    case "零花钱":
-                        shouruValueList.add(new Entry(incomeNumAndAccount.lihuaqianAccount,2));
-                        break;
-                    case "红包":
-                        shouruValueList.add(new Entry(incomeNumAndAccount.hongbaoAccount,3));
-                        break;
-                    case "理财收益":
-                        shouruValueList.add(new Entry(incomeNumAndAccount.licaiAccount,4));
-                        break;
-                }
-            }else {
-                continue;
-            }
+        ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
+        for (int i = 0; i < count; i++) {
+            entries.add(new PieEntry(allAccountDDIncome[i],  shouruDataType[i % shouruDataType.length]));
         }
 
         //显示在比例图上
-        PieDataSet dataSet = new PieDataSet(shouruValueList, "");
+        PieDataSet dataSet = new PieDataSet(entries,"");
         //设置各个饼状图之间的距离
         dataSet.setSliceSpace(1f);
         //各个区域不显示具体的数字，即所占百分比
@@ -174,34 +131,13 @@ public class ReportFormIncome {
         dataSet.setSelectionShift(10f);
 
         //设置各个区域的颜色
-        ArrayList<Integer> shouruColor = new ArrayList<>();
-        for(int i = 0;i < 5; i ++){
-            if(shourLeixing[i] == 1){
-                switch (shouruDataType[i]){
-                    case "工资":
-                        shouruColor.add(shouruColors[0]);
-                        break;
-                    case "兼职":
-                        shouruColor.add(shouruColors[1]);
-                        break;
-                    case "零花钱":
-                        shouruColor.add(shouruColors[2]);
-                        break;
-                    case "红包":
-                        shouruColor.add(shouruColors[3]);
-                        break;
-                    case "理财收益":
-                        shouruColor.add(shouruColors[4]);
-                        break;
-                }
-            }else {
-                continue;
-            }
+        ArrayList<Integer> color = new ArrayList<Integer>();
+        for(int c : shouruColors){
+            color.add(c);
         }
+        dataSet.setColors(color);
+        PieData pieData = new PieData(dataSet);
 
-        dataSet.setColors(shouruColor);
-
-        PieData pieData = new PieData(shouruNameList, dataSet);
         //设置显示百分比
         pieData.setValueFormatter(new PercentFormatter());
         //区域文字的大小
@@ -211,6 +147,10 @@ public class ReportFormIncome {
         //设置区域文字的字体
         pieData.setValueTypeface(Typeface.DEFAULT);
         pieChart.setData(pieData);
+
+        pieChart.highlightValues(null);
+
+        pieChart.invalidate();
     }
 
     private void initData() {
@@ -252,8 +192,9 @@ public class ReportFormIncome {
                 + incomeNumAndAccount.salaryAccount;
 
 
-        shourLeixing = new int[]{incomeNumAndAccount.salaryNumber, incomeNumAndAccount.jianzhiNumber,
-                incomeNumAndAccount.lihuaqianAccount, incomeNumAndAccount.hongbaoNumber, incomeNumAndAccount.licaiNumber};
+        allAccountDDIncome = new float[]{incomeNumAndAccount.licaiAccount , incomeNumAndAccount.hongbaoAccount
+                , incomeNumAndAccount.lihuaqianAccount , incomeNumAndAccount.jianzhiAccount
+                , incomeNumAndAccount.salaryAccount};
     }
 
     private void customizeLegend() {

@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 
 import com.example.zs.bean.WishInfo;
 import com.example.zs.pager.BasePager;
-import com.example.zs.pager.OwnerPager;
 
 /**
  * Created by wuqi on 2016/9/4 0004.
@@ -18,6 +17,7 @@ public class MyAplication extends Application{
     public static WishInfo wishInfo;
     public static SharedPreferences UserInfosp;
     public static SharedPreferences CurUsersp;
+    private BasePager accountPager;
     private BasePager ownerPager;
 
     /**
@@ -93,8 +93,6 @@ public class MyAplication extends Application{
 
 
 
-
-
     /**
      * 保存用户名和密码到SharedPreferences,用户名为键，密码为值
      * @param username  用户名
@@ -153,5 +151,15 @@ public class MyAplication extends Application{
     public void setOwnerPager(BasePager ownerPager) {
         this.ownerPager = ownerPager;
     }
+
+
+    public BasePager getAccountPager() {
+        return accountPager;
+    }
+
+    public void setAccountPager(BasePager accountPager) {
+        this.accountPager = accountPager;
+    }
+
 
 }

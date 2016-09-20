@@ -87,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.rb_mainactivity_detail:
                         vp_mainactivity.setCurrentItem(0);
                         pageList.get(0).initData();
+                        MyAplication application = (MyAplication) getApplication();
+                        if(application.getAccountPager()==null) {
+                            application.setAccountPager(pageList.get(0));
+                        }
                         break;
 
                     case R.id.rb_mainactivity_wish:
@@ -111,6 +115,10 @@ public class MainActivity extends AppCompatActivity {
 
         vp_mainactivity.setCurrentItem(0);
         pageList.get(0).initData();
+        MyAplication application = (MyAplication) getApplication();
+        if(application.getAccountPager()==null) {
+            application.setAccountPager(pageList.get(0));
+        }
         Log.i(tag,"wennm");
     }
 
@@ -241,6 +249,20 @@ public class MainActivity extends AppCompatActivity {
         } else if(requestCode==PHOTO_REQUEST_CAREMA){
             //照相
             if(resultCode==RESULT_OK){
+            }
+        }else if(requestCode==111){
+            Log.i("wwwwwwww","添加愿望onActivityResult---requestCode==111");
+            if (resultCode==112){
+                Log.i("wwwwwwww","添加愿望onActivityResult---resultCode==112");
+                Intent wishintent = getIntent();
+                boolean hasaddwish = wishintent.getBooleanExtra("hasaddwish", false);
+                Log.i("wwwwww", "hasaddwish===" + hasaddwish);
+
+                if (hasaddwish) {
+                    pageList.get(1).initView();
+                    Log.i("wwwwww", "mainActivity_contentAdapter==notifyDataSetChanged");
+
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, intent);

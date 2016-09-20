@@ -23,7 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity" />
-        <activity android:name=".AddWishActivity" />
+        <activity android:name=".AddWishActivity" android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity android:name=".AddRecordActivity" />
         <activity
             android:name=".GuideActivity"

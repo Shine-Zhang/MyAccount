@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -35,6 +36,7 @@ import android.widget.Toast;
 import com.example.zs.bean.WishInfo;
 import com.example.zs.dao.OnGoingWishDao;
 import com.example.zs.pager.WishPager;
+import com.example.zs.utils.KeyboardUtil;
 import com.example.zs.utils.ScreenUtils;
 import com.example.zs.utils.ShowPopupWindowUtils;
 import com.example.zs.view.CircleImageView;
@@ -55,7 +57,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
 
     private static final String TAG = "AddWishActivity";
     private TextView et_addwishactivity_mywish;
-    private TextView et_addwishactivity_wishfund;
+    private EditText et_addwishactivity_wishfund;
     private TextView et_addwishactivity_description;
     private PopupWindow popupwindow_getphoto;
     private CircleImageView civ_addwishactivity_image;
@@ -70,7 +72,6 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
     private StringBuffer wishFundString;
     private FileOutputStream fileOutputStream = null;
     private InputMethodManager imm;
-    private File photoStorageDir;
     private Uri photoUri;
     private int wishid;
     private OnGoingWishDao onGoingWishDAO;
@@ -89,7 +90,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
         wishFundString = new StringBuffer();
 
         et_addwishactivity_mywish = (TextView) findViewById(R.id.et_addwishactivity_mywish);
-        et_addwishactivity_wishfund = (TextView) findViewById(R.id.et_addwishactivity_wishfund);
+        et_addwishactivity_wishfund = (EditText) findViewById(R.id.et_addwishactivity_wishfund);
         et_addwishactivity_description = (TextView) findViewById(R.id.et_addwishactivity_description);
         civ_addwishactivity_image = (CircleImageView) findViewById(R.id.civ_addwishactivity_image);
         bt_addwishactivity_addwish = (Button) findViewById(R.id.bt_addwishactivity_addwish);
@@ -212,7 +213,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
-        //et_addwishactivity_wishfund的焦点变化事件，获取焦点时弹出popupwindow
+        //et_addwishactivity_wishfund的焦点变化事件，获取焦点时弹出自定义键盘
         et_addwishactivity_wishfund.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
@@ -221,15 +222,14 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
                     if (imm != null) {
                         imm.hideSoftInputFromWindow(et_addwishactivity_wishfund.getWindowToken(), 0);
                     }
-                    et_addwishactivity_wishfund.setInputType(InputType.TYPE_NULL);
                     //显示自定义键盘
-                   /* //showNumberKeyboard(view);
                     int inputback = et_addwishactivity_wishfund.getInputType();
                     et_addwishactivity_wishfund.setInputType(InputType.TYPE_NULL);
-                    KeyboardUtil keyboardUtil = new KeyboardUtil(this, this, et_addwishactivity_wishfund);
-                    keyboardUtil.setNumberFormat(7);
-                    keyboardUtil.showKeyboard();
-                    et_addwishactivity_wishfund.setInputType(inputback);*/
+                   // KeyboardUtil keyboardUtil = new KeyboardUtil(AddWishActivity.this, AddWishActivity.this, et_addwishactivity_wishfund);
+                   // keyboardUtil.setNumberFormat(7);
+                   // keyboardUtil.showKeyboard();
+                    et_addwishactivity_wishfund.setInputType(inputback);
+
                 }
             }
         });
@@ -272,7 +272,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
                 iv_addwishactivity_photo.setVisibility(View.VISIBLE);
                 break;
             case R.id.et_addwishactivity_wishfund:
-                showNumberKeyboard(view);
+                //showNumberKeyboard(view);
                 break;
 
         }
@@ -285,6 +285,9 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
      * @param view
      */
     public void back(View view){
+        Intent intent = new Intent();
+        intent.getBooleanExtra("hasaddwish",false);
+        setResult(112,intent);
         finish();
     }
 
@@ -304,7 +307,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
         //获取当前日期:
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH)+1;
-        int day = calendar.get(Calendar.DATE)+1;
+        int day = calendar.get(Calendar.DATE);
         Log.i(TAG,"year="+year+",month="+month+",day="+day);
 
         String wishtitle = et_addwishactivity_mywish.getText().toString();
@@ -315,6 +318,11 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
         WishInfo wishInfo = new WishInfo(year,month,day,wishtitle,wishdescription,wishfund,photouri);
         //添加到数据库
         onGoingWishDAO.addOnGoingWishInfo(wishInfo);
+
+        Intent intent = new Intent();
+        intent.getBooleanExtra("hasaddwish",true);
+        setResult(112,intent);
+        Log.i("wwwwwwww","当前为添加愿望页面，给前一个页面回传数据---setResult(112,intent)");
 
     }
 

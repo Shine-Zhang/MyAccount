@@ -119,7 +119,7 @@ public class ShowPopupWindowUtils {
                 bundle.putInt("wishid",info.wishid);
                 bundle.putInt("position",adapterPosition);
                 intent.putExtras(bundle);
-                mActivity.startActivity(intent);
+                mActivity.startActivityForResult(intent,111);
             }
         });
 

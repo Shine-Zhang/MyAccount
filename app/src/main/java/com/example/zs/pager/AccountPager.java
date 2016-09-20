@@ -74,7 +74,6 @@ public class AccountPager extends BasePager implements
     private StickyLayout stickyLayout;
     private  ArrayList<ArrayList<AccountChildItemBean>> childItems;
     private  ArrayList<AccountGroupItemBean> groupItems;
-
     private MyexpandableListAdapter adapter;
     private RelativeLayout accountPagerBudgetSta;
 
@@ -91,10 +90,17 @@ public class AccountPager extends BasePager implements
     private float totalCost;
     private String myBudget;
     private TextView tvAccountPagerBudget;
+    private boolean[] groupExpandSta;
 
 
     public AccountPager(Activity activity) {
         super(activity);
+        groupExpandSta = new boolean[31];
+        for(int i = 0;i<groupExpandSta.length;i++){
+            groupExpandSta[i] = true;
+        }
+        now = Calendar.getInstance();
+        today = now.get(Calendar.DAY_OF_MONTH);
     }
 
     /**
@@ -104,8 +110,7 @@ public class AccountPager extends BasePager implements
     @Override
     public View initView() {
 //        Log.i("jjjjjjjjjj","********************************");
-        now = Calendar.getInstance();
-        today = now.get(Calendar.DAY_OF_MONTH);
+
         mrootView = View.inflate(mActivity,R.layout.account_pager_layout,null);
         expandableListView = (PinnedHeaderExpandableListView) mrootView.findViewById(R.id.expandablelist);
         stickyLayout = (StickyLayout) mrootView.findViewById(R.id.sticky_layout);
@@ -113,7 +118,19 @@ public class AccountPager extends BasePager implements
 
         View footView = View.inflate(mActivity,R.layout.account_pager_footview,null);
         expandableListView.initFootView(footView);
+        expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            @Override
+            public void onGroupExpand(int i) {
+                groupExpandSta[groupItems.get(i).getDayOfMonth()] = true;
+            }
+        });
 
+        expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
+            @Override
+            public void onGroupCollapse(int i) {
+                groupExpandSta[groupItems.get(i).getDayOfMonth()] = false;
+            }
+        });
         accountPagerBudgetSta = (RelativeLayout) mrootView.findViewById(R.id.rl_account_pager_budget_state);
         ImageButton ib_account_pager_camera = (ImageButton) mrootView.findViewById(R.id.ib_account_pager_camera);
         ib_account_pager_camera.setOnClickListener(new View.OnClickListener() {
@@ -203,7 +220,6 @@ public class AccountPager extends BasePager implements
             myBudget =MyAplication.getStringFromSp("myBudget");
         }else{
             myBudget ="3000.00";
-
         }
         tvAccountPagerBudget.setText(myBudget);
         totalIncome = 0;
@@ -263,16 +279,20 @@ public class AccountPager extends BasePager implements
             expandableListView.setAdapter(adapter);
 
 
-
+        Log.i("haha","******groupItems.size(): "+groupItems.size());
+        Log.i("haha","******childItems.size(): "+childItems.size());
         // 展开所有group
-/*        for (int i = 0, count = expandableListView.getCount(); i < count; i++) {
+        for ( int i = 0;i<groupItems.size(); i++) {
             Log.i("haha","************展开所有数据完毕***********"+i);
-            expandableListView.expandGroup(i);
-        }*/
-        if(groupItems.size()!=0) {
-            expandableListView.expandGroup(0);
+            if(groupExpandSta[groupItems.get(i).getDayOfMonth()-1]){
+                expandableListView.expandGroup(i);
+            }else{
+                expandableListView.collapseGroup(i);
+            }
 
+            //expandableListView.get
         }
+
 
         expandableListView.setOnHeaderUpdateListener(this);
         //Log.i("huibuhui","**************************************************");
@@ -493,10 +513,23 @@ public class AccountPager extends BasePager implements
                             int child = tmpHolder.child;
                             Log.i("nima","goup : "+ group +"child: "+ child);
                            // Log.i("nima","*****************content: "+ childItems.get(group).get(child).getId()+":::::"+childItems.get(group).remove(child).getHowmuch());
+
+
+                            unFold(tmpHolder);
+                            if(childItems.get(group).get(child).isIncome()){
+                                new IncomeContentDAO(mActivity).deleteIncomeContentItemFromDB(childItems.get(group).get(child).getId());
+
+                                Log.i("lalalala","outid: "+childItems.get(group).get(child).getId());
+                            }else{
+                                new PayOutContentDAO(mActivity).deletePayoutContentItemFromDB(childItems.get(group).get(child).getId());
+                                Log.i("lalalala","inid: "+childItems.get(group).get(child).getId());
+                            }
                             childItems.get(group).remove(child);
+                            if(childItems.get(group).size()==0){
+                                groupItems.remove(group);
+                            }
                             //通知更新
                             adapter.notifyDataSetChanged();
-                            unFold(tmpHolder);
                             preHolder = null;
                         }
                     });
@@ -644,7 +677,8 @@ public class AccountPager extends BasePager implements
             holder.ib_account_pager_item_edit.setVisibility(View.GONE);
             holder.ib_account_pager_item_delete.setVisibility(View.GONE);
             holder.tv_account_pager_word_describe.setVisibility(View.VISIBLE);
-            if( childItems.get(holder.group).get(holder.child).getPhotoResId()>0) {
+
+            if( holder.group>0&&holder.child>0&&childItems.get(holder.group).get(holder.child).getPhotoResId()>0) {
                 holder.iv_account_pager_item_photo.setVisibility(View.VISIBLE);
             }
             holder.tv_account_pager_how_much.setVisibility(View.VISIBLE);
@@ -661,7 +695,7 @@ public class AccountPager extends BasePager implements
     @Override
     public boolean onGroupClick(final ExpandableListView parent, final View v,
                                 int groupPosition, final long id) {
-
+        Log.i("hahaha","&*&&*&*&*&*&*&*&*&*&*&*");
         return false;
     }
 
@@ -721,6 +755,8 @@ public class AccountPager extends BasePager implements
             if (today == firstVisibleGroup.getDayOfMonth()) {
                 MonthOfDay.setText("今天");
                 MonthOfDay.setBackground(mActivity.getResources().getDrawable(R.drawable.account_pager_group_today_icon));
+            }else{
+                MonthOfDay.setBackground(mActivity.getResources().getDrawable(R.drawable.account_pager_group_icon));
             }
             income.setText(String.format("%.2f", firstVisibleGroup.getTotalIncome()));
             outcome.setText(String.format("%.2f", firstVisibleGroup.getTotalCosts()));

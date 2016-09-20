@@ -1,11 +1,13 @@
 package com.example.zs.myaccount;
 
 import android.app.AlertDialog;
+import android.app.Application;
 import android.app.DatePickerDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -35,6 +37,7 @@ import com.example.zs.bean.PayoutContentInfo;
 import com.example.zs.bean.UserAddCategoryInfo;
 import com.example.zs.dao.IncomeContentDAO;
 import com.example.zs.dao.PayOutContentDAO;
+import com.example.zs.pager.BasePager;
 import com.example.zs.utils.KeyboardUtil;
 
 import java.sql.Time;
@@ -81,16 +84,14 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private ImageView iv_addRecordActivity_remarkIcon;
     private TextView tv_addRecordActivity_jumpRemark;
     public KeyboardUtil keyboardUtil;
-
-
+    private Handler mHandler;
+    private int detchTime = 5;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_record);
         //隐藏标题栏
         getSupportActionBar().hide();
-
-
         RadioGroup rg_addRecordActivity_singleChoice = (RadioGroup) findViewById(R.id.rg_addRecordActivity_singleChoice);
         btn_addRecordActivity_time = (Button) findViewById(R.id.btn_addRecordActivity_time);
         ImageView iv_addRecordActivity_finish = (ImageView) findViewById(R.id.iv_addRecordActivity_finish);
@@ -102,9 +103,10 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
 
         int inputback = tv_addRecordActivity_inputNumber.getInputType();
         tv_addRecordActivity_inputNumber.setInputType(InputType.TYPE_NULL);
-        keyboardUtil =  new KeyboardUtil(this, this, tv_addRecordActivity_inputNumber);
+        keyboardUtil =  new KeyboardUtil(this, this, tv_addRecordActivity_inputNumber,false);
         keyboardUtil.setNumberFormat(7);
-        keyboardUtil.showKeyboard();
+       // showPopwindow();
+        keyboardUtil.showKeyboardAsNormal();
         keyboardUtil.setOnkeyBoardConfirmListener(new KeyboardUtil.KeyBoardConfirmListener() {
             @Override
             public void toConfirm() {
@@ -113,7 +115,14 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 if (stringNumber.isEmpty()){
                     //为空
                 }
+
+
                 commitAndsave();
+                MyAplication application = (MyAplication) getApplication();
+                BasePager accountPager = application.getAccountPager();
+                if(accountPager!=null){
+                    accountPager.initData();
+                }
             }
         });
         tv_addRecordActivity_inputNumber.setInputType(inputback);
@@ -162,6 +171,34 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         //显示日期
         setDate(isJumpActivity);
         vp_addRecordActivity_content.setAdapter(new MyViewPagerAdapter());
+
+
+    }
+
+    private void showPopwindow(){
+
+        mHandler = new Handler();
+
+        Runnable showPopWindowRunnable = new Runnable() {
+
+            @Override
+            public void run() {
+                // 得到activity中的根元素
+                View view = findViewById(R.id.ll_addRecordActivity_keyboard_parent);
+                // 如何根元素的width和height大于0说明activity已经初始化完毕
+                if( view != null && view.getWidth() > 0 && view.getHeight() > 0) {
+                    // 显示popwindow
+                    keyboardUtil.showKeyboard(view);
+                    // 停止检测
+                    mHandler.removeCallbacks(this);
+                } else {
+                    // 如果activity没有初始化完毕则等待5毫秒再次检测
+                    mHandler.postDelayed(this, detchTime);
+                }
+            }
+        };
+        // 开始检测
+        mHandler.post(showPopWindowRunnable);
     }
 
     private void getInfoFromActivity() {
@@ -257,7 +294,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
             case R.id.btn_addCategory_markConfirm:
                 //照相区显示，备注区隐藏
                 Log.i(TAG,stringNumber+"88");
-                keyboardUtil.showKeyboard();
+               // keyboardUtil.showKeyboard();
                 remarkContent = et_addCategory_markContent.getText().toString();
                 rl_addRecordActivity_remarklayout.setVisibility(View.GONE);
                 rl_addRecordActivity_photolayout.setVisibility(View.VISIBLE);
@@ -381,7 +418,37 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
 
     public void setDate(boolean b) {
         datePicker = new DatePicker(this);
-        //Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+       // datePicker.init(year, month, day,null);
+/*        datePicker.init(year, month, day, new DatePicker.OnDateChangedListener() {
+
+            @Override
+            public void onDateChanged(DatePicker view, int year,
+                                      int monthOfYear, int dayOfMonth) {
+
+                if (isDateAfter(view)) {
+                    Calendar mCalendar = Calendar.getInstance();
+                    view.init(mCalendar.get(Calendar.YEAR),
+                            mCalendar.get(Calendar.MONTH),
+                            mCalendar.get(Calendar.DAY_OF_MONTH), this);
+                }
+            }
+
+            private boolean isDateAfter(DatePicker tempView) {
+                Calendar mCalendar = Calendar.getInstance();
+                Calendar tempCalendar = Calendar.getInstance();
+                tempCalendar.set(tempView.getYear(), tempView.getMonth(),
+                        tempView.getDayOfMonth(), 0, 0, 0);
+                if (tempCalendar.after(mCalendar))
+                    return true;
+                else
+                    return false;
+            }
+        });*/
+
         if (!b){
             //从+号加入此activity
             //得到当日的日期

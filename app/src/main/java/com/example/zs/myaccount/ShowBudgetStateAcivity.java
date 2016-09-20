@@ -68,6 +68,7 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
     private Calendar now;
     private float income;
     private float balance;
+    public KeyboardUtil keyboardUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -353,9 +354,10 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                }
                int inputback = et_show_budeget_sta_setbudget.getInputType();
                et_show_budeget_sta_setbudget.setInputType(InputType.TYPE_NULL);
-               KeyboardUtil keyboardUtil = new KeyboardUtil(this, this, et_show_budeget_sta_setbudget);
+               keyboardUtil = new KeyboardUtil(this, this, et_show_budeget_sta_setbudget,true);
                keyboardUtil.setNumberFormat(7);
-               keyboardUtil.showKeyboard();
+              // RelativeLayout parentView = (RelativeLayout) findViewById(R.id.bt_show_budget_sta_parent);
+               keyboardUtil.showKeyboard(pagers.get(1));
                et_show_budeget_sta_setbudget.setInputType(inputback);
 
             break;
@@ -645,8 +647,22 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
         return day + "";
     }
 
+    @Override
+    protected void onDestroy() {
+        if(keyboardUtil!=null) {
+            if (!keyboardUtil.isNormal) {
+                keyboardUtil.hideKeyboardAsNormal();
+                }
+            }else{
+                if(keyboardUtil!=null) {
+                    keyboardUtil.hideKeyboardAsNormal();
+                }
+            }
+        super.onDestroy();
+        }
 
-}
+    }
+
 
 /**
  * RecyclerView的触摸监听
@@ -705,6 +721,7 @@ abstract class ShowBudgetStateOnItemTouchListener implements RecyclerView.OnItem
             }
         }
     }
+
 }
 
 

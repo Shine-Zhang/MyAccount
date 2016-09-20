@@ -116,7 +116,7 @@
         android:layout_centerInParent="true">
     </android.support.v7.widget.RecyclerView>
 
-    <RelativeLayout
+<!--    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
         <android.inputmethodservice.KeyboardView
@@ -132,7 +132,7 @@
         android:keyBackground="@drawable/btn_keyboard_key"
             android:keyTextColor="#444444"
             android:visibility="gone" />
-    </RelativeLayout>
+    </RelativeLayout>-->
 
 
     <!--android:keyBackground="@drawable/btn_keyboard_key"-->
