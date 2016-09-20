@@ -118,7 +118,7 @@
                 android:layout_height="30sp"
                 android:gravity="bottom"
                 android:layout_gravity="center"
-                android:text="欢迎加入MyAccout官方QQ交流群"
+                android:text="欢迎加入钱哆哆官方QQ交流群"
                 android:textColor="#A0A0A0"
                 android:textSize="10dp"/>
             <TextView
