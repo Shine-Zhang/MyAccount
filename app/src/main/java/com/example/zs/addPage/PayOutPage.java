@@ -112,7 +112,7 @@ public class PayOutPage extends AddBasePage {
                         //保存下滑消失键盘 用户选中的item
                         isClickShowKeyBoard = true;
                         //isTouchHindkeyBoard = false;
-                        addRecordActivity.keyboardUtil.showKeyboard();
+                        //addRecordActivity.keyboardUtil.showKeyboard();
                         addRecordActivity.showUserInputNumber();
                     }else {
                         iv.setEnabled(false);
