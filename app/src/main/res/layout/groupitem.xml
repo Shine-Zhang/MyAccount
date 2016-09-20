@@ -23,10 +23,10 @@
         android:id="@+id/iv_account_pager_item_img_describe"
         android:layout_centerInParent="true"
         android:text="1号"
-        android:textSize="10sp"
+        android:textSize="8sp"
         android:background="@drawable/account_pager_group_icon"
-        android:layout_width="25dp"
-        android:layout_height="25dp" />
+        android:layout_width="20dp"
+        android:layout_height="20dp" />
 
 
         <TextView

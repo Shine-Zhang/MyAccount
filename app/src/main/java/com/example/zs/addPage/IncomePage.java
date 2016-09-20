@@ -101,7 +101,7 @@ public class IncomePage extends AddBasePage {
                     selectResourceID = incomeCategoryToDB.get(i).getResourceID();
                     selectCategoryName = incomeCategoryToDB.get(i).getCategoryName();
                 }
-                addRecordActivity.keyboardUtil.showKeyboard();
+               // addRecordActivity.keyboardUtil.showKeyboard();
                 Log.i(TAG, "--" + i);
             }
         });

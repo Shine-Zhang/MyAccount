@@ -125,6 +125,7 @@ public class PayOutPage extends AddBasePage {
                 // current iv=com.example.zs.view.CircleImageView{4a70d83 V.ED.... ........ 68,53-147,132 #7f0e012b app:id/cv_addPage_recordIcon}
                 Log.i(TAG, "--" + i);
 
+               // addRecordActivity.keyboardUtil.showKeyboard();
             }
         });
         gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

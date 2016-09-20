@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.zs.view.WishItemLinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <TextView
-        android:layout_gravity="right"
+        android:layout_alignParentRight="true"
         android:id="@+id/tv_itemwishfooter_completewishes"
         android:paddingLeft="15dp"
-        android:paddingTop="5dp"
+        android:paddingTop="15dp"
         android:paddingRight="15dp"
         android:paddingBottom="30dp"
         android:layout_width="wrap_content"
@@ -18,4 +17,4 @@
         android:textSize="15sp"
         android:clickable="true"/>
 
-</com.example.zs.view.WishItemLinearLayout>
+</RelativeLayout>

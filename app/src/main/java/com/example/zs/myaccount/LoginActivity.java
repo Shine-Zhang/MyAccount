@@ -5,11 +5,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.zs.application.MyAplication;
+import com.example.zs.pager.BasePager;
+import com.lidroid.xutils.BitmapUtils;
+import com.lidroid.xutils.HttpUtils;
 import com.mob.tools.utils.UIHandler;
 
 import java.util.HashMap;
@@ -41,8 +42,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private static final int MSG_TOAST = 2;
     private static final int MSG_CANCEL_NOTIFY = 3;
 
-    private static final int MSG_USERID_FOUND = 4;
-    private static final int MSG_LOGIN = 5;
     private String usernameStr;
     private String passwordStr;
     private EditText et_loginactivity_username;
@@ -50,6 +49,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private LinearLayout ll_loginactivity_weiboLogin;
     private LinearLayout ll_loginactivity_QQLogin;
     private Button bt_loginactivity_login;
+    private String userName;
+    private String userIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,10 +82,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.ll_loginactivity_weiboLogin:
                 Log.i(TAG,"weiboLogin");
                 thirdSinaLogin();
+                finish();
                 break;
             case R.id.ll_loginactivity_QQLogin:
                 Log.i(TAG,"QQLogin");
                 thirdQQLogin();
+                finish();
                 break;
         }
     }
@@ -118,16 +121,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
          *   http://sharesdk.cn/androidDoc/cn/sharesdk/framework/PlatformActionListener.html
          *
          */
-
         PlatformDb platDB = platform.getDb();//获取数平台数据DB
         //通过DB获取各种数据
-        Log.i("sharesdk use_id", platDB.getUserId()); //获取用户id
-        Log.i("sharesdk use_name", platDB.getUserName());//获取用户名称
-        Log.i("sharesdk use_icon", platDB.getUserIcon());//获取用户头像
-        Log.i(TAG,"授权成功"+"\n"+"用户id:" + platDB.getUserId() + "\n" +
-                "获取用户名称：" + platDB.getUserName() + "\n" +
-                "获取用户头像：" + platDB.getUserIcon());
+        String userId = platDB.getUserId(); //获取用户id
+        //获取用户名称
+        userName = platDB.getUserName();
+        //获取用户头像
+        userIcon = platDB.getUserIcon();
+        Log.i(TAG,"授权成功"+"\n"+"用户id:" + userId + "\n" +
+                "获取用户名称：" + userName + "\n" +
+                "获取用户头像：" + userIcon);
 
+        Message msg = new Message();
+        msg.what = MSG_ACTION_CCALLBACK;
+        msg.arg1 = 1;
+        msg.arg2 = action;
+        msg.obj = platform;
+        UIHandler.sendMessage(msg, this);
     }
     /** 取消授权 */
     @Override
@@ -162,6 +172,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             break;
             case MSG_ACTION_CCALLBACK: {
                 switch (msg.arg1) {
+                    case 1:
+                        Log.i(TAG+"zzzzzz","登录成功！");
+                        //登录成功就保存用户信息到当前用户文件中
+                        MyAplication.saveCurUsernaemToSp("username",userName);
+                        MyAplication.saveUserInfoToSp(userName+"PhotoUri",userIcon);
+
+                        MyAplication myAplication = (MyAplication) getApplication();
+                        BasePager ownerPager = myAplication.getOwnerPager();
+                        if (ownerPager!=null) {
+                            ownerPager.initData();
+                            Log.i(TAG+"zzzzz","第三方登录刷新");
+                        }
+
+                        break;
                     case 2: {
                         Toast.makeText(LoginActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
                     }
@@ -193,12 +217,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if(MyAplication.getUserInfoFromSp(usernameStr).isEmpty()){
                 Toast.makeText(LoginActivity.this, "用户名不存在，请重新输入！", Toast.LENGTH_SHORT).show();
             }else {
+                //如果根据用户名取得的密码与用户输入的密码相同，则登录成功，否则显示密码不正确
                 if (MyAplication.getUserInfoFromSp(usernameStr).equals(passwordStr)) {
                     Log.i(TAG,"登录成功！");
-                    //带用户名传回OwnerPager
-                    Intent intent = new Intent(this, MainActivity.class);
-                    intent.putExtra("usernameStr",usernameStr);
-                    startActivity(intent);
+
+                    //登录成功就立即将用户名保存到当前用户的临时文件中，用于回显
+                    MyAplication.saveCurUsernaemToSp("username",usernameStr);
+                    MyAplication myAplication = (MyAplication) getApplication();
+                    BasePager ownerPager = myAplication.getOwnerPager();
+                    if (ownerPager!=null) {
+                        ownerPager.initData();
+                        Log.i(TAG+"zzzz","LoginActivity login!");
+                    }
 
                     finish();
                 }else {
@@ -230,13 +260,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         usernameStr = et_loginactivity_username.getText().toString();
         passwordStr = et_loginactivity_pwd.getText().toString();
         Log.i(TAG,"usernameStr=**"+usernameStr+" passwordStr=**"+passwordStr);
-
+        //当用户输入的字符串长度大于5时，登录Button的背景颜色更改
         if(passwordStr.length()>5){
             bt_loginactivity_login.setBackgroundColor(Color.parseColor("#30C9F2"));
         }else {
             bt_loginactivity_login.setBackgroundColor(Color.parseColor("#E6E6E6"));
         }
-
     }
 
     @Override
@@ -246,10 +275,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void back(View v){
-        finish();
-        //返回到指定的viewPager页面
+        //点击返回Button，返回到指定的viewPager页面
         MainActivity.vp_mainactivity.setCurrentItem(3);
-        //startActivity(new Intent(this,MainActivity.class));
+        finish();
     }
 
 }

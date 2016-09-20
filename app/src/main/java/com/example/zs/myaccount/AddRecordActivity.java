@@ -1,7 +1,13 @@
 package com.example.zs.myaccount;
 
+import android.app.AlertDialog;
+import android.app.Application;
 import android.app.DatePickerDialog;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -24,13 +30,20 @@ import android.widget.Toast;
 
 import com.example.zs.addPage.AddBasePage;
 import com.example.zs.addPage.IncomePage;
-import com.example.zs.addPage.PayOutPage;;
+import com.example.zs.addPage.PayOutPage;
+import com.example.zs.application.MyAplication;
 import com.example.zs.bean.IncomeContentInfo;
 import com.example.zs.bean.PayoutContentInfo;
+import com.example.zs.bean.UserAddCategoryInfo;
 import com.example.zs.dao.IncomeContentDAO;
 import com.example.zs.dao.PayOutContentDAO;
+import com.example.zs.pager.BasePager;
 import com.example.zs.utils.KeyboardUtil;
+
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -74,6 +87,8 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private String beforeHindBoardNumber;
 
 
+    private Handler mHandler;
+    private int detchTime = 5;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,7 +119,14 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 if (stringNumber.isEmpty()){
                     //为空
                 }
+
+
                 commitAndsave();
+                MyAplication application = (MyAplication) getApplication();
+                BasePager accountPager = application.getAccountPager();
+                if(accountPager!=null){
+                    accountPager.initData();
+                }
             }
         });
         tv_addRecordActivity_inputNumber.setInputType(inputback);
@@ -153,6 +175,34 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         //显示日期
         setDate(isJumpActivity);
         vp_addRecordActivity_content.setAdapter(new MyViewPagerAdapter());
+
+
+    }
+
+    private void showPopwindow(){
+
+        mHandler = new Handler();
+
+        Runnable showPopWindowRunnable = new Runnable() {
+
+            @Override
+            public void run() {
+                // 得到activity中的根元素
+                View view = findViewById(R.id.ll_addRecordActivity_keyboard_parent);
+                // 如何根元素的width和height大于0说明activity已经初始化完毕
+                if( view != null && view.getWidth() > 0 && view.getHeight() > 0) {
+                    // 显示popwindow
+                    keyboardUtil.showKeyboard(view);
+                    // 停止检测
+                    mHandler.removeCallbacks(this);
+                } else {
+                    // 如果activity没有初始化完毕则等待5毫秒再次检测
+                    mHandler.postDelayed(this, detchTime);
+                }
+            }
+        };
+        // 开始检测
+        mHandler.post(showPopWindowRunnable);
     }
 
     private void getInfoFromActivity() {

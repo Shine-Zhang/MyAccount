@@ -1,5 +1,6 @@
 package com.example.zs.myaccount;
 
+import android.app.Application;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.example.zs.application.MyAplication;
 import com.example.zs.bean.PayoutContentInfo;
 import com.example.zs.pager.AccountPager;
 import com.example.zs.pager.BasePager;
@@ -85,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.rb_mainactivity_detail:
                         vp_mainactivity.setCurrentItem(0);
                         pageList.get(0).initData();
+                        MyAplication application = (MyAplication) getApplication();
+                        if(application.getAccountPager()==null) {
+                            application.setAccountPager(pageList.get(0));
+                        }
                         break;
 
                     case R.id.rb_mainactivity_wish:
@@ -100,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.rb_mainactivity_mine:
                         vp_mainactivity.setCurrentItem(3);
                         pageList.get(3).initData();
+                        MyAplication application = (MyAplication) getApplication();
+                        application.setOwnerPager(pageList.get(3));
                         break;
                 }
             }
@@ -107,16 +115,28 @@ public class MainActivity extends AppCompatActivity {
 
         vp_mainactivity.setCurrentItem(0);
         pageList.get(0).initData();
+        MyAplication application = (MyAplication) getApplication();
+        if(application.getAccountPager()==null) {
+            application.setAccountPager(pageList.get(0));
+        }
         Log.i(tag,"wennm");
     }
 
     //新建Adapter用于每个RadioButton点击显示不同页面
-    class MainActivity_ContentAdapter extends PagerAdapter{
+   public class MainActivity_ContentAdapter extends PagerAdapter{
 
         @Override
         public int getCount() {
+
             return pageList.size();
             //return 0;
+        }
+
+        public BasePager getRefreshTarget(){
+            if(pageList!=null&&pageList.get(3)!=null){
+                return pageList.get(3);
+            }
+            return null;
         }
 
         @Override
@@ -229,6 +249,20 @@ public class MainActivity extends AppCompatActivity {
         } else if(requestCode==PHOTO_REQUEST_CAREMA){
             //照相
             if(resultCode==RESULT_OK){
+            }
+        }else if(requestCode==111){
+            Log.i("wwwwwwww","添加愿望onActivityResult---requestCode==111");
+            if (resultCode==112){
+                Log.i("wwwwwwww","添加愿望onActivityResult---resultCode==112");
+                Intent wishintent = getIntent();
+                boolean hasaddwish = wishintent.getBooleanExtra("hasaddwish", false);
+                Log.i("wwwwww", "hasaddwish===" + hasaddwish);
+
+                if (hasaddwish) {
+                    pageList.get(1).initView();
+                    Log.i("wwwwww", "mainActivity_contentAdapter==notifyDataSetChanged");
+
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, intent);

@@ -33,7 +33,7 @@
     
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <com.example.zs.view.CircleImageView
             android:layout_width="100dp"
@@ -125,4 +125,23 @@
             android:clickable="false" />
 
     </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        <android.inputmethodservice.KeyboardView
+            android:id="@+id/keyboard_view"
+            android:layout_width="match_parent"
+            android:shadowColor="#fff"
+            android:shadowRadius="0.0"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:background="@android:color/transparent"
+            android:keyBackground="@drawable/btn_keyboard_key"
+            android:keyTextColor="#444444"
+            android:visibility="gone" />
+    </RelativeLayout>
+
 </LinearLayout>

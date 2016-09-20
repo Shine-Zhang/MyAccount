@@ -1,5 +1,6 @@
 package com.example.zs.myaccount;
 
+import android.app.Application;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -17,8 +18,10 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.zs.application.MyAplication;
+import com.example.zs.pager.BasePager;
 import com.example.zs.utils.ScreenUtils;
 import com.example.zs.view.CircleImageView;
 
@@ -38,6 +41,7 @@ public class MyInfoActivity extends AppCompatActivity implements View.OnClickLis
     private PopupWindow popupwindow_showphoto;
     private CircleImageView iv_myinfoactivity_touxiang;
     private CircleImageView civ_myinfoactivity_img;
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +53,9 @@ public class MyInfoActivity extends AppCompatActivity implements View.OnClickLis
         iv_myinfoactivity_touxiang = (CircleImageView) findViewById(R.id.iv_myinfoactivity_touxiang);
         civ_myinfoactivity_img = (CircleImageView) findViewById(R.id.civ_myinfoactivity_img);
         //回显
-        String username = MyAplication.getCurUsernameFromSp("username");
+        username = MyAplication.getCurUsernameFromSp("username");
         tv_myinfoactivity_username.setText(username);
-        Uri photoUri = Uri.parse(MyAplication.getCurUsernameFromSp("photoUri"));
+        Uri photoUri = Uri.parse(MyAplication.getUserInfoFromSp(username+"PhotoUri"));
         iv_myinfoactivity_touxiang.setImageURI(photoUri);
     }
 
@@ -89,19 +93,44 @@ public class MyInfoActivity extends AppCompatActivity implements View.OnClickLis
 
     public void exit(View view){
         Log.i(TAG,"退出登录");
-        String filePath = "/data/data/"+getPackageName()+"/shared_prefs/currentUsername.xml";
-        File file = new File(filePath);
-        Log.i(TAG,file.exists()+"");
-        if(file.exists()){
-            file.delete();
-            Log.i(TAG,"currentUsername删除成功");
+
+        if(MyAplication.clearData()){
+            //如果清楚数据成功，则成功退出
+            Toast.makeText(MyInfoActivity.this, "退出成功！", Toast.LENGTH_SHORT).show();
+
+            MainActivity.vp_mainactivity.setCurrentItem(3);//直接跳转到页面3
+            /*方法一：
+            MainActivity.MainActivity_ContentAdapter tmp =
+                    (MainActivity.MainActivity_ContentAdapter) MainActivity.vp_mainactivity.getAdapter();
+            BasePager refreshTarget =   tmp.getRefreshTarget();
+            if(refreshTarget!=null){
+                refreshTarget.initData();
+                Log.i(TAG+"zzzzz","refreshTarget!=null");
+            }*/
+            //方法二：
+            MyAplication application = (MyAplication) getApplication();
+            BasePager ownerPager = application.getOwnerPager();
+            if(ownerPager!=null){
+                ownerPager.initData();//调用initData方法即可刷新数据
+                Log.i(TAG+"zzzzz","***************************************ownerPager!=null");
+            }
             finish();
-            startActivity(new Intent(this,MainActivity.class));
+        }else {
+            //退出失败
+            Toast.makeText(MyInfoActivity.this, "退出失败！", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     public void back(View v){
-        startActivity(new Intent(this,MainActivity.class));
+        MainActivity.vp_mainactivity.setCurrentItem(3);
+        MyAplication myAplication = (MyAplication) getApplication();
+        BasePager ownerPager = myAplication.getOwnerPager();
+        if(ownerPager!=null){
+            ownerPager.initData();
+            Log.i(TAG+"zzzz","back回退刷新");
+        }
+        finish();
     }
 
     /**
@@ -219,7 +248,9 @@ public class MyInfoActivity extends AppCompatActivity implements View.OnClickLis
                     Log.i("wwwwwwww","调用图库  uri="+photoUri);
                     civ_myinfoactivity_img.setImageURI(photoUri);
                     iv_myinfoactivity_touxiang.setVisibility(View.INVISIBLE);
-                    MyAplication.saveCurUsernaemToSp("photoUri",photoUri+"");
+
+                    //将用户选择的图片保存到注册文件中，以用户名开头作为标识
+                    MyAplication.saveUserInfoToSp(username+"PhotoUri",photoUri+"");
 
                 }else{
                     return;
@@ -282,4 +313,6 @@ public class MyInfoActivity extends AppCompatActivity implements View.OnClickLis
                 break;
         }
     }
+
+
 }
