@@ -9,7 +9,6 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/ic_splash_bg"
         android:background="@drawable/ic_splash_bg"
         android:id="@+id/rl_splashactivity_bg"
         />
@@ -19,9 +18,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/tv_splashactivity_date"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="35dp"
-        android:textColor="#FFF"
-        android:textSize="20sp"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="85dp"
+        android:textColor="#b2b2b2"
+        android:textSize="@dimen/activity_horizontal_margin"
         >
     </TextView>
 

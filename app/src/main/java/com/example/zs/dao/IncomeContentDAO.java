@@ -160,4 +160,16 @@ public class IncomeContentDAO {
         }
         return children;
     }
+
+    /**
+     * 用于查询月收入总额
+     * @param month
+     * @return 月收入
+     */
+    public String getIncomeForMonth(int month){
+        Cursor incomeCursor = db.rawQuery("select sum(money),day from incomeContent where month=?",new String[]{month+""});
+        incomeCursor.moveToNext();
+        String income_month = incomeCursor.getString(0);
+        return income_month;
+    }
 }
