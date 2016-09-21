@@ -110,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.rb_mainactivity_mine:
                         vp_mainactivity.setCurrentItem(3);
                         pageList.get(3).initData();
+                        MyAplication application03 = (MyAplication) getApplication();
+                        application03.setOwnerPager(pageList.get(3));
                         break;
                 }
             }
@@ -125,12 +127,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //新建Adapter用于每个RadioButton点击显示不同页面
-    class MainActivity_ContentAdapter extends PagerAdapter{
+   public class MainActivity_ContentAdapter extends PagerAdapter{
 
         @Override
         public int getCount() {
+
             return pageList.size();
             //return 0;
+        }
+
+        public BasePager getRefreshTarget(){
+            if(pageList!=null&&pageList.get(3)!=null){
+                return pageList.get(3);
+            }
+            return null;
         }
 
         @Override
