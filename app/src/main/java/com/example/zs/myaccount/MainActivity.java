@@ -106,8 +106,8 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.rb_mainactivity_mine:
                         vp_mainactivity.setCurrentItem(3);
                         pageList.get(3).initData();
-                        MyAplication application = (MyAplication) getApplication();
-                        application.setOwnerPager(pageList.get(3));
+                        MyAplication application03 = (MyAplication) getApplication();
+                        application03.setOwnerPager(pageList.get(3));
                         break;
                 }
             }
