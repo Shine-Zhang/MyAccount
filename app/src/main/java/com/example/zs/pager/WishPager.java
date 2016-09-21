@@ -108,7 +108,7 @@ public class WishPager extends BasePager {
         }*/
         //计算可用的愿望资金
         totalWishFund = calculateWishFund();
-        Log.i("yyyyyyyyyy","totalWishFund" +totalWishFund);
+        Log.i("yyyyyyyyyy","totalWishFund =" +totalWishFund);
 
         //判断数据库中的用户愿望数目
         if(allOnGoingWishNumber==0 && allCompleteWishNumber==0){
@@ -185,6 +185,9 @@ public class WishPager extends BasePager {
     public void initData() {
         //计算可用的愿望资金
         totalWishFund = calculateWishFund();
+        //未完成愿望的数目和详细信息
+        onGoingWishDAO = new OnGoingWishDao(mActivity);
+        allOnGoingWishNumber = onGoingWishDAO.getAllOnGoingWishNumber();
 
         //已完成愿望的数目
         completeWishDAO = new CompleteWishDAO(mActivity);
@@ -210,6 +213,8 @@ public class WishPager extends BasePager {
             //显示总的愿望基金
             tv_showwish_wishfund.setText(totalWishFund);
 
+            ll_showwish_ongoingwishes = (LinearLayout) view_wishpager.findViewById(R.id.ll_showwish_ongoingwishes);
+            ll_showwish_noongoingwishes = (LinearLayout) view_wishpager.findViewById(R.id.ll_showwish_noongoingwishes);
             ll_showwish_ongoingwishes.setVisibility(View.VISIBLE);
             ll_showwish_noongoingwishes.setVisibility(View.INVISIBLE);
 
@@ -310,7 +315,7 @@ public class WishPager extends BasePager {
                     Calendar calendar = Calendar.getInstance();
                     //获取当前日期:
                     final int year = calendar.get(Calendar.YEAR);
-                    final int month = calendar.get(Calendar.MONTH);
+                    final int month = calendar.get(Calendar.MONTH)+1;
                     final int day = calendar.get(Calendar.DATE);
                     final WishInfo compinfo = new WishInfo(year,month,day,title,description,photoUri);
 
@@ -519,11 +524,11 @@ public class WishPager extends BasePager {
             ll_showwish_noongoingwishes.setVisibility(View.VISIBLE);
         }
         myAdapter.notifyDataSetChanged();
-        /*//刷新页面
+        //刷新页面
         MyAplication application = (MyAplication) mActivity.getApplication();
         if(application.getWishPager()!=null){
             application.getWishPager().initData();
-        }*/
+        }
     }
 
 
@@ -570,14 +575,18 @@ public class WishPager extends BasePager {
         Log.i(TAG,"monthincome="+income_month);
         if(income_month!=null){
             income = Float.parseFloat(income_month);
-        }
+        }/*else{
+
+        }*/
 
         PayOutContentDAO payOutContentDAO = new PayOutContentDAO(mActivity);
         String expense_month = payOutContentDAO.getExpenseForMonth(month);
         Log.i(TAG,"monthexpense="+expense_month);
-        if(income_month!=null){
-            expense = Float.parseFloat(income_month);
-        }
+        if(expense_month!=null){
+            expense = Float.parseFloat(expense_month);
+        }/*else {
+            expense = Float.parseFloat(expense_month);
+        }*/
 
         //计算愿望资金
         /*import java.text.DecimalFormat;
