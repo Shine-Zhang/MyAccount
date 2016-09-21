@@ -1,10 +1,12 @@
 package com.example.zs.myaccount;
 
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -49,9 +51,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private LinearLayout ll_loginactivity_weiboLogin;
     private LinearLayout ll_loginactivity_QQLogin;
     private Button bt_loginactivity_login;
-    private String userName;
-    private String userIcon;
-
+    private String userName = "";
+    private String userIcon = "";
+    private Handler mhandler;
+    private Activity mActivity ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,12 +85,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.ll_loginactivity_weiboLogin:
                 Log.i(TAG,"weiboLogin");
                 thirdSinaLogin();
-                finish();
                 break;
             case R.id.ll_loginactivity_QQLogin:
                 Log.i(TAG,"QQLogin");
                 thirdQQLogin();
-                finish();
                 break;
         }
     }
@@ -112,6 +113,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         qZone.setPlatformActionListener(this);
         //获取登陆用户的信息，如果没有授权，会先授权，然后获取用户信息
         qZone.authorize();
+        finishCurrentActivity();
     }
 
     /** 授权成功回调页面 */
@@ -121,6 +123,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
          *   http://sharesdk.cn/androidDoc/cn/sharesdk/framework/PlatformActionListener.html
          *
          */
+
         PlatformDb platDB = platform.getDb();//获取数平台数据DB
         //通过DB获取各种数据
         String userId = platDB.getUserId(); //获取用户id
@@ -137,8 +140,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         msg.arg1 = 1;
         msg.arg2 = action;
         msg.obj = platform;
+
         UIHandler.sendMessage(msg, this);
+        //finish();
     }
+
+    private void finishCurrentActivity() {
+        //创建handler
+      new Thread() {
+            @Override
+            public void run() {
+                Log.i("lalalalala","执行到子线程啦！");
+               /* try {
+                    Thread.sleep(5);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }*/
+                SystemClock.sleep(5);
+                LoginActivity.this.finish();
+            }
+        }.start();
+
+    }
+
     /** 取消授权 */
     @Override
     public void onCancel(Platform platform, int action) {
@@ -211,7 +235,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
     public void login(View view){
-        if (usernameStr.isEmpty()||passwordStr.isEmpty()){
+        if (usernameStr==""||passwordStr==""){
             Toast.makeText(LoginActivity.this, "用户名和密码都不能为空！", Toast.LENGTH_SHORT).show();
         }else {
             if(MyAplication.getUserInfoFromSp(usernameStr).isEmpty()){
