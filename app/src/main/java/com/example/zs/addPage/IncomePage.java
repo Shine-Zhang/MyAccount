@@ -48,6 +48,7 @@ public class IncomePage extends AddBasePage {
     private int currentClickItem;
     private boolean isTouchHindkeyBoard;
     private boolean isClickShowKeyBoard;
+    private boolean isHaveAddCategoty;
 
     public IncomePage(Activity activity, boolean isJump) {
         super(activity, isJump);
@@ -202,6 +203,7 @@ public class IncomePage extends AddBasePage {
 
     public void getActivityResult(int id, String name) {
         Log.i(TAG, "getActivityResult");
+        isHaveAddCategoty = true;
         UserAddCategoryInfo categoryInfo = new UserAddCategoryInfo(id, name);
         IncomeCategoryDAO incomeCategoryDAO = new IncomeCategoryDAO(activity);
         incomeCategoryDAO.addIncomeCategoryToDB(id, name);
@@ -289,6 +291,14 @@ public class IncomePage extends AddBasePage {
                             previous = iv_addPage_catagoryIcon;
                             isTouchHindkeyBoard = false;
                         }
+                    }
+                }
+                //从addCategory页面跳转过来默认新添加为选中状态
+                if (isHaveAddCategoty){
+                    if (i==incomeCategoryToDB.size()-1){
+                        iv_addPage_catagoryIcon.setEnabled(false);
+                        previous = iv_addPage_catagoryIcon;
+                        isHaveAddCategoty = false;
                     }
                 }
                 iv_addPage_catagoryIcon.setImageResource(incomeCategoryToDB.get(i).getResourceID());

@@ -47,6 +47,7 @@ public class PayOutPage extends AddBasePage {
     private int currentClickItem;
     private boolean isTouchHindkeyBoard;
     private boolean isClickShowKeyBoard;
+    private boolean isHaveAddCategoty;
 
     public PayOutPage(Activity activity, boolean isJump) {
         super(activity, isJump);
@@ -220,6 +221,7 @@ public class PayOutPage extends AddBasePage {
 
     public void getActivityResult(int id, String name) {
         Log.i(TAG, "getActivityResult");
+        isHaveAddCategoty = true;
         UserAddCategoryInfo categoryInfo = new UserAddCategoryInfo(id, name);
         PayoutCategoryDAO payoutCategoryDAO = new PayoutCategoryDAO(activity);
         payoutCategoryDAO.addPayoutCategoryToDB(id, name);
@@ -307,6 +309,14 @@ public class PayOutPage extends AddBasePage {
                             previous = iv_addPage_catagoryIcon;
                             isTouchHindkeyBoard = false;
                         }
+                    }
+                }
+                //从addCategory页面跳转过来默认新添加为选中状态
+                if (isHaveAddCategoty){
+                    if (i==payoutCategoryToDB.size()-1){
+                        iv_addPage_catagoryIcon.setEnabled(false);
+                        previous = iv_addPage_catagoryIcon;
+                        isHaveAddCategoty = false;
                     }
                 }
                 iv_addPage_catagoryIcon.setImageResource(payoutCategoryToDB.get(i).getResourceID());
