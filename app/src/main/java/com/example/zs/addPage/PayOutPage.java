@@ -44,7 +44,6 @@ public class PayOutPage extends AddBasePage {
     private CircleImageView firstCircle;
     private boolean isFirstOnclick;
     private int jumpItemEnable;
-    private int previousHindKeyBClickItem ;
     private int currentClickItem;
     private boolean isTouchHindkeyBoard;
     private boolean isClickShowKeyBoard;
@@ -112,7 +111,7 @@ public class PayOutPage extends AddBasePage {
                         //保存下滑消失键盘 用户选中的item
                         isClickShowKeyBoard = true;
                         //isTouchHindkeyBoard = false;
-                        //addRecordActivity.keyboardUtil.showKeyboard();
+                        addRecordActivity.keyboardUtil.showKeyboardAsNormal();
                         addRecordActivity.showUserInputNumber();
                     }else {
                         iv.setEnabled(false);
@@ -123,9 +122,6 @@ public class PayOutPage extends AddBasePage {
                 }
                 //previous=com.example.zs.view.CircleImageView{3fed4c3d V..D.... ........ 68,53-147,132 #7f0e012b app:id/cv_addPage_recordIcon}
                 // current iv=com.example.zs.view.CircleImageView{4a70d83 V.ED.... ........ 68,53-147,132 #7f0e012b app:id/cv_addPage_recordIcon}
-                Log.i(TAG, "--" + i);
-
-               // addRecordActivity.keyboardUtil.showKeyboard();
             }
         });
         gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -171,7 +167,7 @@ public class PayOutPage extends AddBasePage {
                             //动画隐藏掉键盘
                           // keyAnimationInVisble();
                             isTouchHindkeyBoard = true;
-                            addRecordActivity.keyboardUtil.hideKeyboard();
+                            addRecordActivity.keyboardUtil.hideKeyboardAsNormal();
                             addRecordActivity.saveuserInputNumberBeforeHindKeyBoard();
                         }
                         break;

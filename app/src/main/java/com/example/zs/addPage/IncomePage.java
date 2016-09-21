@@ -45,6 +45,9 @@ public class IncomePage extends AddBasePage {
     private CircleImageView firstCircle;
     private boolean isFirstOnclick;
     private int jumpItemEnable;
+    private int currentClickItem;
+    private boolean isTouchHindkeyBoard;
+    private boolean isClickShowKeyBoard;
 
     public IncomePage(Activity activity, boolean isJump) {
         super(activity, isJump);
@@ -81,6 +84,7 @@ public class IncomePage extends AddBasePage {
                     //跳转到addCategory页面
                     activity.startActivityForResult(new Intent(activity, AddCategoryActivity.class), 90);
                 } else {
+                    currentClickItem = i;
                     //选中背景色变化
                     CircleImageView iv = (CircleImageView) view.findViewById(R.id.cv_addPage_recordIcon);
                     if (previous != null) {
@@ -96,13 +100,19 @@ public class IncomePage extends AddBasePage {
 
                         //myGridViewAdapter.notifyDataSetChanged();
                     }
-                    iv.setEnabled(false);
-                    previous = iv;
+                    if (isTouchHindkeyBoard){
+                        //保存下滑消失键盘 用户选中的item
+                        isClickShowKeyBoard = true;
+                        //isTouchHindkeyBoard = false;
+                        addRecordActivity.keyboardUtil.showKeyboardAsNormal();
+                        addRecordActivity.showUserInputNumber();
+                    }else {
+                        iv.setEnabled(false);
+                        previous = iv;
+                    }
                     selectResourceID = incomeCategoryToDB.get(i).getResourceID();
                     selectCategoryName = incomeCategoryToDB.get(i).getCategoryName();
                 }
-               // addRecordActivity.keyboardUtil.showKeyboard();
-                Log.i(TAG, "--" + i);
             }
         });
         return gridView;
@@ -138,7 +148,9 @@ public class IncomePage extends AddBasePage {
                         if (Math.abs(endY - startY) > 100) {
                             //动画隐藏掉键盘
                             // keyAnimationInVisble();
-                            addRecordActivity.keyboardUtil.hideKeyboard();
+                            isTouchHindkeyBoard = true;
+                            addRecordActivity.keyboardUtil.hideKeyboardAsNormal();
+                            addRecordActivity.saveuserInputNumberBeforeHindKeyBoard();
                         }
                         break;
                     case MotionEvent.ACTION_UP:
@@ -248,6 +260,36 @@ public class IncomePage extends AddBasePage {
                 if (isJump&&jumpItemEnable ==i){
                     iv_addPage_catagoryIcon.setEnabled(false);
                     previous = iv_addPage_catagoryIcon;
+                }
+                //下滑 键盘消失布局，再次点击item键盘出现，布局会发生变化，
+                //gridview会重新刷新，获取的item对象会失效
+                if(isClickShowKeyBoard){
+                    //因为刷新在点击事件之后，所以点击事件里的item实例无法改变背景色，需要在适配器中更改
+                    if (currentClickItem==i){
+                        Log.i(TAG,"currentClickItem="+i);
+                        iv_addPage_catagoryIcon.setEnabled(false);
+                        previous = iv_addPage_catagoryIcon;
+                        isClickShowKeyBoard = false;
+                        if (currentClickItem!=0){
+                            //把第一个变为不选中状态
+                            firstCircle.setEnabled(true);
+                        }
+                    }
+
+                }
+                //点击item
+                if (isTouchHindkeyBoard){
+                    Log.i(TAG,"isTouchHindkeyBoard1"+i);
+                    //选中的item在键盘消失 布局变化适配器重新刷新时，依然是选中的状态
+                    //没有点击过为0，currentClickItem初始值也为0,所以不用单独的判断
+                    if (previous!=null){
+                        if (currentClickItem==i){
+                            Log.i(TAG,"isTouchHindkeyBoard2"+i);
+                            iv_addPage_catagoryIcon.setEnabled(false);
+                            previous = iv_addPage_catagoryIcon;
+                            isTouchHindkeyBoard = false;
+                        }
+                    }
                 }
                 iv_addPage_catagoryIcon.setImageResource(incomeCategoryToDB.get(i).getResourceID());
                 tv_addPage_catagoryContent.setText(incomeCategoryToDB.get(i).getCategoryName());
