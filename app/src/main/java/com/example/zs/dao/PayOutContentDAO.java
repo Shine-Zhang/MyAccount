@@ -181,6 +181,16 @@ public class PayOutContentDAO {
         return children;
     }
 
-
+    /**
+     * 用于查询月支出总额
+     * @param month
+     * @return 月支出
+     */
+    public String getExpenseForMonth(int month){
+        Cursor expenseCursor = db.rawQuery("select sum(money),day from payouContent where month=?",new String[]{month+""});
+        expenseCursor.moveToNext();
+        String expense_month = expenseCursor.getString(0);
+        return expense_month;
+    }
 
 }
