@@ -20,16 +20,16 @@ public class WishItemCardView extends CardView {
         super(context, attrs);
     }
 
-    public WishItemCardView(Context context, AttributeSet attrs, int defStyleAttr) {
+/*    public WishItemCardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
+    }*/
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         //getParent().requestDisallowInterceptTouchEvent(true);
         Log.i(TAG,"dispatchTouchEvent");
         return super.dispatchTouchEvent(ev);
-    }
+}
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {

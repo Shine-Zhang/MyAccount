@@ -37,16 +37,19 @@ public class PayOutPage extends AddBasePage {
     private String TAG = "PayOutPage";
     private AddRecordActivity addRecordActivity;
     private ArrayList<UserAddCategoryInfo> payoutCategoryToDB;
-    private MyGridViewAdapter myGridViewAdapter;
+    public MyGridViewAdapter myGridViewAdapter;
     public String selectCategoryName;
     public int selectResourceID;
-    private CircleImageView previous;
-    private CircleImageView firstCircle;
-    private boolean isFirstOnclick;
-    private int jumpItemEnable;
-    private int previousHindKeyBClickItem ;
-    private int afterHindKeyBClickItem;
-    private boolean isTouchHindkeyBoard;
+    public CircleImageView previous;
+    public CircleImageView firstCircle;
+    public boolean isFirstOnclick;
+    public int jumpItemEnable;
+    public int currentClickItem;
+    public boolean isTouchHindkeyBoard;
+    public boolean isClickShowKeyBoard;
+    public boolean isHaveAddCategoty;
+    public boolean isHindBeforeChangePage;
+    public boolean isChangePage;
 
     public PayOutPage(Activity activity, boolean isJump) {
         super(activity, isJump);
@@ -73,6 +76,13 @@ public class PayOutPage extends AddBasePage {
         slideGridView();
         //设置gridviewItem监听事件
         //去掉默认的点击背景色
+        /*背景色的设置依然是setEnable，而出现第一个不消失和下滑时背景色消失的bug
+        * 解决方向1.获取的item实例不对 造成view.setEnable本身的view不对
+        * 方向2.键盘的消失与出现gridview的布局发生变化，会刷新item实例，以前获取的item实例则会失效
+        * bug1：在gridview布局不发生变化 的情况下，点击item第一个item背景色还是enable的状态：已解决——获取第一item实例不正确
+        * bug2：上滑或下滑布局发生变化时，item实例全部刷新变化了，适配器类重新执行到
+        * */
+
         gridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -82,6 +92,8 @@ public class PayOutPage extends AddBasePage {
                     //跳转到addCategory页面
                     activity.startActivityForResult(new Intent(activity, AddCategoryActivity.class), 100);
                 } else {
+                    currentClickItem = i;
+                    Log.i(TAG,"currentClickItem="+i);
                     //选中背景色变化
                     CircleImageView iv = (CircleImageView) view.findViewById(R.id.cv_addPage_recordIcon);
                         if (previous != null) {
@@ -98,20 +110,30 @@ public class PayOutPage extends AddBasePage {
 
                             //myGridViewAdapter.notifyDataSetChanged();
                     }
+                    Log.i(TAG,"isTouchHindkeyBoard="+isTouchHindkeyBoard);
                     if (isTouchHindkeyBoard){
-                        //保存下滑消失键盘 后键盘出现时用户点击的item
-                        afterHindKeyBClickItem = i;
+                        Log.i("ppppp","00");
+                        //保存下滑消失键盘 用户选中的item
+                        isClickShowKeyBoard = true;
+                        //isTouchHindkeyBoard = false;
+                        addRecordActivity.keyboardUtil.showKeyboardAsNormal();
+                        addRecordActivity.showUserInputNumber();
                     }else {
                         iv.setEnabled(false);
                         previous = iv;
+                    }
+                    if (isHindBeforeChangePage){
+                        isClickShowKeyBoard = true;
+                        //isTouchHindkeyBoard = false;
+                        addRecordActivity.keyboardUtil.showKeyboardAsNormal();
+                        addRecordActivity.showUserInputNumber();
+                        isHindBeforeChangePage = false;
                     }
                     selectResourceID = payoutCategoryToDB.get(i).getResourceID();
                     selectCategoryName = payoutCategoryToDB.get(i).getCategoryName();
                 }
                 //previous=com.example.zs.view.CircleImageView{3fed4c3d V..D.... ........ 68,53-147,132 #7f0e012b app:id/cv_addPage_recordIcon}
                 // current iv=com.example.zs.view.CircleImageView{4a70d83 V.ED.... ........ 68,53-147,132 #7f0e012b app:id/cv_addPage_recordIcon}
-                Log.i(TAG, "--" + i);
-               // addRecordActivity.keyboardUtil.showKeyboard();
             }
         });
         gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -157,7 +179,8 @@ public class PayOutPage extends AddBasePage {
                             //动画隐藏掉键盘
                           // keyAnimationInVisble();
                             isTouchHindkeyBoard = true;
-                            addRecordActivity.keyboardUtil.hideKeyboard();
+                            addRecordActivity.keyboardUtil.hideKeyboardAsNormal();
+                            addRecordActivity.saveuserInputNumberBeforeHindKeyBoard();
                         }
                         break;
                     case MotionEvent.ACTION_UP:
@@ -209,6 +232,7 @@ public class PayOutPage extends AddBasePage {
 
     public void getActivityResult(int id, String name) {
         Log.i(TAG, "getActivityResult");
+        isHaveAddCategoty = true;
         UserAddCategoryInfo categoryInfo = new UserAddCategoryInfo(id, name);
         PayoutCategoryDAO payoutCategoryDAO = new PayoutCategoryDAO(activity);
         payoutCategoryDAO.addPayoutCategoryToDB(id, name);
@@ -219,7 +243,13 @@ public class PayOutPage extends AddBasePage {
         //jumpItemEnable = payoutCategoryToDB.size();
         myGridViewAdapter.notifyDataSetChanged();
     }
-
+    //切换page 初始化 刷新gridview 并默认为itme=0为选中状态
+    public void changePage(){
+        currentClickItem = 0;
+        isFirstOnclick = false;
+        previous = null;
+        myGridViewAdapter.notifyDataSetChanged();
+    }
 
     class MyGridViewAdapter extends BaseAdapter {
         CircleImageView cv = null;
@@ -250,7 +280,7 @@ public class PayOutPage extends AddBasePage {
                 if (i==0){
                     //第一个item设置false
                     if (!isFirstOnclick&&!isJump) {
-                        Log.i(TAG, "---");
+                        Log.i(TAG, "firstItem set false");
                         iv_addPage_catagoryIcon.setEnabled(false);
                     }
                 }
@@ -270,11 +300,49 @@ public class PayOutPage extends AddBasePage {
                 }
                 //下滑 键盘消失布局，再次点击item键盘出现，布局会发生变化，
                 //gridview会重新刷新，获取的item对象会失效
-                if(isTouchHindkeyBoard){
-                    iv_addPage_catagoryIcon.setEnabled(false);
-                    previous = iv_addPage_catagoryIcon;
-                    isTouchHindkeyBoard = false;
+                if(isClickShowKeyBoard){
+                    //因为刷新在点击事件之后，所以点击事件里的item实例无法改变背景色，需要在适配器中更改
+                    if (currentClickItem==i){
+                        iv_addPage_catagoryIcon.setEnabled(false);
+                        previous = iv_addPage_catagoryIcon;
+                        isClickShowKeyBoard = false;
+                        if (currentClickItem!=0){
+                            //把第一个变为不选中状态
+                            firstCircle.setEnabled(true);
+                        }
+                    }
+
                 }
+                //点击item
+                if (isTouchHindkeyBoard){
+                    Log.i(TAG,"isTouchHindkeyBoard1"+i);
+                    //选中的item在键盘消失 布局变化适配器重新刷新时，依然是选中的状态
+                    //没有点击过为0，currentClickItem初始值也为0,所以不用单独的判断
+                    if (previous!=null){
+                        if (currentClickItem==i){
+                            Log.i(TAG,"isTouchHindkeyBoard2"+i);
+                            iv_addPage_catagoryIcon.setEnabled(false);
+                            previous = iv_addPage_catagoryIcon;
+                            isTouchHindkeyBoard = false;
+                        }
+                    }
+                }
+                //从addCategory页面跳转过来默认新添加为选中状态
+                if (isHaveAddCategoty){
+                    if (i==payoutCategoryToDB.size()-1){
+                        iv_addPage_catagoryIcon.setEnabled(false);
+                        previous = iv_addPage_catagoryIcon;
+                        isHaveAddCategoty = false;
+                    }
+                }
+                //用户切换page时 需要重新默认为item=0为选中状态
+               /* if (isChangePage){
+                    if (currentClickItem ==i){
+                        firstCircle.setEnabled(false);
+                        previous = null;
+                        isChangePage = false;
+                    }
+                }*/
                 iv_addPage_catagoryIcon.setImageResource(payoutCategoryToDB.get(i).getResourceID());
                 tv_addPage_catagoryContent.setText(payoutCategoryToDB.get(i).getCategoryName());
             } else

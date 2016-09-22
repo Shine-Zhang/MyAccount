@@ -89,6 +89,8 @@ public class RoundProgressBar extends View {
                 R.styleable.RoundProgressBar);
 
         //获取自定义属性和默认值
+        //getColor方法的第一个参数是我们在XML文件中定义的颜色，
+        //第二个参数为默认值，如果我们没有给我们自定义的View定义颜色，它就会使用中的默认值，即Color.RED
         roundColor = mTypedArray.getColor(R.styleable.RoundProgressBar_roundColor, Color.RED);
         roundProgressColor = mTypedArray.getColor(R.styleable.RoundProgressBar_roundProgressColor, Color.GREEN);
         textColor = mTypedArray.getColor(R.styleable.RoundProgressBar_textColor, Color.GREEN);
@@ -98,6 +100,7 @@ public class RoundProgressBar extends View {
         textIsDisplayable = mTypedArray.getBoolean(R.styleable.RoundProgressBar_textIsDisplayable, true);
         style = mTypedArray.getInt(R.styleable.RoundProgressBar_style, 0);
 
+        //回收mTypedArray，以便后面重用
         mTypedArray.recycle();
     }
 
@@ -120,7 +123,7 @@ public class RoundProgressBar extends View {
         Log.e("log", centre + "");
 
         /**
-         * 画进度百分比
+         * 画进度百分比（中间的进度字体）
          */
         paint.setStrokeWidth(0);
         paint.setColor(textColor);
@@ -145,12 +148,12 @@ public class RoundProgressBar extends View {
                 + radius, centre + radius); //用于定义的圆弧的形状和大小的界限
 
         switch (style) {
-            case STROKE:{
+            case STROKE:{  //空心
                 paint.setStyle(Paint.Style.STROKE);
                 canvas.drawArc(oval, 0, 360 * progress / max, false, paint); //根据进度画圆弧
                 break;
             }
-            case FILL:{
+            case FILL:{   //实心
                 paint.setStyle(Paint.Style.FILL_AND_STROKE);
                 if(progress !=0)
                     canvas.drawArc(oval, 0, 360 * progress / max, true, paint); //根据进度画圆弧
@@ -198,7 +201,7 @@ public class RoundProgressBar extends View {
         }
         if(progress <= max){
             this.progress = progress;
-            postInvalidate();
+            postInvalidate();     //在非UI线程中更新View
         }
 
     }

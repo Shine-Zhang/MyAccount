@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">点滴记账</string>
+    <string name="app_name">钱哆哆记账</string>
 
     <string name="userid_found">用户信息已存在，正在跳转登录操作…</string>
     <string name="logining">使用%s帐号登录中…</string>

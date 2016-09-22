@@ -32,6 +32,7 @@ import com.example.zs.myaccount.R;
 import com.example.zs.utils.MyHttpUtils;
 import com.example.zs.view.CircleImageView;
 import com.example.zs.view.OwnerItem;
+import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -78,6 +79,10 @@ public class OwnerPager extends BasePager {
     private TextView tv_ownerpager_mybalance;
     private RelativeLayout rl_ownerpager_unlogin;
     private RelativeLayout rl_ownerpager_logined;
+    private TextView iv_ownerpager_username;
+    private CircleImageView iv_ownerpager_unlogin;
+    private CircleImageView iv_ownerpager_loginIcon;
+    private TextView tv_ownerpager_version;
 
     public OwnerPager(Activity activity) {
         super(activity);
@@ -99,31 +104,46 @@ public class OwnerPager extends BasePager {
         oi_ownerpager_commonQuestion = (OwnerItem) OwnerPagerView.findViewById(R.id.oi_ownerpager_commonQuestion);
         oi_ownerpager_aboutUs = (OwnerItem) OwnerPagerView.findViewById(R.id.oi_ownerpager_aboutUs);
 
-        TextView tv_ownerpager_version = (TextView) OwnerPagerView.findViewById(R.id.tv_ownerpager_version);
+        tv_ownerpager_version = (TextView) OwnerPagerView.findViewById(R.id.tv_ownerpager_version);
         tv_ownerpager_mybalance = (TextView) OwnerPagerView.findViewById(R.id.tv_ownerpager_mybalance);
-        TextView iv_ownerpager_username = (TextView) OwnerPagerView.findViewById(R.id.iv_ownerpager_username);
+        iv_ownerpager_username = (TextView) OwnerPagerView.findViewById(R.id.iv_ownerpager_username);
         pb_ownerpager_downloadapk = (ProgressBar) OwnerPagerView.findViewById(R.id.pb_ownerpager_downloadapk);
-        CircleImageView iv_ownerpager_unlogin = (CircleImageView) OwnerPagerView.findViewById(R.id.iv_ownerpager_unlogin);
-        CircleImageView iv_ownerpager_loginIcon = (CircleImageView) OwnerPagerView.findViewById(R.id.iv_ownerpager_loginIcon);
+        iv_ownerpager_unlogin = (CircleImageView) OwnerPagerView.findViewById(R.id.iv_ownerpager_unlogin);
+        iv_ownerpager_loginIcon = (CircleImageView) OwnerPagerView.findViewById(R.id.iv_ownerpager_loginIcon);
 
+        return OwnerPagerView;
+    }
+
+    @Override
+    public void initData() {
+        Log.i(TAG+"zzzzzz","initData");
         tv_ownerpager_version.setText("v"+getVersionName());
         getDataFromDB();
-        //接收由LoginActivity回传的数据
-        Intent intent = mActivity.getIntent();
-        String usernameStr = intent.getStringExtra("usernameStr");
-        Log.i(TAG,"usernameStr="+usernameStr);
 
         //获取当前用户的信息
         String username = MyAplication.getCurUsernameFromSp("username");
-        Uri photoUri = Uri.parse(MyAplication.getCurUsernameFromSp("photoUri"));
-        Log.i(TAG,"username ="+username+" photoUri ="+photoUri);
+        String photoUriStr = MyAplication.getUserInfoFromSp(username+"PhotoUri");
+        Log.i(TAG+"zzz","username ="+username+" photoUriStr ="+photoUriStr);
+
+
         if(username!=""){
             Log.i(TAG,"用户状态：当前有用户"+username);
             //当保存当前用户的username，不为空，直接用于回显
             rl_ownerpager_logined.setVisibility(View.VISIBLE);
             rl_ownerpager_unlogin.setVisibility(View.GONE);
             iv_ownerpager_username.setText(username);
-            iv_ownerpager_loginIcon.setImageURI(photoUri);
+            if(photoUriStr!=""){
+                if(photoUriStr.startsWith("http")){
+                    //是url，直接获取图片
+                BitmapUtils bitmapUtils = new BitmapUtils(mActivity);
+                bitmapUtils.display(iv_ownerpager_loginIcon,photoUriStr);
+                }else {
+                    //是uri，解析uri
+                    Uri photoUri = Uri.parse(photoUriStr);
+                    Log.i(TAG+"zzzzz","photoUri不为空");
+                    iv_ownerpager_loginIcon.setImageURI(photoUri);
+                }
+            }
             initLogined();
         }else {
             Log.i(TAG,"用户状态：当前没有用户");
@@ -132,7 +152,7 @@ public class OwnerPager extends BasePager {
             rl_ownerpager_unlogin.setVisibility(View.VISIBLE);
             initLogin();        //登录
         }
-        if (usernameStr!=null){
+        /*if (usernameStr!=null){
             Log.i(TAG,"用户状态：当前是新注册用户"+usernameStr);
             //有用户名，说明登录成功，修改显示的布局
             rl_ownerpager_logined.setVisibility(View.VISIBLE);
@@ -140,9 +160,8 @@ public class OwnerPager extends BasePager {
 
             iv_ownerpager_username.setText(usernameStr);
             initLogined();
-        }
+        }*/
 
-        //initLogin();        //登录
         initMyBalance();    //我的余额
         initShareApp();     //分享App
         initClearALl();     //初始化，最初状态
@@ -150,8 +169,6 @@ public class OwnerPager extends BasePager {
         initUpdate();       //检测更新
         initQuestion();     //常见问题
         initAboutUs();      //关于我们
-
-        return OwnerPagerView;
     }
 
     private void getDataFromDB() {
@@ -168,7 +185,7 @@ public class OwnerPager extends BasePager {
         rl_ownerpager_unlogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i(TAG,"去登录");
+                Log.i(TAG,"未登录，点击去登录");
                 mActivity.startActivity(new Intent(mActivity, LoginActivity.class));
             }
         });
@@ -180,7 +197,7 @@ public class OwnerPager extends BasePager {
         rl_ownerpager_logined.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i(TAG,"点击修改用户信息");
+                Log.i(TAG,"已登录，点击修改用户信息");
                 mActivity.startActivity(new Intent(mActivity,MyInfoActivity.class));
             }
         });
@@ -568,8 +585,5 @@ public class OwnerPager extends BasePager {
         oks.show(mActivity);
     }
 
-    @Override
-    public void initData() {
 
-    }
 }

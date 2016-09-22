@@ -25,7 +25,7 @@ public class DynamicWave extends View {
     private static  float STRETCH_FACTOR_A = 20;
     private static  int OFFSET_Y = 0;
     // 第一条水波移动速度
-    private static  int TRANSLATE_X_SPEED_ONE = 20;
+    private static  int TRANSLATE_X_SPEED_ONE = 7;
     // 第二条水波移动速度
     private static  int TRANSLATE_X_SPEED_TWO = 11;
     private int mTotalWidth;

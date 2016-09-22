@@ -87,9 +87,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.rb_mainactivity_detail:
                         vp_mainactivity.setCurrentItem(0);
                         pageList.get(0).initData();
-                        MyAplication application = (MyAplication) getApplication();
-                        if(application.getAccountPager()==null) {
-                            application.setAccountPager(pageList.get(0));
+                        MyAplication application0 = (MyAplication) getApplication();
+                        if(application0.getAccountPager()==null) {
+                            application0.setAccountPager(pageList.get(0));
                         }
                         break;
 
@@ -97,6 +97,10 @@ public class MainActivity extends AppCompatActivity {
                         Log.i(tag,"00");
                         vp_mainactivity.setCurrentItem(1);
                         pageList.get(1).initData();
+                        MyAplication application1 = (MyAplication) getApplication();
+                        if(application1.getWishPager()==null) {
+                            application1.setWishPager(pageList.get(1));
+                        }
                         break;
                     case R.id.rb_mainactivity_list:
                         vp_mainactivity.setCurrentItem(2);
@@ -106,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.rb_mainactivity_mine:
                         vp_mainactivity.setCurrentItem(3);
                         pageList.get(3).initData();
+                        MyAplication application03 = (MyAplication) getApplication();
+                        application03.setOwnerPager(pageList.get(3));
                         break;
                 }
             }
@@ -113,20 +119,28 @@ public class MainActivity extends AppCompatActivity {
 
         vp_mainactivity.setCurrentItem(0);
         pageList.get(0).initData();
-        MyAplication application = (MyAplication) getApplication();
-        if(application.getAccountPager()==null) {
-            application.setAccountPager(pageList.get(0));
+        MyAplication application0 = (MyAplication) getApplication();
+        if(application0.getAccountPager()==null) {
+            application0.setAccountPager(pageList.get(0));
         }
         Log.i(tag,"wennm");
     }
 
     //新建Adapter用于每个RadioButton点击显示不同页面
-    class MainActivity_ContentAdapter extends PagerAdapter{
+   public class MainActivity_ContentAdapter extends PagerAdapter{
 
         @Override
         public int getCount() {
+
             return pageList.size();
             //return 0;
+        }
+
+        public BasePager getRefreshTarget(){
+            if(pageList!=null&&pageList.get(3)!=null){
+                return pageList.get(3);
+            }
+            return null;
         }
 
         @Override
