@@ -18,6 +18,9 @@ public class MyAplication extends Application{
     public static SharedPreferences UserInfosp;
     public static SharedPreferences CurUsersp;
     private BasePager accountPager;
+
+
+    private BasePager wishPager;
     private BasePager ownerPager;
 
     /**
@@ -159,6 +162,14 @@ public class MyAplication extends Application{
 
     public void setAccountPager(BasePager accountPager) {
         this.accountPager = accountPager;
+    }
+
+    public BasePager getWishPager() {
+        return wishPager;
+    }
+
+    public void setWishPager(BasePager wishPager) {
+        this.wishPager = wishPager;
     }
 
 

@@ -14,8 +14,18 @@ public class PayoutContentInfo {
         public   String remarks;
         public  String photo;
 
+    public PayoutContentInfo(int resourceID, int year, int mouth, int day, String category, String money, String remarks, String photo) {
+        this.resourceID = resourceID;
+        this.year = year;
+        this.mouth = mouth;
+        this.day = day;
+        this.category = category;
+        this.money = money;
+        this.remarks = remarks;
+        this.photo = photo;
+    }
 
-        public PayoutContentInfo(int id, int resourceID, String category, int year, int mouth, int day, String money, String remarks, String photo ) {
+    public PayoutContentInfo(int id, int resourceID, String category, int year, int mouth, int day, String money, String remarks, String photo ) {
             this.id = id;
             this.category = category;
             this.day = day;

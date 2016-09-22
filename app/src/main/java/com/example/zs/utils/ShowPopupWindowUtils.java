@@ -35,9 +35,9 @@ public class ShowPopupWindowUtils {
      * 显示愿望详情的页面
      * @param info
      * @param view
-     * @param adapterPosition
+     * //@param adapterPosition
      */
-    public static void showWishDetail(Activity activity,final WishInfo info, View view, final int adapterPosition) {
+    public static void showWishDetail(Activity activity,final WishInfo info, View view) { //, final int adapterPosition
         mActivity = activity;
         //初始化popupwindow
         popupwindow_showwishdetail = new PopupWindow();
@@ -117,7 +117,7 @@ public class ShowPopupWindowUtils {
                 bundle.putString("wishfund", info.wishFund);
                 bundle.putString("photoUri", info.wishphotoUri);
                 bundle.putInt("wishid",info.wishid);
-                bundle.putInt("position",adapterPosition);
+                //bundle.putInt("position",adapterPosition);
                 intent.putExtras(bundle);
                 mActivity.startActivityForResult(intent,111);
             }
