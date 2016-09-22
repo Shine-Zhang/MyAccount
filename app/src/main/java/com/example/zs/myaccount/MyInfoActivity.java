@@ -24,6 +24,7 @@ import com.example.zs.application.MyAplication;
 import com.example.zs.pager.BasePager;
 import com.example.zs.utils.ScreenUtils;
 import com.example.zs.view.CircleImageView;
+import com.lidroid.xutils.BitmapUtils;
 
 import java.io.File;
 import java.util.Calendar;
@@ -55,8 +56,17 @@ public class MyInfoActivity extends AppCompatActivity implements View.OnClickLis
         //回显
         username = MyAplication.getCurUsernameFromSp("username");
         tv_myinfoactivity_username.setText(username);
-        Uri photoUri = Uri.parse(MyAplication.getUserInfoFromSp(username+"PhotoUri"));
-        iv_myinfoactivity_touxiang.setImageURI(photoUri);
+        String photoUriStr = MyAplication.getUserInfoFromSp(username+"PhotoUri");
+        if(photoUriStr.startsWith("http")){
+            //是url，直接获取图片
+            BitmapUtils bitmapUtils = new BitmapUtils(this);
+            bitmapUtils.display(iv_myinfoactivity_touxiang,photoUriStr);
+        }else {
+            //是uri，解析uri
+            Uri photoUri = Uri.parse(photoUriStr);
+            Log.i(TAG+"zzzzz","photoUri不为空");
+            iv_myinfoactivity_touxiang.setImageURI(photoUri);
+        }
     }
 
     public void modTouxiang(View view){
