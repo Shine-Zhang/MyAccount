@@ -37,7 +37,7 @@ public class PayOutPage extends AddBasePage {
     private String TAG = "PayOutPage";
     private AddRecordActivity addRecordActivity;
     private ArrayList<UserAddCategoryInfo> payoutCategoryToDB;
-    private MyGridViewAdapter myGridViewAdapter;
+    public MyGridViewAdapter myGridViewAdapter;
     public String selectCategoryName;
     public int selectResourceID;
     public CircleImageView previous;
@@ -243,7 +243,13 @@ public class PayOutPage extends AddBasePage {
         //jumpItemEnable = payoutCategoryToDB.size();
         myGridViewAdapter.notifyDataSetChanged();
     }
-
+    //切换page 初始化 刷新gridview 并默认为itme=0为选中状态
+    public void changePage(){
+        currentClickItem = 0;
+        isFirstOnclick = false;
+        previous = null;
+        myGridViewAdapter.notifyDataSetChanged();
+    }
 
     class MyGridViewAdapter extends BaseAdapter {
         CircleImageView cv = null;
@@ -330,13 +336,13 @@ public class PayOutPage extends AddBasePage {
                     }
                 }
                 //用户切换page时 需要重新默认为item=0为选中状态
-                if (isChangePage){
+               /* if (isChangePage){
                     if (currentClickItem ==i){
                         firstCircle.setEnabled(false);
                         previous = null;
                         isChangePage = false;
                     }
-                }
+                }*/
                 iv_addPage_catagoryIcon.setImageResource(payoutCategoryToDB.get(i).getResourceID());
                 tv_addPage_catagoryContent.setText(payoutCategoryToDB.get(i).getCategoryName());
             } else

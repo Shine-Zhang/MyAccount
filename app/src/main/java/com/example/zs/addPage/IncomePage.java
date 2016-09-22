@@ -223,7 +223,13 @@ public class IncomePage extends AddBasePage {
         //jumpItemEnable = payoutCategoryToDB.size();
         myGridViewAdapter.notifyDataSetChanged();
     }
-
+    //切换page 初始化 刷新gridview 并默认为itme=0为选中状态
+    public void changePage(){
+        currentClickItem = 0;
+        isFirstOnclick = false;
+        previous =null;
+        myGridViewAdapter.notifyDataSetChanged();
+    }
 
     class MyGridViewAdapter extends BaseAdapter {
         CircleImageView cv = null;
@@ -310,11 +316,11 @@ public class IncomePage extends AddBasePage {
                         isHaveAddCategoty = false;
                     }
                 }
-                if (isChangePage){
+               /* if (isChangePage){
                     firstCircle.setEnabled(false);
                     previous = null;
                     isChangePage = false;
-                }
+                }*/
                 iv_addPage_catagoryIcon.setImageResource(incomeCategoryToDB.get(i).getResourceID());
                 tv_addPage_catagoryContent.setText(incomeCategoryToDB.get(i).getCategoryName());
             } else

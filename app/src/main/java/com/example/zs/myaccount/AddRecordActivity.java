@@ -105,7 +105,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private ImageView iv_addRecordActivity_photo;
     private PopupWindow popupwindow_getphoto;
     private static final int ADD_CATEGORY_REQUSET = 100;//跳到类别添加页面请求码
-    private static final int ADD_CATEGORY_RESUIT = 100;//类别添加页面回传码
+    private static final int ADD_CATEGORY_RESUIT = 10;//类别添加页面回传码
     private static final int PHOTO_REQUEST_CAREMA = 103;// 拍照
     private static final int PHOTO_REQUEST_GALLERY = 104;// 从相册中选择
     private Uri photoUri;
@@ -176,9 +176,10 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                     if ( payOutPage.isTouchHindkeyBoard){
                         //incomePage.isTouchHindkeyBoard = true;
                         incomePage.isHindBeforeChangePage = true;
-                        incomePage.isChangePage = true;
+                        //incomePage.isChangePage = true;
                         //incomePage.currentClickItem = 0;
                     }
+                    incomePage.changePage();
                     vp_addRecordActivity_content.setCurrentItem(1,false);
                     isIncomePage = true;
                 }else {
@@ -186,9 +187,10 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                         Log.i(TAG,"isTouchHindkeyBoard test=00"+incomePage.isTouchHindkeyBoard);
                         //payOutPage.isTouchHindkeyBoard = true;
                         payOutPage.isHindBeforeChangePage = true;
-                        payOutPage.isChangePage = true;
+                        //payOutPage.isChangePage = true;
                         //payOutPage.currentClickItem = 0;
                     }
+                    payOutPage.changePage();
                     Log.i(TAG,"isTouchHindkeyBoard test="+incomePage.isTouchHindkeyBoard);
                     vp_addRecordActivity_content.setCurrentItem(0,false);
 
