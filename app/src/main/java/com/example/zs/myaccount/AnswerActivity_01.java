@@ -25,7 +25,8 @@ public class AnswerActivity_01 extends AppCompatActivity {
         //设置可读取文件
         webSettings.setAllowFileAccess(true);
         //要跳转的网址
-        wv_answeractivity_01.loadUrl("https://jizhang.yixin.com/FAQ/android/version1/faq1/");
+        //wv_answeractivity_01.loadUrl("https://jizhang.yixin.com/FAQ/android/version1/faq1/");
+        wv_answeractivity_01.loadUrl("https://jizhang.yixin.com/#!/faq/android/1");
         //
         wv_answeractivity_01.setWebViewClient(new webViewClient());
     }
