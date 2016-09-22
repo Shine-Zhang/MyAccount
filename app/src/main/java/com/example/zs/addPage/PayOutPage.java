@@ -40,14 +40,16 @@ public class PayOutPage extends AddBasePage {
     private MyGridViewAdapter myGridViewAdapter;
     public String selectCategoryName;
     public int selectResourceID;
-    private CircleImageView previous;
-    private CircleImageView firstCircle;
-    private boolean isFirstOnclick;
-    private int jumpItemEnable;
-    private int currentClickItem;
-    private boolean isTouchHindkeyBoard;
-    private boolean isClickShowKeyBoard;
-    private boolean isHaveAddCategoty;
+    public CircleImageView previous;
+    public CircleImageView firstCircle;
+    public boolean isFirstOnclick;
+    public int jumpItemEnable;
+    public int currentClickItem;
+    public boolean isTouchHindkeyBoard;
+    public boolean isClickShowKeyBoard;
+    public boolean isHaveAddCategoty;
+    public boolean isHindBeforeChangePage;
+    public boolean isChangePage;
 
     public PayOutPage(Activity activity, boolean isJump) {
         super(activity, isJump);
@@ -108,7 +110,9 @@ public class PayOutPage extends AddBasePage {
 
                             //myGridViewAdapter.notifyDataSetChanged();
                     }
+                    Log.i(TAG,"isTouchHindkeyBoard="+isTouchHindkeyBoard);
                     if (isTouchHindkeyBoard){
+                        Log.i("ppppp","00");
                         //保存下滑消失键盘 用户选中的item
                         isClickShowKeyBoard = true;
                         //isTouchHindkeyBoard = false;
@@ -117,6 +121,13 @@ public class PayOutPage extends AddBasePage {
                     }else {
                         iv.setEnabled(false);
                         previous = iv;
+                    }
+                    if (isHindBeforeChangePage){
+                        isClickShowKeyBoard = true;
+                        //isTouchHindkeyBoard = false;
+                        addRecordActivity.keyboardUtil.showKeyboardAsNormal();
+                        addRecordActivity.showUserInputNumber();
+                        isHindBeforeChangePage = false;
                     }
                     selectResourceID = payoutCategoryToDB.get(i).getResourceID();
                     selectCategoryName = payoutCategoryToDB.get(i).getCategoryName();
@@ -286,7 +297,6 @@ public class PayOutPage extends AddBasePage {
                 if(isClickShowKeyBoard){
                     //因为刷新在点击事件之后，所以点击事件里的item实例无法改变背景色，需要在适配器中更改
                     if (currentClickItem==i){
-                        Log.i(TAG,"currentClickItem="+i);
                         iv_addPage_catagoryIcon.setEnabled(false);
                         previous = iv_addPage_catagoryIcon;
                         isClickShowKeyBoard = false;
@@ -317,6 +327,14 @@ public class PayOutPage extends AddBasePage {
                         iv_addPage_catagoryIcon.setEnabled(false);
                         previous = iv_addPage_catagoryIcon;
                         isHaveAddCategoty = false;
+                    }
+                }
+                //用户切换page时 需要重新默认为item=0为选中状态
+                if (isChangePage){
+                    if (currentClickItem ==i){
+                        firstCircle.setEnabled(false);
+                        previous = null;
+                        isChangePage = false;
                     }
                 }
                 iv_addPage_catagoryIcon.setImageResource(payoutCategoryToDB.get(i).getResourceID());

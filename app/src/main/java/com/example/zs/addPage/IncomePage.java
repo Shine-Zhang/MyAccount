@@ -41,14 +41,16 @@ public class IncomePage extends AddBasePage {
     private MyGridViewAdapter myGridViewAdapter;
     public String selectCategoryName;
     public int selectResourceID;
-    private CircleImageView previous;
-    private CircleImageView firstCircle;
-    private boolean isFirstOnclick;
-    private int jumpItemEnable;
-    private int currentClickItem;
-    private boolean isTouchHindkeyBoard;
-    private boolean isClickShowKeyBoard;
-    private boolean isHaveAddCategoty;
+    public CircleImageView previous;
+    public CircleImageView firstCircle;
+    public boolean isFirstOnclick;
+    public int jumpItemEnable;
+    public int currentClickItem;
+    public boolean isTouchHindkeyBoard;
+    public boolean isClickShowKeyBoard;
+    public boolean isHaveAddCategoty;
+    public boolean isHindBeforeChangePage;
+    public boolean isChangePage;
 
     public IncomePage(Activity activity, boolean isJump) {
         super(activity, isJump);
@@ -110,6 +112,13 @@ public class IncomePage extends AddBasePage {
                     }else {
                         iv.setEnabled(false);
                         previous = iv;
+                    }
+                    if (isHindBeforeChangePage){
+                        isClickShowKeyBoard = true;
+                        //isTouchHindkeyBoard = false;
+                        addRecordActivity.keyboardUtil.showKeyboardAsNormal();
+                        addRecordActivity.showUserInputNumber();
+                        isHindBeforeChangePage = false;
                     }
                     selectResourceID = incomeCategoryToDB.get(i).getResourceID();
                     selectCategoryName = incomeCategoryToDB.get(i).getCategoryName();
@@ -300,6 +309,11 @@ public class IncomePage extends AddBasePage {
                         previous = iv_addPage_catagoryIcon;
                         isHaveAddCategoty = false;
                     }
+                }
+                if (isChangePage){
+                    firstCircle.setEnabled(false);
+                    previous = null;
+                    isChangePage = false;
                 }
                 iv_addPage_catagoryIcon.setImageResource(incomeCategoryToDB.get(i).getResourceID());
                 tv_addPage_catagoryContent.setText(incomeCategoryToDB.get(i).getCategoryName());

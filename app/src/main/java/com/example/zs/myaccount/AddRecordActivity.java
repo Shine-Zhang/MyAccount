@@ -7,14 +7,21 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -25,6 +32,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -41,12 +49,15 @@ import com.example.zs.dao.IncomeContentDAO;
 import com.example.zs.dao.PayOutContentDAO;
 import com.example.zs.pager.BasePager;
 import com.example.zs.utils.KeyboardUtil;
+import com.example.zs.utils.ScreenUtils;
 
+import java.io.File;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author  wuqi
@@ -81,7 +92,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private InputMethodManager inputMethodManager;
     private boolean isJumpActivity;
     private int idFromOther;
-    private String photo;
+    private String photo="";
     private String remarkContent="";
     private ImageView iv_addRecordActivity_remarkIcon;
     private TextView tv_addRecordActivity_jumpRemark;
@@ -91,6 +102,15 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
 
     private Handler mHandler;
     private int detchTime = 5;
+    private ImageView iv_addRecordActivity_photo;
+    private PopupWindow popupwindow_getphoto;
+    private static final int ADD_CATEGORY_REQUSET = 100;//跳到类别添加页面请求码
+    private static final int ADD_CATEGORY_RESUIT = 100;//类别添加页面回传码
+    private static final int PHOTO_REQUEST_CAREMA = 103;// 拍照
+    private static final int PHOTO_REQUEST_GALLERY = 104;// 从相册中选择
+    private Uri photoUri;
+    private MyViewPagerAdapter myViewPagerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +127,8 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         rl_addRecordActivity_photolayout = (RelativeLayout) findViewById(R.id.rl_addRecordActivity_photolayout);
         et_addCategory_markContent = (EditText) findViewById(R.id.et_addCategory_markContent);
         tv_addRecordActivity_inputNumber = (EditText) findViewById(R.id.tv_addRecordActivity_inputNumber);
-
+        iv_addRecordActivity_photo = (ImageView) findViewById(R.id.iv_addRecordActivity_photo);
+        //
         int inputback = tv_addRecordActivity_inputNumber.getInputType();
         tv_addRecordActivity_inputNumber.setInputType(InputType.TYPE_NULL);
         keyboardUtil =  new KeyboardUtil(this, this, tv_addRecordActivity_inputNumber,false);
@@ -152,10 +173,25 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 if(i==R.id.btn_addRecordActivity_income){
+                    if ( payOutPage.isTouchHindkeyBoard){
+                        //incomePage.isTouchHindkeyBoard = true;
+                        incomePage.isHindBeforeChangePage = true;
+                        incomePage.isChangePage = true;
+                        //incomePage.currentClickItem = 0;
+                    }
                     vp_addRecordActivity_content.setCurrentItem(1,false);
                     isIncomePage = true;
                 }else {
+                    if ( incomePage.isTouchHindkeyBoard){
+                        Log.i(TAG,"isTouchHindkeyBoard test=00"+incomePage.isTouchHindkeyBoard);
+                        //payOutPage.isTouchHindkeyBoard = true;
+                        payOutPage.isHindBeforeChangePage = true;
+                        payOutPage.isChangePage = true;
+                        //payOutPage.currentClickItem = 0;
+                    }
+                    Log.i(TAG,"isTouchHindkeyBoard test="+incomePage.isTouchHindkeyBoard);
                     vp_addRecordActivity_content.setCurrentItem(0,false);
+
                 }
             }
         });
@@ -178,10 +214,12 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
 
         //显示日期
         setDate(isJumpActivity);
-        vp_addRecordActivity_content.setAdapter(new MyViewPagerAdapter());
+        myViewPagerAdapter = new MyViewPagerAdapter();
+        vp_addRecordActivity_content.setAdapter(myViewPagerAdapter);
 
 
     }
+
 
     private void showPopwindow(){
 
@@ -234,6 +272,9 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 photo = intent.getStringExtra("photo");
                 tv_addRecordActivity_inputNumber.setText(stringNumber);
                 btn_addRecordActivity_time.setText(month+"月"+day+"日");
+                if (!photo.isEmpty()){
+                    iv_addRecordActivity_photo.setImageURI(Uri.parse(photo));
+                }
             }
         }
     }
@@ -320,9 +361,21 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 //隐藏软键盘
                 inputMethodManager.hideSoftInputFromWindow(et_addCategory_markContent.getWindowToken(), 0);
                 break;
+            case R.id.bt_addwishpopupwindow_camera:
+                toCamera();
+                popupwindow_getphoto.dismiss();
+                break;
+            case R.id.bt_addwishpopupwindow_gallery:
+                toGallery();
+                popupwindow_getphoto.dismiss();
+                break;
+            case R.id.bt_addwishpopupwindow_cancel:
+                popupwindow_getphoto.dismiss();
+                break;
 
         }
         }
+
     private void commitAndsave() {
         //保存数据数据库中
         if (isJumpActivity){
@@ -362,7 +415,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private void saveIncomeInfoToDB() {
         //id为自增，这里随便填充即可
         IncomeContentInfo incomeContentInfo = new IncomeContentInfo(0, incomePage.selectResourceID, incomePage.selectCategoryName,
-                year, month, day, stringNumber, remarkContent, "");
+                year, month, day, stringNumber, remarkContent, photo);
             if (!stringNumber.toString().isEmpty()) {
                 if (!isJumpActivity){
                     /*idNumberIn++;
@@ -383,7 +436,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private void savePayoutInfoToDB() {
         Log.i(TAG,"savePayoutInfoToDB");
         PayoutContentInfo payouContentInfo = new PayoutContentInfo(0,payOutPage.selectResourceID, payOutPage.selectCategoryName,
-                year, month, day, stringNumber, remarkContent, "");
+                year, month, day, stringNumber, remarkContent, photo);
                  if (!stringNumber.isEmpty()){
                      if (!isJumpActivity){
                          //id不自增的原因是，修改时不需要自增
@@ -407,17 +460,45 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.i(TAG,"requestCode"+requestCode);
         //直接返回时，intent为null
-        if(resultCode==10&&data!=null){
+        if(resultCode==ADD_CATEGORY_RESUIT&&data!=null){
             //确认按钮返回的,标志位置为true
             //接收由intent携带的数据
             getResourceID= data.getIntExtra("resourceID", R.drawable.ic_yiban_default);
             getCategoryName = data.getStringExtra("categoryName");
             Log.i(TAG,getResourceID+"--"+getCategoryName);
-            if(requestCode==100){
+            if(requestCode==ADD_CATEGORY_REQUSET){
                 //传给payOutPage
                 payOutPage.getActivityResult(getResourceID,getCategoryName);
             }else {
                 incomePage.getActivityResult(getResourceID,getCategoryName);
+            }
+        }//去图库获取到的数据
+        else if(requestCode==PHOTO_REQUEST_GALLERY){
+
+                if(resultCode==RESULT_OK){
+                    if(data!=null){
+                        if(data.hasExtra("data")){
+                            /*Bundle extras = data.getExtras();
+                            Bitmap bitmap = (Bitmap) extras.get("data");*/
+                            Bitmap bitmap = data.getParcelableExtra("data");
+                            iv_addRecordActivity_photo.setImageBitmap(bitmap);
+                        }
+                        //获取图片的全路径uri
+                        photoUri = data.getData();
+                        photo = photoUri.toString();
+                        Log.i("wwwwwwww","调用图库  uri="+photoUri);
+                        iv_addRecordActivity_photo.setImageURI(photoUri);
+                       // iv_addRecordActivity_photo.setVisibility(View.INVISIBLE);
+                    }else{
+                        return;
+                    }
+                }
+            }
+        //照相
+        else if(requestCode==PHOTO_REQUEST_CAREMA){
+            if(resultCode==RESULT_OK){
+                iv_addRecordActivity_photo.setImageURI(photoUri);
+                //iv_addwishactivity_photo.setVisibility(View.INVISIBLE);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -552,6 +633,84 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 })
         .show();*/
     }
+    /**
+     * 设置监听事件，用户点击iamgeview控件就可以弹出popwindow 选择拍照或是从图库获取照片
+     * @param v
+     */
+    public void getPhoto(View v){
+        //初始化popupwindow
+        popupwindow_getphoto = new PopupWindow();
+
+        //popupWindow的界面，三个button
+        View view_getphoto = View.inflate(AddRecordActivity.this, R.layout.popupwindow_getphoto_addwish, null);
+        Button bt_addwishpopupwindow_camera =  (Button) view_getphoto.findViewById(R.id.bt_addwishpopupwindow_camera);
+        Button bt_addwishpopupwindow_gallery = (Button) view_getphoto.findViewById(R.id.bt_addwishpopupwindow_gallery);
+        Button bt_addwishpopupwindow_cancel = (Button) view_getphoto.findViewById(R.id.bt_addwishpopupwindow_cancel);
+
+        //获得焦点
+        popupwindow_getphoto.setFocusable(true);
+        popupwindow_getphoto.setBackgroundDrawable(new BitmapDrawable());
+        //设置popupwindow弹出和退出时的动画效果
+        popupwindow_getphoto.setAnimationStyle(R.style.AnimationBottomFade);
+        //将popup_view部署到popupWindow上
+        popupwindow_getphoto.setContentView(view_getphoto);
+        //设置popupWindow的宽高（必须要设置）
+        popupwindow_getphoto.setHeight(RelativeLayout.LayoutParams.WRAP_CONTENT);
+        popupwindow_getphoto.setWidth(RelativeLayout.LayoutParams.MATCH_PARENT);
+        //设置popupwindow显示的位置
+        popupwindow_getphoto.showAtLocation(v, Gravity.BOTTOM,0,0);
+
+        if (popupwindow_getphoto.isShowing()){
+            ScreenUtils.backgroundAlpha(AddRecordActivity.this,0.5f);
+        }else {
+            ScreenUtils.backgroundAlpha(AddRecordActivity.this,1.0f);
+        }
+        //给三个按钮添加点击事件
+        bt_addwishpopupwindow_camera.setOnClickListener(AddRecordActivity.this);
+        bt_addwishpopupwindow_gallery.setOnClickListener(AddRecordActivity.this);
+        bt_addwishpopupwindow_cancel.setOnClickListener(AddRecordActivity.this);
+
+        //给popupwindow添加监听,点击其它位置popupwindow会消失，activity背景还原
+        popupwindow_getphoto.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                ScreenUtils.backgroundAlpha(AddRecordActivity.this,1.0f);
+            }
+        });
+    }
+    /**
+     * 从图库中获取图片
+     */
+    private void toGallery() {
+        // 激活系统图库，选择一张图片
+        Intent intent = new Intent("android.intent.action.PICK");
+        intent.setType("image/*");
+        // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_GALLERY
+        startActivityForResult(intent,PHOTO_REQUEST_GALLERY);
+    }
+    /**
+     * 拍照获取图片
+     */
+    private void toCamera() {
+        String path = Environment.getExternalStorageDirectory() + "/MyAccount/";
+        String fileName;
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        new DateFormat();
+        fileName= DateFormat.format("yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA))+".jpg";
+        photoUri =  Uri.fromFile(new File(path + fileName));
+        photo = photoUri.toString();
+        Log.i("wwwwwwww","使用相机前  uri="+photoUri);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT,photoUri);
+        startActivityForResult(intent, PHOTO_REQUEST_CAREMA);
+    }
+
+    /**
+     * 处理用户先输入金额，键盘消失后出现以前的金额不见的bug
+     */
     public void saveuserInputNumberBeforeHindKeyBoard(){
         beforeHindBoardNumber = tv_addRecordActivity_inputNumber.getText().toString();
         Log.i(TAG,"saveuserInputNumberPreviousHindKeyBoard--"+ beforeHindBoardNumber);
