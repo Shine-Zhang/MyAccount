@@ -22,6 +22,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.zs.application.MyAplication;
 import com.example.zs.bean.WishInfo;
 import com.example.zs.dao.CompleteWishDAO;
 import com.example.zs.utils.ScreenUtils;

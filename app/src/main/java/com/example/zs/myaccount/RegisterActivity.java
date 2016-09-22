@@ -31,10 +31,10 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     private EditText et_registeractivity_pwdAgain;
     private EditText et_registeractivity_mail;
     private SharedPreferences UserInfosp;
-    private String username;
-    private String password;
-    private String passwordAgain;
-    private String mail;
+    private String username = "";
+    private String password = "";
+    private String passwordAgain = "";
+    private String mail = "";
     private Button bt_registeractivity_register;
 
     @Override
@@ -58,7 +58,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     }
 
     public void register(View view){
-        if(username.isEmpty()|| password.isEmpty()|| passwordAgain.isEmpty()|| mail.isEmpty()){
+        if(username==""||password==""||passwordAgain==""||mail==""){
             Toast.makeText(RegisterActivity.this, "每一项都必须填写！", Toast.LENGTH_SHORT).show();
         }else {
             if (MyAplication.getUserInfoFromSp(username).isEmpty()) {

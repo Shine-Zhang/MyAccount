@@ -111,7 +111,6 @@ public class OwnerPager extends BasePager {
         iv_ownerpager_unlogin = (CircleImageView) OwnerPagerView.findViewById(R.id.iv_ownerpager_unlogin);
         iv_ownerpager_loginIcon = (CircleImageView) OwnerPagerView.findViewById(R.id.iv_ownerpager_loginIcon);
 
-
         return OwnerPagerView;
     }
 
@@ -134,12 +133,16 @@ public class OwnerPager extends BasePager {
             rl_ownerpager_unlogin.setVisibility(View.GONE);
             iv_ownerpager_username.setText(username);
             if(photoUriStr!=""){
-                Uri photoUri = Uri.parse(photoUriStr);
-                Log.i(TAG+"zzzzz","photoUri不为空");
-                iv_ownerpager_loginIcon.setImageURI(photoUri);
-                //不是uri，则是url，直接获取图片
-                /*BitmapUtils bitmapUtils = new BitmapUtils(mActivity);
-                bitmapUtils.display(iv_ownerpager_loginIcon,photoUriStr);*/
+                if(photoUriStr.startsWith("http")){
+                    //是url，直接获取图片
+                BitmapUtils bitmapUtils = new BitmapUtils(mActivity);
+                bitmapUtils.display(iv_ownerpager_loginIcon,photoUriStr);
+                }else {
+                    //是uri，解析uri
+                    Uri photoUri = Uri.parse(photoUriStr);
+                    Log.i(TAG+"zzzzz","photoUri不为空");
+                    iv_ownerpager_loginIcon.setImageURI(photoUri);
+                }
             }
             initLogined();
         }else {

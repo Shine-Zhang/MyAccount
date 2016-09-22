@@ -90,5 +90,25 @@ public class OnGoingWishDao {
         return cursor.getInt(0);
     }
 
+    /**
+     * 根据id查找愿望信息
+     * @param id
+     * @return
+     */
+    public WishInfo getWishInfoById(int id){
+        Cursor cursor = readableDatabase.rawQuery("select * from ongoingwish where wishid = ?;", new String[]{id+""});
+        cursor.moveToNext();
+        int wishid = cursor.getInt(0);
+        int wishYear = cursor.getInt(1);
+        int wishMonth = cursor.getInt(2);
+        int wishDay = cursor.getInt(3);
+        String wishTitle = cursor.getString(4);
+        String wishDescription = cursor.getString(5);
+        String wishFund = cursor.getString(6);
+        String wishphotoUri = cursor.getString(7);
+        WishInfo wishInfo = new WishInfo(wishid,wishYear,wishMonth,wishDay,wishTitle,wishDescription,wishFund,wishphotoUri);
+        return wishInfo;
+    }
+
 
 }

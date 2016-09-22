@@ -13,10 +13,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -84,6 +86,9 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private ImageView iv_addRecordActivity_remarkIcon;
     private TextView tv_addRecordActivity_jumpRemark;
     public KeyboardUtil keyboardUtil;
+    private String beforeHindBoardNumber;
+
+
     private Handler mHandler;
     private int detchTime = 5;
     @Override
@@ -92,6 +97,8 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_add_record);
         //隐藏标题栏
         getSupportActionBar().hide();
+
+
         RadioGroup rg_addRecordActivity_singleChoice = (RadioGroup) findViewById(R.id.rg_addRecordActivity_singleChoice);
         btn_addRecordActivity_time = (Button) findViewById(R.id.btn_addRecordActivity_time);
         ImageView iv_addRecordActivity_finish = (ImageView) findViewById(R.id.iv_addRecordActivity_finish);
@@ -105,7 +112,8 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         tv_addRecordActivity_inputNumber.setInputType(InputType.TYPE_NULL);
         keyboardUtil =  new KeyboardUtil(this, this, tv_addRecordActivity_inputNumber,false);
         keyboardUtil.setNumberFormat(7);
-       // showPopwindow();
+        keyboardUtil.setNumberFormat(7);
+        // showPopwindow();
         keyboardUtil.showKeyboardAsNormal();
         keyboardUtil.setOnkeyBoardConfirmListener(new KeyboardUtil.KeyBoardConfirmListener() {
             @Override
@@ -270,7 +278,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                 //获取焦点。并弹出软键盘
                 //et_addCategory_markContent.setFocusable(true);
-                keyboardUtil.hideKeyboard();
+                keyboardUtil.hideKeyboardAsNormal();
                 et_addCategory_markContent.requestFocus();
                 inputMethodManager.showSoftInput(et_addCategory_markContent, 0);
 
@@ -278,7 +286,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
             case R.id.tv_addRecordActivity_jumpRemark:
                 //照相区隐藏，显示备注区
                 //键盘消失
-                keyboardUtil.hideKeyboard();
+                keyboardUtil.hideKeyboardAsNormal();
                 rl_addRecordActivity_photolayout.setVisibility(View.GONE);
                 rl_addRecordActivity_remarklayout.setVisibility(View.VISIBLE);
                 et_addCategory_markContent.setText(remarkContent);
@@ -294,7 +302,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
             case R.id.btn_addCategory_markConfirm:
                 //照相区显示，备注区隐藏
                 Log.i(TAG,stringNumber+"88");
-               // keyboardUtil.showKeyboard();
+                keyboardUtil.showKeyboardAsNormal();
                 remarkContent = et_addCategory_markContent.getText().toString();
                 rl_addRecordActivity_remarklayout.setVisibility(View.GONE);
                 rl_addRecordActivity_photolayout.setVisibility(View.VISIBLE);
@@ -418,37 +426,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
 
     public void setDate(boolean b) {
         datePicker = new DatePicker(this);
-       /* Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);*/
-       // datePicker.init(year, month, day,null);
-/*        datePicker.init(year, month, day, new DatePicker.OnDateChangedListener() {
-
-            @Override
-            public void onDateChanged(DatePicker view, int year,
-                                      int monthOfYear, int dayOfMonth) {
-
-                if (isDateAfter(view)) {
-                    Calendar mCalendar = Calendar.getInstance();
-                    view.init(mCalendar.get(Calendar.YEAR),
-                            mCalendar.get(Calendar.MONTH),
-                            mCalendar.get(Calendar.DAY_OF_MONTH), this);
-                }
-            }
-
-            private boolean isDateAfter(DatePicker tempView) {
-                Calendar mCalendar = Calendar.getInstance();
-                Calendar tempCalendar = Calendar.getInstance();
-                tempCalendar.set(tempView.getYear(), tempView.getMonth(),
-                        tempView.getDayOfMonth(), 0, 0, 0);
-                if (tempCalendar.after(mCalendar))
-                    return true;
-                else
-                    return false;
-            }
-        });*/
-
+        //Calendar calendar = Calendar.getInstance();
         if (!b){
             //从+号加入此activity
             //得到当日的日期
@@ -515,17 +493,25 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     public void choiceTime(View v){
         //使用系统提供的日期选择器
         //api已经封装了dialog 并设置了其的宽高
-        new DatePickerDialog(this,  new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                 //用户点击dialog确认时调用
-                Log.i(TAG,i+"--"+i1+"--"+"--" +i2);
+                Log.i(TAG, i + "--" + i1 + "--" + "--" + i2);
                 year = i;
-                month = i1+1;
+                month = i1 + 1;
                 day = i2;
-                btn_addRecordActivity_time.setText(month+"月"+day+"日");
+                btn_addRecordActivity_time.setText(month + "月" + day + "日");
             }
-        },year,month-1,day).show();
+        }, year, month - 1, day);
+        DatePicker datePicker = datePickerDialog.getDatePicker();
+        //new MaxDay();
+        Calendar calendar = Calendar.getInstance();
+        //天数加1，
+        calendar.add(calendar.DAY_OF_YEAR,1);
+        //设置日期选择器的最大可选日期，当天是不能选中的，所以在上面天数加1
+        datePicker.setMaxDate(calendar.getTime().getTime());
+        datePickerDialog.show();
        /* //不用指定位置，就不需要使用popupwindow
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
        // View inflate = View.inflate(this, R.layout.date_choice, null);
@@ -565,6 +551,16 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                     }
                 })
         .show();*/
+    }
+    public void saveuserInputNumberBeforeHindKeyBoard(){
+        beforeHindBoardNumber = tv_addRecordActivity_inputNumber.getText().toString();
+        Log.i(TAG,"saveuserInputNumberPreviousHindKeyBoard--"+ beforeHindBoardNumber);
+    }
+    public void showUserInputNumber(){
+        //键盘的原因 隐藏后出现吧editText的值变为0了
+        String s = tv_addRecordActivity_inputNumber.getText().toString();
+        Log.i(TAG,s);
+        tv_addRecordActivity_inputNumber.setText(beforeHindBoardNumber);
     }
 }
 
