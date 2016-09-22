@@ -53,8 +53,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button bt_loginactivity_login;
     private String userName = "";
     private String userIcon = "";
-    private Handler mhandler;
-    private Activity mActivity ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
