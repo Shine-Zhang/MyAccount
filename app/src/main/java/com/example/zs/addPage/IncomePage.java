@@ -1,5 +1,7 @@
 package com.example.zs.addPage;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -50,7 +52,9 @@ public class IncomePage extends AddBasePage {
     public boolean isClickShowKeyBoard;
     public boolean isHaveAddCategoty;
     public boolean isHindBeforeChangePage;
-    public boolean isChangePage;
+    private boolean isShowDelteIcon;
+    private IncomeCategoryDAO incomeCategoryDAO;
+    private boolean isDeleteOrModify;//标志位，目的在修改或删除状态时，点击item键盘不弹出
 
     public IncomePage(Activity activity, boolean isJump) {
         super(activity, isJump);
@@ -58,7 +62,7 @@ public class IncomePage extends AddBasePage {
     @Override
     public View initView() {
         //初始化父类构造器时多态执行子类的执行initView（）时tag还为初始化
-        TAG = "PayOutPage";
+        TAG = "IncomePage";
         Log.i(TAG, "initView");
         initData();
         addRecordActivity = (AddRecordActivity) activity;
@@ -90,6 +94,20 @@ public class IncomePage extends AddBasePage {
                     currentClickItem = i;
                     //选中背景色变化
                     CircleImageView iv = (CircleImageView) view.findViewById(R.id.cv_addPage_recordIcon);
+                    CircleImageView cv_addPage_delete = (CircleImageView) view.findViewById(R.id.cv_addPage_delete);
+                    //为删除小图标设置点击事件，当小图标为visible时，点击可以调用
+                    cv_addPage_delete.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Log.i(TAG,"delete is callback");
+                            //点击删除小图标，删除此类别，并更新集合
+                            int id = incomeCategoryToDB.get(currentClickItem).getId();
+                            incomeCategoryDAO.deletePayoutCategoryItemFromDB(id);
+                            //更新集合
+                            incomeCategoryToDB.remove(currentClickItem);
+                            myGridViewAdapter.notifyDataSetChanged();
+                        }
+                    });
                     if (previous != null) {
 
                         Log.i(TAG,"previous="+previous.toString());
@@ -103,7 +121,7 @@ public class IncomePage extends AddBasePage {
 
                         //myGridViewAdapter.notifyDataSetChanged();
                     }
-                    if (isTouchHindkeyBoard){
+                    if (isTouchHindkeyBoard&&!isShowDelteIcon){
                         //保存下滑消失键盘 用户选中的item
                         isClickShowKeyBoard = true;
                         //isTouchHindkeyBoard = false;
@@ -115,7 +133,6 @@ public class IncomePage extends AddBasePage {
                     }
                     if (isHindBeforeChangePage){
                         isClickShowKeyBoard = true;
-                        //isTouchHindkeyBoard = false;
                         addRecordActivity.keyboardUtil.showKeyboardAsNormal();
                         addRecordActivity.showUserInputNumber();
                         isHindBeforeChangePage = false;
@@ -125,8 +142,42 @@ public class IncomePage extends AddBasePage {
                 }
             }
         });
+        //设置长按事件，检测到则销售显示小图标
+        gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //标志位删除修改状态，供addRecordActivity重写back键
+                addRecordActivity.isDeleteState = true;
+                //标志位，表示page在删除或修改状态，点击item时键盘不弹出
+                isDeleteOrModify = true;
+                //显示删除小按钮
+                Log.i(TAG,"setOnItemLongClickListener");
+                isShowDelteIcon = true;
+                if (!isTouchHindkeyBoard){
+                    //标志位，表示键盘已经被隐藏
+                    isTouchHindkeyBoard = true;
+                    addRecordActivity.keyboardUtil.hideKeyboardAsNormal();
+                }else {
+                    //刷新适配器
+                    myGridViewAdapter.notifyDataSetChanged();
+                }
+                // addRecordActivity.keyboardUtil.hideKeyboardAsNormal();
+                //myGridViewAdapter.notifyDataSetChanged();键盘消失布局变化，适配器自动刷新
+                //返回true则 检测到长按事件只到长按，false表长按执行到 再执行点击
+                return true;
+            }
+        });
         return gridView;
     }
+    //退出删除修改状态
+    public void backFromDeleteState(){
+        //隐藏删除小图标
+        isShowDelteIcon = false;
+        //标志位表示退出删除或修改状态，再点击item可以弹出键盘
+        isDeleteOrModify = false;
+        myGridViewAdapter.notifyDataSetChanged();
+    }
+
     public void setItemEnable(int resID,String name){
         isJump = true;
         //通过categoryName，在数据库中查找对应的resourceID
@@ -141,59 +192,46 @@ public class IncomePage extends AddBasePage {
     }
 
     float startY;
-
+    float endY;
     private void slideGridView() {
 
         gridView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                float rawY = motionEvent.getRawY();
+                Log.i(TAG,"onTouch");
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        Log.i(TAG,"ACTION_DOWN");
                         startY = motionEvent.getRawY();
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        float endY = motionEvent.getRawY();
+                        Log.i(TAG,"ACTION_MOVE");
+                        endY = motionEvent.getRawY();
                         Log.i(TAG, "ACTION_MOVE" + Math.abs(endY - startY));
-                        if (Math.abs(endY - startY) > 100) {
-                            //动画隐藏掉键盘
-                            // keyAnimationInVisble();
-                            isTouchHindkeyBoard = true;
-                            addRecordActivity.keyboardUtil.hideKeyboardAsNormal();
-                            addRecordActivity.saveuserInputNumberBeforeHindKeyBoard();
-                        }
                         break;
                     case MotionEvent.ACTION_UP:
-                        startY = motionEvent.getRawY();
+                        Log.i(TAG,"ACTION_UP");
+                        Log.i(TAG, "ACTION_UP" + Math.abs(endY - startY));
+                        //如果是点击事件，有可能只有down和up，endY的值就为0；
+                        if (endY!=0){
+                            if (Math.abs(endY - startY) > 100) {
+                                Log.i(TAG,"ACTION_UP_shoushi");
+                                //动画隐藏掉键盘
+                                // keyAnimationInVisble();
+                                isTouchHindkeyBoard = true;
+                                addRecordActivity.keyboardUtil.hideKeyboardAsNormal();
+                                addRecordActivity.saveuserInputNumberBeforeHindKeyBoard();
+                            }
+                        }
+                        //初始化endY
+                        endY = 0;
                         break;
                 }
-                //优先控件内部点击事件处理，如不处理，touch消耗掉事件
+                //设置了点击事件情况下，true，点击事件不会执行到
+                //没有设置点击事件情况下，false则下次不会再接收事件分发
                 return false;
             }
         });
-    }
-
-    private void keyAnimationInVisble() {
-        float x = addRecordActivity.ll_addRecordActivity_downRegion.getX();
-        float y = addRecordActivity.ll_addRecordActivity_downRegion.getY();
-        int height = addRecordActivity.ll_addRecordActivity_keyboard.getMeasuredHeight();
-        Log.i(TAG, x + "-" + y + "-" + height + "-");
-        TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 0, height);
-        // TranslateAnimation translateAnimation = new TranslateAnimation(0, y, , height);
-        translateAnimation.setDuration(1000);
-        translateAnimation.setFillAfter(true);
-        addRecordActivity.ll_addRecordActivity_downRegion.startAnimation(translateAnimation);
-    }
-
-    private void keyAnimationVisble() {
-        float x = addRecordActivity.ll_addRecordActivity_downRegion.getX();
-        float y = addRecordActivity.ll_addRecordActivity_downRegion.getMeasuredHeight();
-        int height = addRecordActivity.ll_addRecordActivity_keyboard.getMeasuredHeight();
-        Log.i(TAG, x + "-" + y + "-" + height + "-");
-        TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, y, y - height);
-        translateAnimation.setDuration(1000);
-        translateAnimation.setFillAfter(true);
-        addRecordActivity.ll_addRecordActivity_downRegion.startAnimation(translateAnimation);
     }
 
     /**
@@ -204,7 +242,7 @@ public class IncomePage extends AddBasePage {
         selectResourceID = R.drawable.ic_yiban_default;
         selectCategoryName = "一般";
         Log.i(TAG, "initData");
-        IncomeCategoryDAO incomeCategoryDAO = new IncomeCategoryDAO(activity);
+        incomeCategoryDAO = new IncomeCategoryDAO(activity);
         incomeCategoryToDB = incomeCategoryDAO.getIncomeCategoryToDB();
         // Log.i(TAG, payoutCategoryToDB.toString());
         // Log.i(TAG, payoutCategoryToDB.get(0).toString());
@@ -213,7 +251,7 @@ public class IncomePage extends AddBasePage {
     public void getActivityResult(int id, String name) {
         Log.i(TAG, "getActivityResult");
         isHaveAddCategoty = true;
-        UserAddCategoryInfo categoryInfo = new UserAddCategoryInfo(id, name);
+        UserAddCategoryInfo categoryInfo = new UserAddCategoryInfo(0,id, name);
         IncomeCategoryDAO incomeCategoryDAO = new IncomeCategoryDAO(activity);
         incomeCategoryDAO.addIncomeCategoryToDB(id, name);
         //gridview刷新数据
@@ -254,12 +292,31 @@ public class IncomePage extends AddBasePage {
             Log.i(TAG, "getView: " + i);
             View inflate = View.inflate(activity, R.layout.page_addrecord_detail, null);
             CircleImageView iv_addPage_catagoryIcon = (CircleImageView) inflate.findViewById(R.id.cv_addPage_recordIcon);
+            CircleImageView cv_addPage_delete = (CircleImageView) inflate.findViewById(R.id.cv_addPage_delete);
             TextView tv_addPage_catagoryContent = (TextView) inflate.findViewById(R.id.tv_addPage_catagoryContent);
 
             if (i < incomeCategoryToDB.size()) {
+                //长按显示小图标
+                if (isShowDelteIcon){
+                    Log.i(TAG,"isShowDelteIcon");
+                    cv_addPage_delete.setVisibility(View.VISIBLE);
+                    //item 动画效果,因为要实现用户点击，所以使用属性动画
+                    //动画效果为，已圆心为旋转中心，从左4°旋转8°
+                    ObjectAnimator rotation = ObjectAnimator.ofFloat(inflate, "rotation", -4f, 4f);
+                    //一次动画的执行时间，100毫秒
+                    rotation.setDuration(100);
+                    //动画重复的次数
+                    rotation.setRepeatCount(10000);
+                    //摆动的原理为，一次方向执行完，下次重复是自动从反方向执行的
+                    rotation.setRepeatMode(ValueAnimator.REVERSE);
+                    //动画开始
+                    rotation.start();
+                }
                 if (i==0){
-                    //第一个item设置false
-                    if (!isFirstOnclick&&!isJump) {
+                    //第一个item设置false,在不是从其它页面跳转过来修改和从addCategory页面跳转过来
+                    //其它页面跳转过来修改,需指定item为选中状态
+                    //从addCategory页面跳转过来，默认倒数第二个位选中状态
+                    if (!isFirstOnclick&&!isJump&&!isHaveAddCategoty) {
                         Log.i(TAG, "---");
                         iv_addPage_catagoryIcon.setEnabled(false);
                     }
@@ -304,7 +361,6 @@ public class IncomePage extends AddBasePage {
                             Log.i(TAG,"isTouchHindkeyBoard2"+i);
                             iv_addPage_catagoryIcon.setEnabled(false);
                             previous = iv_addPage_catagoryIcon;
-                            isTouchHindkeyBoard = false;
                         }
                     }
                 }
@@ -329,6 +385,9 @@ public class IncomePage extends AddBasePage {
                     iv_addPage_catagoryIcon.setBackgroundColor(Color.WHITE);
                     iv_addPage_catagoryIcon.setImageResource(R.drawable.ic_jia_default);
                     tv_addPage_catagoryContent.setText("添加");
+                    if (isDeleteOrModify){
+                        inflate.setVisibility(View.GONE);
+                    }
                 }
             return inflate;
         }

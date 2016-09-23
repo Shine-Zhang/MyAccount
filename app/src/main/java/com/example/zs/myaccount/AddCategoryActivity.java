@@ -1,6 +1,8 @@
 package com.example.zs.myaccount;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,6 +47,7 @@ public class AddCategoryActivity extends AppCompatActivity {
 
         //设置适配器
         gv_addCategory_content.setAdapter(new MyGridViewAdapter());
+        //gv_addCategory_content.setSelector(new ColorDrawable(Color.TRANSPARENT));
         //设置GridView item监听事件
         gv_addCategory_content.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

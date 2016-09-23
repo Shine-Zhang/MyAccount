@@ -58,7 +58,7 @@
             android:padding="8dp"
             android:layout_gravity="center"
             android:layout_marginLeft="17dp"
-            android:background="@drawable/bg_categoryactivityitem"
+            android:background="@drawable/bg_categoryactivityitem_title"
             android:src="@drawable/ic_yiban_default"/>
         <EditText
             android:id="@+id/et_addCategory_categoryName"

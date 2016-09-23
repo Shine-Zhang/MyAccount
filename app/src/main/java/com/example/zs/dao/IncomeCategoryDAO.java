@@ -40,13 +40,17 @@ public class IncomeCategoryDAO {
         ArrayList<UserAddCategoryInfo> userAddCategoryInfos = new ArrayList<>();
         Cursor cursor = db.rawQuery("select * from incomeCategoryInfo;", null);
         while (cursor.moveToNext()){
+            int id = cursor.getInt(0);
             int resourceID = cursor.getInt(1);
             Log.i("000","resourceID"+resourceID);
             String name = cursor.getString(2);
-            UserAddCategoryInfo userAddCategoryInfo = new UserAddCategoryInfo(resourceID, name);
+            UserAddCategoryInfo userAddCategoryInfo = new UserAddCategoryInfo(id,resourceID, name);
             userAddCategoryInfos.add(userAddCategoryInfo);
         }
         return userAddCategoryInfos;
     }
-
+    //单个删除
+    public void deletePayoutCategoryItemFromDB(int id){
+        db.delete("incomeCategoryInfo","id=?",new String[]{""+id});
+    }
 }

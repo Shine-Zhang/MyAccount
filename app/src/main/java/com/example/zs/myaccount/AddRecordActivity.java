@@ -50,6 +50,7 @@ import com.example.zs.dao.PayOutContentDAO;
 import com.example.zs.pager.BasePager;
 import com.example.zs.utils.KeyboardUtil;
 import com.example.zs.utils.ScreenUtils;
+import com.mob.tools.gui.PullToRequestBaseAdapter;
 
 import java.io.File;
 import java.sql.Time;
@@ -110,7 +111,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private static final int PHOTO_REQUEST_GALLERY = 104;// 从相册中选择
     private Uri photoUri;
     private MyViewPagerAdapter myViewPagerAdapter;
-
+    public boolean isDeleteState;//显示page是否为删除修改状态
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,29 +170,29 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         keyBoard();
         //默认为支出page
         rg_addRecordActivity_singleChoice.check(R.id.btn_addRecordActivity_payout);
+        //设置radioGroup点击事件，目的点击可以切换page
         rg_addRecordActivity_singleChoice.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 if(i==R.id.btn_addRecordActivity_income){
                     if ( payOutPage.isTouchHindkeyBoard){
-                        //incomePage.isTouchHindkeyBoard = true;
+                        //退出删除或修改状态
+                        if (isDeleteState){
+                            payOutPage.backFromDeleteState();
+                        }
                         incomePage.isHindBeforeChangePage = true;
-                        //incomePage.isChangePage = true;
-                        //incomePage.currentClickItem = 0;
                     }
                     incomePage.changePage();
                     vp_addRecordActivity_content.setCurrentItem(1,false);
                     isIncomePage = true;
                 }else {
+                    if (isDeleteState){
+                        incomePage.backFromDeleteState();
+                    }
                     if ( incomePage.isTouchHindkeyBoard){
-                        Log.i(TAG,"isTouchHindkeyBoard test=00"+incomePage.isTouchHindkeyBoard);
-                        //payOutPage.isTouchHindkeyBoard = true;
                         payOutPage.isHindBeforeChangePage = true;
-                        //payOutPage.isChangePage = true;
-                        //payOutPage.currentClickItem = 0;
                     }
                     payOutPage.changePage();
-                    Log.i(TAG,"isTouchHindkeyBoard test="+incomePage.isTouchHindkeyBoard);
                     vp_addRecordActivity_content.setCurrentItem(0,false);
 
                 }
@@ -221,7 +222,23 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
 
 
     }
-
+    //重写back键
+    @Override
+    public void onBackPressed() {
+        Log.i(TAG,"onBackPressed");
+        Log.i(TAG,"isDeleteState="+isDeleteState);
+        if (isDeleteState){
+            Log.i(TAG,"isDeleteState");
+            //标志位，表示page退出删除或修改，下次使用back可以正常的finish（）页面
+            isDeleteState = false;
+            //调用page方法退出删除修改状态
+            payOutPage.backFromDeleteState();
+            incomePage.backFromDeleteState();
+        }else {
+            //调用父的，退出页面
+            super.onBackPressed();
+        }
+    }
 
     private void showPopwindow(){
 
@@ -312,6 +329,11 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         Log.i(TAG,"onClick"+view.getId());
         switch (view.getId()) {
             case R.id.iv_addRecordActivity_remarkIcon:
+                //布局变化就得保存用户以前输入的金
+                saveuserInputNumberBeforeHindKeyBoard();
+                //目的记录用户以前选中的item背景色依然为选中状态
+                payOutPage.isTouchHindkeyBoard = true;
+                incomePage.isTouchHindkeyBoard = true;
                 stringNumber = tv_addRecordActivity_inputNumber.getText().toString();
                 Log.i(TAG,"88");
                 //照相区隐藏，显示备注区
@@ -327,6 +349,11 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
 
                 break;
             case R.id.tv_addRecordActivity_jumpRemark:
+                //目的记录用户以前选中的item背景色依然为选中状态
+                payOutPage.isTouchHindkeyBoard = true;
+                incomePage.isTouchHindkeyBoard = true;
+                //布局变化就得保存用户以前输入的金额
+                saveuserInputNumberBeforeHindKeyBoard();
                 //照相区隐藏，显示备注区
                 //键盘消失
                 keyboardUtil.hideKeyboardAsNormal();
@@ -343,8 +370,18 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
 
                 break;
             case R.id.btn_addCategory_markConfirm:
+                payOutPage.isTouchHindkeyBoard = false;
+                payOutPage.isClickShowKeyBoard = true;
+                incomePage.isTouchHindkeyBoard = false;
+                incomePage.isClickShowKeyBoard = true;
+                //重新显示用户以前输入的金额，布局变化会使以前输入 的消失掉
+                showUserInputNumber();
+                //
+                //隐藏软键盘
+                inputMethodManager.hideSoftInputFromWindow(et_addCategory_markContent.getWindowToken(), 0);
                 //照相区显示，备注区隐藏
                 Log.i(TAG,stringNumber+"88");
+               // payOutPage.isClickShowKeyBoard = true;
                 keyboardUtil.showKeyboardAsNormal();
                 remarkContent = et_addCategory_markContent.getText().toString();
                 rl_addRecordActivity_remarklayout.setVisibility(View.GONE);
@@ -360,8 +397,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                     tv_addRecordActivity_jumpRemark.setVisibility(View.GONE);
                     iv_addRecordActivity_remarkIcon.setVisibility(View.VISIBLE);
                 }
-                //隐藏软键盘
-                inputMethodManager.hideSoftInputFromWindow(et_addCategory_markContent.getWindowToken(), 0);
+
                 break;
             case R.id.bt_addwishpopupwindow_camera:
                 toCamera();
