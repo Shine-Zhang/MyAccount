@@ -194,7 +194,7 @@ public class WishPager extends BasePager {
         allCompleteWishNumber = completeWishDAO.getAllCompleteWishNumber();
 
         //当数据库变化的时候重新更新内存中的数据,当数据库变化的时候通知内容观察者数据库变化了,然后在内容观察者中去更新最新的数据
-/*        Uri uri = Uri.parse("content://com.example.zs.dao.ongoingwish.changed");
+        Uri uri = Uri.parse("content://com.example.zs.dao.ongoingwish.changed");
         //notifyForDescendents:匹配规则,true:精确匹配  false:模糊匹配
         mActivity.getContentResolver().registerContentObserver(uri, true, new ContentObserver(null) {
             public void onChange(boolean selfChange) {
@@ -206,7 +206,7 @@ public class WishPager extends BasePager {
                 }
                 initView();
             };
-        });*/
+        });
 
         if(allOnGoingWishNumber!=0){
 

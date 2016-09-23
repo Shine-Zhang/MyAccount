@@ -172,9 +172,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 //当我的愿望和愿望资金都填写时，按钮变蓝
                 if((!et_addwishactivity_mywish.getText().toString().isEmpty() &&
-                        !et_addwishactivity_wishfund.getText().toString().isEmpty())
-                        ||(!et_addwishactivity_mywish.getText().toString().isEmpty() &&
-                        !et_addwishactivity_wishfund.getText().toString().equals("0"))){
+                        !et_addwishactivity_wishfund.getText().toString().isEmpty())){
                     Log.i(TAG,"mywish="+et_addwishactivity_mywish.getText().toString()
                             +" wishfund="+et_addwishactivity_wishfund.getText());
                     bt_addwishactivity_addwish.setClickable(true);
@@ -202,9 +200,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 //当我的愿望和愿望资金都填写时，按钮变蓝
                 if((!et_addwishactivity_mywish.getText().toString().isEmpty() &&
-                        !et_addwishactivity_wishfund.getText().toString().isEmpty())
-                        ||(!et_addwishactivity_mywish.getText().toString().isEmpty() &&
-                        !et_addwishactivity_wishfund.getText().toString().equals("0"))){
+                        !et_addwishactivity_wishfund.getText().toString().isEmpty())){
                     bt_addwishactivity_addwish.setClickable(true);
                     bt_addwishactivity_addwish.setBackgroundColor(Color.rgb(31,185,236));
                     //给“许下愿望”按钮添加点击监听
