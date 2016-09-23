@@ -24,6 +24,7 @@ public class TimeLineDAO {
     public Context ctx;
     private SQLiteDatabase indb;
     private SQLiteDatabase outdb;
+    private ArrayList<Cursor> cursorSet = new ArrayList<Cursor>();
     public TimeLineDAO(Context ctx){
         this.ctx = ctx;
         IncometContentDB incometContentDB = new IncometContentDB(ctx, "IncomeContent.db", null, 1);
@@ -45,6 +46,7 @@ public class TimeLineDAO {
         }
          Log.i("cacaca","***************************");
         Cursor costCursor = outdb.rawQuery("select sum(money),day from payouContent where month=?group by day order by day DESC",new String[]{month+""});
+        cursorSet.add(costCursor);
         while(costCursor.moveToNext()){
             // AccountGroupItemBean =
             int total = costCursor.getInt(costCursor.getColumnIndex("sum(money)"));
@@ -54,6 +56,7 @@ public class TimeLineDAO {
         }
 
         Cursor incomeCursor = indb.rawQuery("select sum(money),day from incomeContent where month=?group by day order by day DESC",new String[]{month+""});
+        cursorSet.add(incomeCursor);
         while(incomeCursor.moveToNext()){
 
             int total = incomeCursor.getInt(incomeCursor.getColumnIndex("sum(money)"));
@@ -77,7 +80,9 @@ public class TimeLineDAO {
         TreeSet<Integer> alldays = new TreeSet<>();
 
         Cursor costDayCursor = outdb.rawQuery("select day from payouContent where month=?group by day order by day DESC",new String[]{month+""});
+        cursorSet.add(costDayCursor);
         Cursor incomeDayCursor = indb.rawQuery("select day from incomeContent where month=?group by day order by day DESC",new String[]{month+""});
+        cursorSet.add(incomeDayCursor);
         while(costDayCursor.moveToNext()){
             int day = costDayCursor.getInt(costDayCursor.getColumnIndex("day"));
             alldays.add(day);
@@ -96,7 +101,9 @@ public class TimeLineDAO {
         for (Integer x:alldays) {
             child = new ArrayList<AccountChildItemBean>();
             Cursor dayCosts = outdb.rawQuery("select * from payouContent where month=? and day=?",new String[]{month+"",x+""});
+            cursorSet.add(dayCosts);
             Cursor dayIncomes = indb.rawQuery("select * from incomeContent where month=? and day=?",new String[]{month+"",x+""});
+            cursorSet.add(dayIncomes);
             AccountChildItemBean item = null;
 
             while(dayCosts.moveToNext()){
@@ -124,6 +131,12 @@ public class TimeLineDAO {
         return children;
     }
 
+    public void releaseCursors(){
+        
+        for(int i=0;i<cursorSet.size();i++){
+            cursorSet.get(i).close();
+        }
+    }
 
 
 }

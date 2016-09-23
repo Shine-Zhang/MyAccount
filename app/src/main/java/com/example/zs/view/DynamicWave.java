@@ -240,7 +240,6 @@ public class DynamicWave extends View {
 
             // 将周期定为view总宽度
             mCycleFactorW = (float) (2 * Math.PI / (2*mWaveWidth));
-
             mYStart = new float[2*mTotalWidth];
             mYEnd = new float[2*mTotalWidth];
             // 根据view总宽度得出所有对应的y值
