@@ -180,7 +180,9 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                         if (isDeleteState){
                             payOutPage.backFromDeleteState();
                         }
-                        incomePage.isHindBeforeChangePage = true;
+                        if (payOutPage.isTouchHindkeyBoard){
+                            incomePage.isHindBeforeChangePage = true;
+                        }
                     }
                     incomePage.changePage();
                     vp_addRecordActivity_content.setCurrentItem(1,false);
@@ -329,16 +331,20 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         Log.i(TAG,"onClick"+view.getId());
         switch (view.getId()) {
             case R.id.iv_addRecordActivity_remarkIcon:
+                payOutPage.remarksInFlag = true;
+                //备注时静止弹出自定义键盘
+                payOutPage.isTouchHindkeyBoard = false;
                 //布局变化就得保存用户以前输入的金
+                incomePage.remarksInFlag = true;
+                incomePage.isTouchHindkeyBoard = false;
                 saveuserInputNumberBeforeHindKeyBoard();
-                //目的记录用户以前选中的item背景色依然为选中状态
-                payOutPage.isTouchHindkeyBoard = true;
-                incomePage.isTouchHindkeyBoard = true;
                 stringNumber = tv_addRecordActivity_inputNumber.getText().toString();
                 Log.i(TAG,"88");
                 //照相区隐藏，显示备注区
                 rl_addRecordActivity_photolayout.setVisibility(View.GONE);
+                Log.i(TAG,"---1");
                 rl_addRecordActivity_remarklayout.setVisibility(View.VISIBLE);
+                Log.i(TAG,"---2");
                 //弹出键盘
                 inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                 //获取焦点。并弹出软键盘
@@ -346,12 +352,15 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 keyboardUtil.hideKeyboardAsNormal();
                 et_addCategory_markContent.requestFocus();
                 inputMethodManager.showSoftInput(et_addCategory_markContent, 0);
-
+                Log.i(TAG,"---3");//执行完123 这整段代码，才开始执行适配器刷新
                 break;
             case R.id.tv_addRecordActivity_jumpRemark:
                 //目的记录用户以前选中的item背景色依然为选中状态
-                payOutPage.isTouchHindkeyBoard = true;
-                incomePage.isTouchHindkeyBoard = true;
+                payOutPage.remarksInFlag = true;
+                //备注时静止弹出自定义键盘
+                payOutPage.isTouchHindkeyBoard = false;
+                incomePage.remarksInFlag = true;
+                incomePage.isTouchHindkeyBoard = false;
                 //布局变化就得保存用户以前输入的金额
                 saveuserInputNumberBeforeHindKeyBoard();
                 //照相区隐藏，显示备注区
@@ -362,26 +371,24 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 et_addCategory_markContent.setText(remarkContent);
                 //弹出键盘
                 inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-
                 //获取焦点。并弹出软键盘
                 //et_addCategory_markContent.setFocusable(true);
                 et_addCategory_markContent.requestFocus();
                 inputMethodManager.showSoftInput(et_addCategory_markContent, 0);
-
+                Log.i(TAG,"showSoftInput");
                 break;
             case R.id.btn_addCategory_markConfirm:
-                payOutPage.isTouchHindkeyBoard = false;
-                payOutPage.isClickShowKeyBoard = true;
-                incomePage.isTouchHindkeyBoard = false;
-                incomePage.isClickShowKeyBoard = true;
-                //重新显示用户以前输入的金额，布局变化会使以前输入 的消失掉
-                showUserInputNumber();
-                //
+                //目的记录用户以前选中的item背景色依然为选中状态
+                //不需要因为下次点击的时候才会把标志位置为fasle
+                //payOutPage.isNeedRefresh = true;//适配器只刷新一次,但有可能刷新多次，专门设置一个系键盘消失的标志位
+                //incomePage.isNeedRefresh = true;
+                payOutPage.remarksExitFlag = true;
+                incomePage.remarksExitFlag = true;
                 //隐藏软键盘
                 inputMethodManager.hideSoftInputFromWindow(et_addCategory_markContent.getWindowToken(), 0);
                 //照相区显示，备注区隐藏
                 Log.i(TAG,stringNumber+"88");
-               // payOutPage.isClickShowKeyBoard = true;
+                //目的记录用户以前选中的item背景色依然为选中状态
                 keyboardUtil.showKeyboardAsNormal();
                 remarkContent = et_addCategory_markContent.getText().toString();
                 rl_addRecordActivity_remarklayout.setVisibility(View.GONE);
@@ -397,7 +404,9 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                     tv_addRecordActivity_jumpRemark.setVisibility(View.GONE);
                     iv_addRecordActivity_remarkIcon.setVisibility(View.VISIBLE);
                 }
-
+                //重新显示用户以前输入的金额，布局变化会使以前输入 的消失掉
+                showUserInputNumber();
+                Log.i(TAG,"--00");
                 break;
             case R.id.bt_addwishpopupwindow_camera:
                 toCamera();
