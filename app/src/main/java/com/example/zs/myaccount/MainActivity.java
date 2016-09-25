@@ -9,11 +9,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.example.zs.application.MyAplication;
 import com.example.zs.bean.PayoutContentInfo;
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (checkId){
 
                     case R.id.rb_mainactivity_detail:
-                        vp_mainactivity.setCurrentItem(0);
+                        vp_mainactivity.setCurrentItem(0,false);
                         pageList.get(0).initData();
                         MyAplication application0 = (MyAplication) getApplication();
                         if(application0.getAccountPager()==null) {
@@ -95,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.rb_mainactivity_wish:
                         Log.i(tag,"00");
-                        vp_mainactivity.setCurrentItem(1);
+                        vp_mainactivity.setCurrentItem(1,false);
                         pageList.get(1).initData();
                         MyAplication application1 = (MyAplication) getApplication();
                         if(application1.getWishPager()==null) {
@@ -103,12 +105,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                         break;
                     case R.id.rb_mainactivity_list:
-                        vp_mainactivity.setCurrentItem(2);
+                        vp_mainactivity.setCurrentItem(2,false);
                         pageList.get(2).initData();
                         break;
 
                     case R.id.rb_mainactivity_mine:
-                        vp_mainactivity.setCurrentItem(3);
+                        vp_mainactivity.setCurrentItem(3,false);
                         pageList.get(3).initData();
                         MyAplication application03 = (MyAplication) getApplication();
                         application03.setOwnerPager(pageList.get(3));
@@ -192,8 +194,39 @@ public class MainActivity extends AppCompatActivity {
 
         Log.i("11","大油桃");
 
-
     }
+    long firstTime;
+    //方式一
+    //防止用户误触返回键退出应用,重写back键
+    @Override
+    public void onBackPressed() {
+        long secondTime = System.currentTimeMillis();
+        if (secondTime-firstTime>1000){
+            Toast.makeText(MainActivity.this, "再按一次退出程序",
+                    Toast.LENGTH_SHORT).show();
+            firstTime = secondTime;//记录上次的时间
+        }else {
+            super.onBackPressed();
+        }
+    }
+    /*//按键松开触发
+    //方式二
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode==KeyEvent.KEYCODE_BACK){
+            long secondTime = System.currentTimeMillis();
+            if (secondTime-firstTime>1000){
+                Toast.makeText(MainActivity.this, "再按一次退出程序",
+                        Toast.LENGTH_SHORT).show();
+                firstTime = secondTime;
+                return true;
+            }else {
+                finish();
+            }
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+*/
     public void add(View v){
         //test
         /*Intent intent = new Intent(this,AddRecordActivity.class);

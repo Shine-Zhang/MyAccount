@@ -468,7 +468,7 @@ public class PayOutPage extends AddBasePage {
                         firstDeleteIcon = cv_addPage_delete;
                         cvMap.put(i, cv_addPage_delete);
                     }
-                    //从明细，报表跳转过来点亮对应的item
+                    //从明细，报表跳转过来点亮对应的item，如果当前的种类已删除则不点亮默认为第一个点亮
                     if (isJump && jumpItemEnable == i) {
                         iv_addPage_catagoryIcon.setEnabled(false);
                         previous = iv_addPage_catagoryIcon;
