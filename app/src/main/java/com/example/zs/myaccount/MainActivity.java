@@ -201,8 +201,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         long secondTime = System.currentTimeMillis();
-        if (secondTime-firstTime>1000){
-            Toast.makeText(MainActivity.this, "再按一次退出程序",
+        if (secondTime-firstTime>1000){//比较优先级低
+            Toast.makeText(MainActivity.this, "再次点击退出钱哆哆记账",
                     Toast.LENGTH_SHORT).show();
             firstTime = secondTime;//记录上次的时间
         }else {
