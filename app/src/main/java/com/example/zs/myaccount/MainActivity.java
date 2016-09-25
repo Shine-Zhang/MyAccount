@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
         if (keyCode==KeyEvent.KEYCODE_BACK){
             long secondTime = System.currentTimeMillis();
             if (secondTime-firstTime>1000){
-                Toast.makeText(MainActivity.this, "再按一次退出程序",
+                Toast.makeText(MainActivity.this, "再次点击退出钱哆哆记账",
                         Toast.LENGTH_SHORT).show();
                 firstTime = secondTime;
                 return true;
