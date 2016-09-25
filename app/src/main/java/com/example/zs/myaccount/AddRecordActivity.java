@@ -109,6 +109,9 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private static final int ADD_CATEGORY_RESUIT = 10;//类别添加页面回传码
     private static final int PHOTO_REQUEST_CAREMA = 103;// 拍照
     private static final int PHOTO_REQUEST_GALLERY = 104;// 从相册中选择
+    private static final int JUMP_ACCOUNT_MODIFY_REQUST =110;//从明细page跳过来修改的请求码
+    private static final int JUMP_ACCOUNT_PHOTO_ADDCONTENT =111;//从明细page拍照过来的请求码
+
     private Uri photoUri;
     private MyViewPagerAdapter myViewPagerAdapter;
     public boolean isDeleteState;//显示page是否为删除修改状态
@@ -118,8 +121,6 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_add_record);
         //隐藏标题栏
         getSupportActionBar().hide();
-
-
         RadioGroup rg_addRecordActivity_singleChoice = (RadioGroup) findViewById(R.id.rg_addRecordActivity_singleChoice);
         btn_addRecordActivity_time = (Button) findViewById(R.id.btn_addRecordActivity_time);
         ImageView iv_addRecordActivity_finish = (ImageView) findViewById(R.id.iv_addRecordActivity_finish);
@@ -142,11 +143,6 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
             public void toConfirm() {
                 Log.i(TAG,"toConfirm");
                 stringNumber = tv_addRecordActivity_inputNumber.getText().toString();
-                if (stringNumber.isEmpty()){
-                    //为空
-                }
-
-
                 commitAndsave();
                 MyAplication application = (MyAplication) getApplication();
                 BasePager accountPager = application.getAccountPager();
@@ -271,7 +267,10 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
     private void getInfoFromActivity() {
         Intent intent = getIntent();
         if(intent!=null){
+            //跳转过来的都不为空。不管是startActivity还是startActivityForResult
+            Log.i(TAG,"intent="+intent.toString());//intent=Intent { cmp=com.example.zs.myaccount/.AddRecordActivity }
             String money = intent.getStringExtra("money");
+            photo = intent.getStringExtra("photoUriString");
             if (money!=null){
                 isJumpActivity = true;
                 setDate(isJumpActivity);
@@ -290,13 +289,18 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                     tv_addRecordActivity_jumpRemark.setText(remarkContent);
                 }
                 stringNumber = money;
-                photo = intent.getStringExtra("photo");
+                //photo = intent.getStringExtra("photoUriString");
                 tv_addRecordActivity_inputNumber.setText(stringNumber);
                 btn_addRecordActivity_time.setText(month+"月"+day+"日");
                 if (!photo.isEmpty()){
                     iv_addRecordActivity_photo.setImageURI(Uri.parse(photo));
                 }
+            }else if(photo!=null){
+                //直接从Acount拍照过来的没有id
+                //直接显示照片即可
+                iv_addRecordActivity_photo.setImageURI(Uri.parse(photo));
             }
+
         }
     }
 
@@ -434,7 +438,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
             intent.putExtra("day",day);
             intent.putExtra("money",stringNumber.toString());
             intent.putExtra("marks",remarkContent);
-            intent.putExtra("photo","this is photo");
+            intent.putExtra("photoUriString",photo);
             if (!isIncomePage){
                 savePayoutInfoToDB();
                 intent.putExtra("resourceID",payOutPage.selectResourceID);

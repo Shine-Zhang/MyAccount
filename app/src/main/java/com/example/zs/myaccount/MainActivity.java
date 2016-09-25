@@ -237,11 +237,13 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("day",1);
         intent.putExtra("money","350");
         intent.putExtra("remarks","备注测试");
-        intent.putExtra("photo","this is photo");
+        intent.putExtra("photoUriString","");
         intent.putExtra("resourceID",2130837665);
         intent.putExtra("categoryName","红包");
         startActivityForResult(intent,110);*/
-      startActivity(new Intent(MainActivity.this,AddRecordActivity.class));
+        Intent intent = new Intent(MainActivity.this, AddRecordActivity.class);
+        //test intent.putExtra("photoUriString","content://media/external/images/media/33");
+        startActivityForResult(intent,50);
     }
 
     @Override
@@ -259,8 +261,8 @@ public class MainActivity extends AppCompatActivity {
             int day = intent.getIntExtra("day", 0);
             String money = intent.getStringExtra("money");
             String marks = intent.getStringExtra("marks");
-            String photo = intent.getStringExtra("photo");
-            PayoutContentInfo payouContentInfo = new PayoutContentInfo(id, resourceID, categoryName, year, mouth, day, money, marks, photo);
+            String photoUriString = intent.getStringExtra("photoUriString");
+            PayoutContentInfo payouContentInfo = new PayoutContentInfo(id, resourceID, categoryName, year, mouth, day, money, marks, photoUriString);
             Log.i(tag,payouContentInfo.toString());
 
             //super无法执行到
