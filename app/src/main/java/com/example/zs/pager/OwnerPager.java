@@ -176,7 +176,7 @@ public class OwnerPager extends BasePager {
         IncomeContentDAO incomeContentDAO = new IncomeContentDAO(mActivity);
         int moneySum = payOutContentDAO.getMoneySum();
         int moneySum1 = incomeContentDAO.getMoneySum();
-        tv_ownerpager_mybalance.setText(moneySum1-moneySum+"");
+        tv_ownerpager_mybalance.setText(moneySum1-moneySum+".00");
     }
 
     //初始化 登录 条目，添加点击事件

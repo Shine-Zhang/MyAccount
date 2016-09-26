@@ -11,7 +11,7 @@
         android:id="@+id/iv_recordlist_icon"
         android:layout_alignParentLeft="true"
         android:layout_margin="10dp"
-        android:background="#31C9F2"
+        android:background="@drawable/bg_addicon_circular"
         android:src="@drawable/ic_hongbao_yellow"/>
     <LinearLayout
         android:layout_width="wrap_content"
@@ -34,6 +34,7 @@
             android:layout_toRightOf="@id/iv_recordlist_icon"
             android:text="红包"
             android:textSize="10sp"
+            android:visibility="gone"
             android:layout_centerVertical="true"/>
     </LinearLayout>
 

@@ -26,7 +26,7 @@
             android:layout_toRightOf="@id/ib_mybalanceactivity_back"
             android:text="我的余额"
             android:textSize="20sp"/>
-        <TextView
+        <!--<TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/ib_mybalanceactivity_back"
@@ -35,64 +35,66 @@
             android:textSize="16sp"
             android:layout_marginTop="30dp"
             android:layout_centerHorizontal="true"
-            android:onClick="settingtime"/>
+            android:onClick="settingtime"/>-->
     </RelativeLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#88000000"/>
+        android:layout_height="1px"
+        android:background="#000"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#31C9F2">
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:paddingTop="10dp">
+            android:gravity="center"
+            android:orientation="vertical"
+           >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:id="@+id/tv_mybalance_shouru"
+                android:layout_gravity="center"
                 android:text="收入"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/tv_mybalance_shouru"
                 android:id="@+id/tv_mybalance_income"
-                android:text="3100.00"/>
-        </RelativeLayout>
+                android:layout_gravity="center"
+                android:text="3100.00"
+                />
+        </LinearLayout>
         <View
-            android:layout_width="1dp"
+            android:layout_width="1px"
             android:layout_height="match_parent"
-            android:background="#88000000"
-            android:layout_centerHorizontal="true"/>
-        <RelativeLayout
+            android:background="#000"
+            />
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:paddingTop="10dp">
+            android:gravity="center"
+            android:orientation="vertical"
+          >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:id="@+id/tv_mybalance_zhichu"
                 android:text="支出"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/tv_mybalance_zhichu"
                 android:id="@+id/tv_mybalanceactivity_pay"
-                android:text="2300.00"/>
-        </RelativeLayout>
+                android:text="2300.00"
+                />
+        </LinearLayout>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#88000000"/>
+        android:layout_height="1px"
+        android:background="#000"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0px"

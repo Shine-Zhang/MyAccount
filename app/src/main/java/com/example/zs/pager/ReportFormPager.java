@@ -262,7 +262,9 @@ public class ReportFormPager extends BasePager {
 
             }else if(allPayoutCategory.get(i).category.equals("生活用品")){
                 payoutNumAndAccount.lifeNumber = 1;
-                payoutNumAndAccount.lifeAccount += Integer.parseInt(allPayoutCategory.get(i).money);
+                Long i1 = Long.valueOf(allPayoutCategory.get(i).money);
+                Log.i("---","---"+i1);
+                payoutNumAndAccount.lifeAccount += Integer.parseInt(i1.toString());
 
                 Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
 

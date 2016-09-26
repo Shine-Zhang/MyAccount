@@ -22,6 +22,7 @@ import com.example.zs.dao.PayOutContentDAO;
 import com.example.zs.view.CircleImageView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -46,7 +47,7 @@ public class MyBalanceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_balance);
         getSupportActionBar().hide();
 
-        tv_mybalanceactivity_choiceDate = (TextView) findViewById(R.id.tv_mybalanceactivity_choiceDate);
+        //tv_mybalanceactivity_choiceDate = (TextView) findViewById(R.id.tv_mybalanceactivity_choiceDate);
         lv_mybalanceactivity_recordlist = (ListView) findViewById(R.id.lv_mybalanceactivity_recordlist);
         rl_mybalanceactivity_norecord = (RelativeLayout) findViewById(R.id.rl_mybalanceactivity_norecord);
         tv_mybalance_income = (TextView) findViewById(R.id.tv_mybalance_income);
@@ -141,6 +142,15 @@ public class MyBalanceActivity extends AppCompatActivity {
             int insize = allIncomeContentFromDBList.size();
             if (i==0){
                 View inflate = View.inflate(MyBalanceActivity.this, R.layout.item_timeshow, null);
+                TextView tv_record_time = (TextView) inflate.findViewById(R.id.tv_record_time);
+                String[] weeks = {"星期日","星期一","星期二","星期三","星期四","星期五","星期六"};
+                Calendar cal = Calendar.getInstance();
+                int week_index = cal.get(Calendar.DAY_OF_WEEK) - 1;
+                if(week_index<0){
+                    week_index = 0;
+                }
+                Log.i(TAG,""+cal.YEAR+"pp--"+cal.MONTH+"--"+cal.DAY_OF_MONTH);
+                tv_record_time.setText(""+cal.get(Calendar.YEAR)+"年"+(cal.get(Calendar.MONTH)+1)+"月"+cal.get(Calendar.DAY_OF_MONTH)+"日  "+weeks[week_index]);
                 return inflate;
             }else {
                 if (i<paysize+1){
@@ -148,13 +158,19 @@ public class MyBalanceActivity extends AppCompatActivity {
                     Log.i(TAG,payoutContentInfo.toString());
                     iv_recordlist_icon.setImageResource(payoutContentInfo.resourceID);
                     tv_recordlist_category.setText(payoutContentInfo.category);
-                    tv_recordlist_remarks.setText(payoutContentInfo.remarks);
+                    if (!payoutContentInfo.remarks.isEmpty()){
+                        tv_recordlist_remarks.setVisibility(View.VISIBLE);
+                        tv_recordlist_remarks.setText(payoutContentInfo.remarks);
+                    }
                     tv_recordlist_money.setText("-"+payoutContentInfo.money);
                 }else if (i<paysize+insize+1){
                     IncomeContentInfo incomeContentInfo = allIncomeContentFromDBList.get(insize+paysize-i);
                     iv_recordlist_icon.setImageResource(incomeContentInfo.resourceID);
                     tv_recordlist_category.setText(incomeContentInfo.category);
-                    tv_recordlist_remarks.setText(incomeContentInfo.remarks);
+                    if (!incomeContentInfo.remarks.isEmpty()){
+                        tv_recordlist_remarks.setVisibility(View.VISIBLE);
+                        tv_recordlist_remarks.setText(incomeContentInfo.remarks);
+                    }
                     tv_recordlist_money.setText("+"+incomeContentInfo.money);
                 }
             }
