@@ -275,7 +275,6 @@ public class MainActivity extends AppCompatActivity {
         //确认健返回
         if(resultCode==555&&intent!=null){
             //刷新page的数据
-
             int id = intent.getIntExtra("id", 0);
             int resourceID = intent.getIntExtra("resourceID", 0);
             String categoryName = intent.getStringExtra("categoryName");
