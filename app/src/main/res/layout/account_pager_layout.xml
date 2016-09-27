@@ -73,7 +73,8 @@
                 android:layout_centerInParent="true"
                 android:layout_width="25dp"
                 android:background="@drawable/ic_camera_default"
-                android:layout_height="25dp" />
+                android:layout_height="25dp"
+                android:visibility="gone"/>
             <TextView
                 android:id="@+id/tv_account_pager_month_cost_tip"
                 android:textSize="12sp"

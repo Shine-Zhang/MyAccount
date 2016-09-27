@@ -121,16 +121,18 @@ public class AccountPager extends BasePager implements
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int i) {
-                Log.i("lalal","groupExpandSta[groupItems.get(i).getDayOfMonth()]:"+groupExpandSta[groupItems.get(i).getDayOfMonth()]);
-                groupExpandSta[groupItems.get(i).getDayOfMonth()] = true;
+
+                groupExpandSta[groupItems.get(i).getDayOfMonth()-1] = true;
+                Log.i("lalal","g**roupExpandSta[groupItems.get(i).getDayOfMonth()]:"+groupExpandSta[groupItems.get(i).getDayOfMonth()]);
             }
         });
 
         expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
             @Override
             public void onGroupCollapse(int i) {
-                Log.i("lalal","groupExpandSta[groupItems.get(i).getDayOfMonth()]:"+groupExpandSta[groupItems.get(i).getDayOfMonth()]);
-                groupExpandSta[groupItems.get(i).getDayOfMonth()] = false;
+
+                groupExpandSta[groupItems.get(i).getDayOfMonth()-1] = false;
+                Log.i("lalal","***groupExpandSta[groupItems.get(i).getDayOfMonth()]:"+groupExpandSta[groupItems.get(i).getDayOfMonth()]);
             }
         });
         Log.i("haha","*************");
@@ -139,7 +141,7 @@ public class AccountPager extends BasePager implements
         ib_account_pager_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                   showPhotoPopWindow();
+                  // showPhotoPopWindow();
             }
         });
         accountPagerBudgetSta.setOnClickListener(new View.OnClickListener() {
@@ -176,6 +178,28 @@ public class AccountPager extends BasePager implements
         Button btAddWishPopwindowCamera = (Button) contentView.findViewById(R.id.bt_addwishpopupwindow_camera);
         Button btAddWishPopwindowGallery = (Button) contentView.findViewById(R.id.bt_addwishpopupwindow_gallery);
         Button btAddWishPopwindowCancle = (Button) contentView.findViewById(R.id.bt_addwishpopupwindow_cancel);
+        btAddWishPopwindowCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toCamera();
+                popupwindow_getphoto.dismiss();
+            }
+        });
+
+        btAddWishPopwindowGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toGallery();
+                popupwindow_getphoto.dismiss();
+            }
+        });
+
+        btAddWishPopwindowCancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupwindow_getphoto.dismiss();
+            }
+        });
 
         //初始化popupwindow
         popupwindow_getphoto = new PopupWindow();
@@ -712,7 +736,7 @@ public class AccountPager extends BasePager implements
     @Override
     public boolean onGroupClick(final ExpandableListView parent, final View v,
                                 int groupPosition, final long id) {
-        Log.i("hahaha","&*&&*&*&*&*&*&*&*&*&*&*");
+      //  Log.i("hahaha","&*&&*&*&*&*&*&*&*&*&*&*");
         return false;
     }
 
@@ -981,14 +1005,6 @@ public class AccountPager extends BasePager implements
         }
     }*/
 
-    public void refreshTotal(boolean isIncome,float howmuch){
-
-        if(isIncome) {
-
-        }else{
-            tvAccountPagerTotalCost = (TextView) mrootView.findViewById(R.id.account_pager_total_income);
-        }
-    }
 
 
 }
