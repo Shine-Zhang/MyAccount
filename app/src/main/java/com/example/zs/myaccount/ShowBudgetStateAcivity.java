@@ -150,6 +150,12 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                        int month = now.get(Calendar.MONTH);
                        int day = now.get(Calendar.DAY_OF_MONTH);
                         String from = year+"-"+month+"-"+day;
+                        if(month==12){
+                            month =1;
+                            year++;
+                        }else{
+                            month++;
+                        }
                         String to = year+"-"+month+"-"+1;
                         String span = getSpan(from,to);
                          TextView text = (TextView) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.tv_show_budget_state_activity_deadSpan);
@@ -415,6 +421,12 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                     int month = now.get(Calendar.MONTH);
                     int day = now.get(Calendar.DAY_OF_MONTH);
                     String from = year+"-"+month+"-"+day;
+                    if(month==12){
+                        month =1;
+                        year++;
+                    }else{
+                        month++;
+                    }
                     String to = year+"-"+month+"-"+1;
                     String span = getSpan(from,to);
                     TextView text1 = (TextView) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.tv_show_budget_state_activity_deadSpan);
@@ -634,13 +646,13 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
     }*/
 
 
-    public static  String  getSpan(String sj1, String sj2) {
+    public static  String  getSpan(String from, String to) {
         SimpleDateFormat myFormatter = new SimpleDateFormat("yyyy-MM-dd");
         long day = 0;
         try {
-            java.util.Date date = myFormatter.parse(sj1);
-            java.util.Date mydate = myFormatter.parse(sj2);
-            day = (date.getTime() - mydate.getTime()) / (24 * 60 * 60 * 1000);
+            java.util.Date fromDate = myFormatter.parse(from);
+            java.util.Date toDate = myFormatter.parse(to);
+            day = (toDate.getTime() - fromDate.getTime()) / (24 * 60 * 60 * 1000);
         } catch (Exception e) {
             return "";
         }

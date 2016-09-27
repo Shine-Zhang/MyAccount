@@ -147,6 +147,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 MyAplication application = (MyAplication) getApplication();
                 BasePager accountPager = application.getAccountPager();
                 if(accountPager!=null){
+                    Log.i("haha","&&&&&&&&&&&&&&&&&");
                     accountPager.initData();
                 }
             }

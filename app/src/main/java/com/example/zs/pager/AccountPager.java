@@ -121,6 +121,7 @@ public class AccountPager extends BasePager implements
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int i) {
+                Log.i("lalal","groupExpandSta[groupItems.get(i).getDayOfMonth()]:"+groupExpandSta[groupItems.get(i).getDayOfMonth()]);
                 groupExpandSta[groupItems.get(i).getDayOfMonth()] = true;
             }
         });
@@ -128,9 +129,11 @@ public class AccountPager extends BasePager implements
         expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
             @Override
             public void onGroupCollapse(int i) {
+                Log.i("lalal","groupExpandSta[groupItems.get(i).getDayOfMonth()]:"+groupExpandSta[groupItems.get(i).getDayOfMonth()]);
                 groupExpandSta[groupItems.get(i).getDayOfMonth()] = false;
             }
         });
+        Log.i("haha","*************");
         accountPagerBudgetSta = (RelativeLayout) mrootView.findViewById(R.id.rl_account_pager_budget_state);
         ImageButton ib_account_pager_camera = (ImageButton) mrootView.findViewById(R.id.ib_account_pager_camera);
         ib_account_pager_camera.setOnClickListener(new View.OnClickListener() {
@@ -146,7 +149,7 @@ public class AccountPager extends BasePager implements
                 float budget = Float.parseFloat(myBudget);
                 float balance = budget-totalCost;
                 float currentHight = balance/budget;
-                intent.putExtra("currentHight",0.45f);
+                intent.putExtra("currentHight",currentHight);
                 intent.putExtra("balance",balance);
                 intent.putExtra("totalIncome",totalIncome);
                // Log.i("haha","&&&&&&&&&&&&&&&&&&&&:"+currentHight);
@@ -221,14 +224,16 @@ public class AccountPager extends BasePager implements
         }else{
             myBudget ="3000.00";
         }
-        tvAccountPagerBudget.setText(myBudget);
         totalIncome = 0;
         totalCost = 0;
         for(int i=0;i<groupItems.size();i++){
+
             totalIncome +=groupItems.get(i).getTotalIncome();
             totalCost += groupItems.get(i).getTotalCosts();
         }
-
+        Log.i("haha","totalIncome****: "+totalIncome);
+        float remain =  Float.parseFloat(myBudget)-totalCost;
+        tvAccountPagerBudget.setText(String.format("%.2f", remain));
         tvAccountPagerTotalIncome.setText(String.format("%.2f", totalIncome));
         tvAccountPagerTotalCost.setText(String.format("%.2f", totalCost));
 //        setDatasource();
@@ -283,7 +288,7 @@ public class AccountPager extends BasePager implements
         Log.i("haha","******childItems.size(): "+childItems.size());
         // 展开所有group
         for ( int i = 0;i<groupItems.size(); i++) {
-            Log.i("haha","************展开所有数据完毕***********"+i);
+          //  Log.i("haha","************展开所有数据完毕***********"+i);
             if(groupExpandSta[groupItems.get(i).getDayOfMonth()-1]){
                 expandableListView.expandGroup(i);
             }else{
@@ -514,19 +519,31 @@ public class AccountPager extends BasePager implements
                             Log.i("nima","goup : "+ group +"child: "+ child);
                            // Log.i("nima","*****************content: "+ childItems.get(group).get(child).getId()+":::::"+childItems.get(group).remove(child).getHowmuch());
 
-
                             unFold(tmpHolder);
+//                            float now = Float.parseFloat((String) tvAccountPagerBudget.getText());
                             if(childItems.get(group).get(child).isIncome()){
-                                new IncomeContentDAO(mActivity).deleteIncomeContentItemFromDB(childItems.get(group).get(child).getId());
+                                IncomeContentDAO inDao = new IncomeContentDAO(mActivity);
+                                inDao.deleteIncomeContentItemFromDB(childItems.get(group).get(child).getId());
+                                float total = totalIncome - Float.parseFloat(childItems.get(group).get(child).getHowmuch());
+                                tvAccountPagerTotalIncome.setText(String.format("%.2f",total));
 
-                                Log.i("lalalala","outid: "+childItems.get(group).get(child).getId());
+                              //  Log.i("lalalala","outid: "+childItems.get(group).get(child).getId());
                             }else{
                                 new PayOutContentDAO(mActivity).deletePayoutContentItemFromDB(childItems.get(group).get(child).getId());
-                                Log.i("lalalala","inid: "+childItems.get(group).get(child).getId());
+                                float total = totalCost - Float.parseFloat(childItems.get(group).get(child).getHowmuch());
+                                tvAccountPagerTotalCost.setText(String.format("%.2f",total));
+                              //  Log.i("lalalala","inid: "+childItems.get(group).get(child).getId());
                             }
+                           // Log.i("haha","删除前groupsize: "+childItems.get(group).size());
                             childItems.get(group).remove(child);
-                            if(childItems.get(group).size()==0){
+                           // Log.i("haha","删除后groupsize: "+childItems.get(group).size());
+                            if( childItems.get(group).size()==0){
+                                Log.i("haha","删除前（）："+groupItems.size());
                                 groupItems.remove(group);
+                               Log.i("haha","删除后（）："+groupItems);
+                                if(groupItems.size()==0){
+                                    expandableListView.mHeaderView=null;
+                                }
                             }
                             //通知更新
                             adapter.notifyDataSetChanged();
@@ -926,12 +943,11 @@ public class AccountPager extends BasePager implements
     }
 
 
+
+
     /**
      * 该函数用于获取传回来的数据。
      * 即 跳转到其他地方之后获取到想要的信息，将信息传回来
-     * @param requestCode
-     * @param resultCode
-     * @param data
      */
   /*  @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -964,6 +980,15 @@ public class AccountPager extends BasePager implements
             }
         }
     }*/
+
+    public void refreshTotal(boolean isIncome,float howmuch){
+
+        if(isIncome) {
+
+        }else{
+            tvAccountPagerTotalCost = (TextView) mrootView.findViewById(R.id.account_pager_total_income);
+        }
+    }
 
 
 }
