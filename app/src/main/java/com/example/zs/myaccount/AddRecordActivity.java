@@ -146,9 +146,14 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 commitAndsave();
                 MyAplication application = (MyAplication) getApplication();
                 BasePager accountPager = application.getAccountPager();
+                BasePager ownerPager = application.getOwnerPager();
+
                 if(accountPager!=null){
                     Log.i("haha","&&&&&&&&&&&&&&&&&");
                     accountPager.initData();
+                }
+                if(ownerPager!=null){
+                    ownerPager.initData();
                 }
             }
         });

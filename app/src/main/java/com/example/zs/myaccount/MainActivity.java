@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private Uri photoUri;
     //新建ArrayList用于存储ViewPager里的不同page，从BasePager里面拿View
     List<BasePager> pageList =  new ArrayList<BasePager>();
+    private MainActivity_ContentAdapter mainActivity_contentAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +79,9 @@ public class MainActivity extends AppCompatActivity {
         pageList.add(new OwnerPager(this));
 
         //新建Adapter用于每个RadioButton点击显示不同页面
-        vp_mainactivity.setAdapter(new MainActivity_ContentAdapter());
+        mainActivity_contentAdapter = new MainActivity_ContentAdapter();
+
+        vp_mainactivity.setAdapter(mainActivity_contentAdapter);
 
         //处理RadioGroup的点击事件，使之与对应的的ViewPager页面对应
         //（暂时跳转两个页面做测试）
@@ -130,6 +134,22 @@ public class MainActivity extends AppCompatActivity {
 
     //新建Adapter用于每个RadioButton点击显示不同页面
    public class MainActivity_ContentAdapter extends PagerAdapter{
+        private int mChildCount = 0;
+        //解决notifyDataSetChanged 无法刷新page数据的bug
+        @Override
+        public void notifyDataSetChanged() {
+            mChildCount = getCount();
+            super.notifyDataSetChanged();
+        }
+        @Override
+        public int getItemPosition(Object object)   {
+            if ( mChildCount > 0) {
+                mChildCount --;
+                return POSITION_NONE;
+            }
+            return super.getItemPosition(object);
+        }
+
 
         @Override
         public int getCount() {
@@ -153,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
+            Log.i("mainActivity","viewpager-instantiateItem="+position);
             BasePager basePager = pageList.get(position);
             /*测试代码
             Log.i("hahaha","&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
@@ -253,6 +274,7 @@ public class MainActivity extends AppCompatActivity {
         Bitmap resultBitmap;
         //确认健返回
         if(resultCode==555&&intent!=null){
+            //刷新page的数据
             int id = intent.getIntExtra("id", 0);
             int resourceID = intent.getIntExtra("resourceID", 0);
             String categoryName = intent.getStringExtra("categoryName");

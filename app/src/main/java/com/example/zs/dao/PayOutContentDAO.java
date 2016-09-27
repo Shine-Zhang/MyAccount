@@ -93,12 +93,13 @@ public class PayOutContentDAO {
     public void deletePayoutContentItemFromDB(int id){
         db.delete("payouContent","id=?",new String[]{""+id});
     }
-    public  int getMoneySum(){
-        int sum=0;
+    public  float getMoneySum(){
+        float sum=0;
         Cursor cursor = db.rawQuery("select money from payouContent ;", null);
         while (cursor.moveToNext()){
             String s = cursor.getString(0);
-            int i = Integer.parseInt(s);
+            float i = Float.valueOf(s);
+            Log.i("--","000");
             sum+=i;
         }
         return sum;
@@ -191,6 +192,25 @@ public class PayOutContentDAO {
         expenseCursor.moveToNext();
         String expense_month = expenseCursor.getString(0);
         return expense_month;
+    }
+    public ArrayList<PayoutContentInfo> getDatePayoutContentFromDB(int year,int month){
+        ArrayList<PayoutContentInfo> payouContentInfos = new ArrayList<>();
+        Cursor cursor = db.query("payouContent",null, "year=? and month=?", new String[]{year + "", month + ""}, null, null, null);
+        //Cursor cursor = db.rawQuery("select * from payouContent ", null);
+        while (cursor.moveToNext()){
+            int anInt = cursor.getInt(0);
+            int anInt1 = cursor.getInt(1);
+            int anInt2 = cursor.getInt(2);
+            int anInt3 = cursor.getInt(3);
+            int anInt4 = cursor.getInt(4);
+            String string1 = cursor.getString(5);
+            String string2 = cursor.getString(6);
+            String string3 = cursor.getString(7);
+            String string4 = cursor.getString(8);
+            PayoutContentInfo payouContentInfo = new PayoutContentInfo(anInt,anInt1, string1, anInt2, anInt3, anInt4, string2, string3, string4);
+            payouContentInfos.add(payouContentInfo);
+        }
+        return payouContentInfos;
     }
 
 }
