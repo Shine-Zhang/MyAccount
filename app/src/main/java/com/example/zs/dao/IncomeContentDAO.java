@@ -90,12 +90,12 @@ public class IncomeContentDAO {
     public void deleteIncomeContentItemFromDB(int id){
         db.delete("incomeContent","id=?",new String[]{""+id});
     }
-    public  int getMoneySum(){
-        int sum=0;
+    public  float getMoneySum(){
+        float sum=0;
         Cursor cursor = db.rawQuery("select money from incomeContent;", null);
         while (cursor.moveToNext()){
             String s = cursor.getString(0);
-            int i = Integer.parseInt(s);
+            float i = Integer.parseInt(s);
             sum+=i;
         }
         return sum;

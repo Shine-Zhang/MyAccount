@@ -23,6 +23,7 @@ import com.example.zs.view.CircleImageView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -40,6 +41,8 @@ public class MyBalanceActivity extends AppCompatActivity {
     private RelativeLayout rl_mybalanceactivity_norecord;
     private TextView tv_mybalance_income;
     private TextView tv_mybalance_zhichu;
+    private ArrayList<PayoutContentInfo> datePayoutContentFromDB;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +60,7 @@ public class MyBalanceActivity extends AppCompatActivity {
         //从sp文件中取出已经选择是日期数据，用于回显
         String choiceDate = MyAplication.getStringFromSp("choiceDate");
         if(!choiceDate.isEmpty()){
-            tv_mybalanceactivity_choiceDate.setText(choiceDate);
+         //   tv_mybalanceactivity_choiceDate.setText(choiceDate);
         }
 
         MyRecordListAdapter myRecordListAdapter = new MyRecordListAdapter();
@@ -69,20 +72,88 @@ public class MyBalanceActivity extends AppCompatActivity {
         //查询有无收入或支出记录
         PayOutContentDAO payOutContentDAO = new PayOutContentDAO(this);
         allPayoutContentFromDBList = payOutContentDAO.getAllPayoutContentFromDB();
-        int moneySum = payOutContentDAO.getMoneySum();
+        //得到
+        datePayoutContentFromDB = payOutContentDAO.getDatePayoutContentFromDB(2016, 9);
+        //比较日期
+        compareDate();
+        float moneySum = payOutContentDAO.getMoneySum();
         tv_mybalance_zhichu.setText(moneySum+"");
         IncomeContentDAO incomeContentDAO = new IncomeContentDAO(this);
         allIncomeContentFromDBList = incomeContentDAO.getAllIncomeContentFromDB();
-        int moneySum1 = incomeContentDAO.getMoneySum();
+        float moneySum1 = incomeContentDAO.getMoneySum();
         tv_mybalance_income.setText(moneySum1+"");
         if (allPayoutContentFromDBList.size()!=0||allIncomeContentFromDBList.size()!=0){
             Log.i(TAG,"allIncomeContentFromDBList="+allIncomeContentFromDBList);
             Log.i(TAG,"allPayoutContentFromDBList="+allPayoutContentFromDBList);
             rl_mybalanceactivity_norecord.setVisibility(View.GONE);
         }
-
     }
+    ArrayList<PayoutContentInfo> pList;
+    private void compareDate() {
+        pList = new ArrayList<>();
+        int dayTime;
+        int maxNumber;
+        int location;
+        PayoutContentInfo p = new PayoutContentInfo(0, 0, 0, 40, "", "", "", "");
+        if (datePayoutContentFromDB.size() != 0) {
+            dayTime = datePayoutContentFromDB.get(0).day;
+            //第0个位日期
+            //pList.add(p);
+            //用户有添加收入和支出
+            while (datePayoutContentFromDB.size() != 0) {
+                //初始为最后一个，因为为最近用户添加的
+                maxNumber = datePayoutContentFromDB.get(datePayoutContentFromDB.size() - 1).day;
+                location = datePayoutContentFromDB.size() - 1;
+                //循环一次找出最大的一个天数
+                for (int i = datePayoutContentFromDB.size() - 1; i >= 0; i--) {
+                    //找出最大值
+                    if (maxNumber < datePayoutContentFromDB.get(i).day) {
+                        maxNumber = datePayoutContentFromDB.get(i).day;
+                        location = i;
+                        Log.i(TAG,"location="+i);
+                    }
+                }
+                //循环结束，把最大的一个加入到新集合中
+                if (pList.size() != 0) {
+                    //最后一个肯定不是日期,除了第一次进来
+                    Log.i(TAG,"location2="+pList.get(pList.size() - 1).day);
+                    if (maxNumber < pList.get(pList.size() - 1).day) {
+                        //出现日期不一致，增加标志位
+                        if (pList.get(pList.size() - 1).day!=40){
+                            Log.i(TAG,"location3=");
+                            pList.add(p);
+                            pList.add(datePayoutContentFromDB.get(location));
+                            //移除最大的
+                            datePayoutContentFromDB.remove(location);
+                        }else {
+                            pList.add(datePayoutContentFromDB.get(location));
+                            //移除最大的
+                            datePayoutContentFromDB.remove(location);
+                        }
+                    } else {
+                        pList.add(datePayoutContentFromDB.get(location));
+                        //移除最大的
+                        datePayoutContentFromDB.remove(location);
+                    }
+                }else {
+                    //第一次，则添加日期
+                    pList.add(p);
+                }
+           /* for (int i=datePayoutContentFromDB.size()-1;i>=0;i--){
+                if (dayTime<datePayoutContentFromDB.get(i).day){
+                    //有新的日期，先添加一个day为40的PayoutContentInfo
+                    pList.add(p);
+                    pList.add(datePayoutContentFromDB.get(i));
+                }else {
+                    //1表示要出现日期
+                    pList.add(datePayoutContentFromDB.get(i));
+                }
+            }*/
 
+
+            }
+        }
+    }
     /**
      * TextView点击事件，弹出日期选择器，获取日期
      * @param view
@@ -117,7 +188,9 @@ public class MyBalanceActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             Log.i(TAG,allIncomeContentFromDBList.size()+"--"+allPayoutContentFromDBList.size());
-            return allIncomeContentFromDBList.size()+allPayoutContentFromDBList.size()+1;
+            //return allIncomeContentFromDBList.size()+allPayoutContentFromDBList.size()+1;
+            Log.i(TAG,"plist"+pList.size());
+            return pList.size();
         }
 
         @Override
@@ -140,7 +213,29 @@ public class MyBalanceActivity extends AppCompatActivity {
             TextView tv_recordlist_money = (TextView) recordView.findViewById(R.id.tv_recordlist_money);
             int paysize = allPayoutContentFromDBList.size();
             int insize = allIncomeContentFromDBList.size();
-            if (i==0){
+            //收入和支出分开排列
+            if (pList.size()!=0){
+                //有收入或支出
+                if (pList.get(i).day==40){
+                    Log.i(TAG,i+"=="+pList.get(i).day);
+                    Log.i(TAG,"fei 40");
+                    View inflate = View.inflate(MyBalanceActivity.this, R.layout.item_timeshow, null);
+                    TextView tv_record_time = (TextView) inflate.findViewById(R.id.tv_record_time);
+                    tv_record_time.setText("2016年9月"+pList.get(i+1).day+"日");
+                    return inflate;
+                }else {
+                    Log.i(TAG,"fei 0");
+                    recordView.setVisibility(View.VISIBLE);
+                    iv_recordlist_icon.setImageResource(pList.get(i).resourceID);
+                    tv_recordlist_category.setText(pList.get(i).category);
+                    tv_recordlist_remarks.setText(pList.get(i).remarks);
+                    tv_recordlist_money.setText("-"+pList.get(i).money);
+                    return recordView;
+                }
+            }else {
+                return null;
+            }
+           /* if (i==0){
                 View inflate = View.inflate(MyBalanceActivity.this, R.layout.item_timeshow, null);
                 TextView tv_record_time = (TextView) inflate.findViewById(R.id.tv_record_time);
                 String[] weeks = {"星期日","星期一","星期二","星期三","星期四","星期五","星期六"};
@@ -173,9 +268,8 @@ public class MyBalanceActivity extends AppCompatActivity {
                     }
                     tv_recordlist_money.setText("+"+incomeContentInfo.money);
                 }
-            }
+            }*/
 
-            return recordView;
         }
     }
 }
