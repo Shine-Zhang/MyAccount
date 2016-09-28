@@ -70,8 +70,13 @@ public class MyBalanceActivity extends AppCompatActivity {
         initData();
 
         detailList.setAdapter(new MyExpandableListAdapter());
-        detailList.expandGroup(0);//默认展开第0个组
-
+        if(!groupData.isEmpty()){
+            //rl_mybalanceactivity_norecord.setVisibility(View.GONE);
+            Log.i("???","有数据，展开");
+            detailList.expandGroup(0);//默认展开第0个组
+        }else {
+            rl_mybalanceactivity_norecord.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initData() {
