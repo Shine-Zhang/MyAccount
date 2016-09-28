@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     public RadioButton rb_mainactivity_mine;
     private static final int PHOTO_REQUEST_CAREMA = 100;// 拍照
     private static final int PHOTO_REQUEST_GALLERY = 101;// 从相册中选择
+    private static final int PHOTO_REQUEST_CAREMA_FROM_ACCOUNT = 201;
+    private static final int PHOTO_REQUEST_GALLERY_FROM_ACCOUNT = 202;
     private Uri photoUri;
     //新建ArrayList用于存储ViewPager里的不同page，从BasePager里面拿View
     List<BasePager> pageList =  new ArrayList<BasePager>();
@@ -306,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
                 if(intent!=null){
                     if(intent.hasExtra("data")){
                         Bitmap bitmap = intent.getParcelableExtra("data");
-                        ;
+
                     }
                     //获取图片的全路径uri
                     photoUri = intent.getData();
@@ -334,6 +336,11 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             }
+        }else if(requestCode==PHOTO_REQUEST_CAREMA_FROM_ACCOUNT){
+           Uri result =  intent.getData();
+            intent.putExtra("photoUriString",result);
+            startActivityForResult(intent,50);
+
         }
         super.onActivityResult(requestCode, resultCode, intent);
     }

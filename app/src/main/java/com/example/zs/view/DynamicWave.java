@@ -105,11 +105,15 @@ public class DynamicWave extends View {
                     //  Log.i("hhh","i: "+i);
                     //  Log.i("hhh","mXOneOffset+i: "+(mXOneOffset+i));
                 } else {
-                    canvas.drawLine(i, mYPositions[j - upStart], i, mWaveEnd[j - upStart], mWavePaint);
+                    if(j<upEnd-1){
+                        canvas.drawLine(i, mYPositions[j - upStart], i, mWaveEnd[j - upStart], mWavePaint);
                    /* canvas.drawLine(i,mYPositions[j-upStart],i,OFFSET_Y+STRETCH_FACTOR_A,mWavePaint);*/
-                    j++;
+                        j++;
+                    }
+
                 }
             }
+
         }else{
 
 /*            for(int i=start;i<upStart;i++){
@@ -135,7 +139,8 @@ public class DynamicWave extends View {
                     //  Log.i("hhh","mXOneOffset+i: "+(mXOneOffset+i));
                 } else {
 
-                        if(j-start<end-1) {
+                        if(j<end-1) {
+                       //     Log.i("xue","mYPositions: "+mYPositions.length+"  j= "+(j - start));
                             if (mYPositions[j - start] < mSkeleton[i]) {
                                 tmp = mSkeleton[i];
                             } else {
@@ -156,20 +161,27 @@ public class DynamicWave extends View {
                 canvas.drawLine(i,mYPositions[k],i,OFFSET_Y+20,mWavePaint);
                 k++;
             }*/
+
+        }
+
+        if(!isUpHomisphere){
+            mXOneOffset += mXOffsetSpeedOne;
+            if (mXOneOffset >= upEnd-1) {
+                mXOneOffset = 0;
+            }
+        }else{
+            mXOneOffset += mXOffsetSpeedOne;
+            if (mXOneOffset >= end-1) {
+                mXOneOffset = 0;
+            }
         }
 
         doneInflate(canvas);
         // 改变两条波纹的移动点
-        mXOneOffset += mXOffsetSpeedOne;
-        mXTwoOffset += mXOffsetSpeedTwo;
+
 
         // 如果已经移动到结尾处，则重头记录
-        if (mXOneOffset >= end) {
-            mXOneOffset = 0;
-        }
-        if (mXTwoOffset >=end) {
-            mXTwoOffset = 0;
-        }
+
 
         // 引发view重绘，一般可以考虑延迟20-30ms重绘，空出时间片
 
