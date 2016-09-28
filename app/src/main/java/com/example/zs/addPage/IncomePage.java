@@ -352,7 +352,7 @@ public class IncomePage extends AddBasePage {
                 if (incomeCategoryToDB.size()==1){
                     iv_addPage_catagoryIcon.setEnabled(false);
                 }else {
-                    if (i==0){
+                    if (i==0&&!isJump){
                         //第一个item设置false,在不是从其它页面跳转过来修改和从addCategory页面跳转过来
                         //其它页面跳转过来修改,需指定item为选中状态
                         //从addCategory页面跳转过来，默认倒数第二个位选中状态

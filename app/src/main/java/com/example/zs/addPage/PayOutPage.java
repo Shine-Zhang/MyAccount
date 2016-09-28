@@ -438,7 +438,8 @@ public class PayOutPage extends AddBasePage {
                     iv_addPage_catagoryIcon.setEnabled(false);
                 }else {
                     //类别不止一个
-                    if (i == 0) {
+                    //不是从其它页面跳转过来的
+                    if (i == 0&&!isJump) {
                         //第一个item设置false
                         if (isFirstEnterPage) {
                             Log.i(TAG, "firstItem set false");
