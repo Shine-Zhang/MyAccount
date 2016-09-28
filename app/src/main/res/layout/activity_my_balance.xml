@@ -26,16 +26,15 @@
             android:layout_toRightOf="@id/ib_mybalanceactivity_back"
             android:text="我的余额"
             android:textSize="20sp"/>
-        <!--<TextView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/ib_mybalanceactivity_back"
-            android:id="@+id/tv_mybalanceactivity_choiceDate"
-            android:text="2016年11月02日-2016年11月30日"
+            android:id="@+id/tv_mybalanceactivity_titleDate"
+            android:text="2016年8月账单详细"
             android:textSize="16sp"
             android:layout_marginTop="30dp"
-            android:layout_centerHorizontal="true"
-            android:onClick="settingtime"/>-->
+            android:layout_centerHorizontal="true"/>
     </RelativeLayout>
     <View
         android:layout_width="match_parent"
@@ -99,12 +98,11 @@
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="1">
-        <ListView
+        <ExpandableListView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/lv_mybalanceactivity_recordlist"
-            >
-        </ListView>
+            android:layout_height="wrap_content"
+            android:id="@+id/expandablelv_mybalanceactivity_detailList">
+        </ExpandableListView>
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

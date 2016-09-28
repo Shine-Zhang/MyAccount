@@ -4,9 +4,13 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -15,10 +19,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.zs.application.MyAplication;
+import com.example.zs.bean.AccountChildItemBean;
+import com.example.zs.bean.AccountGroupItemBean;
 import com.example.zs.bean.IncomeContentInfo;
 import com.example.zs.bean.PayoutContentInfo;
 import com.example.zs.dao.IncomeContentDAO;
 import com.example.zs.dao.PayOutContentDAO;
+import com.example.zs.dao.TimeLineDAO;
 import com.example.zs.view.CircleImageView;
 
 import java.util.ArrayList;
@@ -32,7 +39,7 @@ import java.util.List;
 public class MyBalanceActivity extends AppCompatActivity {
 
     private static final String TAG = "MyBalanceActivity";
-    private TextView tv_mybalanceactivity_choiceDate;
+    private TextView tv_mybalanceactivity_titleDate;
     private ListView lv_mybalanceactivity_recordlist;
 
     List<PayoutContentInfo> recordlist;//用于存放消费信息的集合
@@ -42,6 +49,11 @@ public class MyBalanceActivity extends AppCompatActivity {
     private TextView tv_mybalance_income;
     private TextView tv_mybalance_zhichu;
     private ArrayList<PayoutContentInfo> datePayoutContentFromDB;
+    private ExpandableListView detailList;
+    private String[] groupStrings;
+    private String[][] childStrings;
+    private ArrayList<ArrayList<AccountChildItemBean>> childData;
+    private ArrayList<AccountGroupItemBean> groupData;
 
 
     @Override
@@ -50,226 +62,166 @@ public class MyBalanceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_balance);
         getSupportActionBar().hide();
 
-        //tv_mybalanceactivity_choiceDate = (TextView) findViewById(R.id.tv_mybalanceactivity_choiceDate);
-        lv_mybalanceactivity_recordlist = (ListView) findViewById(R.id.lv_mybalanceactivity_recordlist);
+        tv_mybalanceactivity_titleDate = (TextView) findViewById(R.id.tv_mybalanceactivity_titleDate);
         rl_mybalanceactivity_norecord = (RelativeLayout) findViewById(R.id.rl_mybalanceactivity_norecord);
         tv_mybalance_income = (TextView) findViewById(R.id.tv_mybalance_income);
         tv_mybalance_zhichu = (TextView) findViewById(R.id.tv_mybalanceactivity_pay);
+        detailList = (ExpandableListView) findViewById(R.id.expandablelv_mybalanceactivity_detailList);
         initData();
 
-        //从sp文件中取出已经选择是日期数据，用于回显
-        String choiceDate = MyAplication.getStringFromSp("choiceDate");
-        if(!choiceDate.isEmpty()){
-         //   tv_mybalanceactivity_choiceDate.setText(choiceDate);
+        detailList.setAdapter(new MyExpandableListAdapter());
+        if(!groupData.isEmpty()){
+            //rl_mybalanceactivity_norecord.setVisibility(View.GONE);
+            Log.i("???","有数据，展开");
+            detailList.expandGroup(0);//默认展开第0个组
+        }else {
+            rl_mybalanceactivity_norecord.setVisibility(View.VISIBLE);
         }
-
-        MyRecordListAdapter myRecordListAdapter = new MyRecordListAdapter();
-        lv_mybalanceactivity_recordlist.setAdapter(myRecordListAdapter);
-
     }
 
     private void initData() {
-        //查询有无收入或支出记录
-        PayOutContentDAO payOutContentDAO = new PayOutContentDAO(this);
-        allPayoutContentFromDBList = payOutContentDAO.getAllPayoutContentFromDB();
-        //得到
-        datePayoutContentFromDB = payOutContentDAO.getDatePayoutContentFromDB(2016, 9);
-        //比较日期
-        compareDate();
-        float moneySum = payOutContentDAO.getMoneySum();
-        tv_mybalance_zhichu.setText(moneySum+"");
-        IncomeContentDAO incomeContentDAO = new IncomeContentDAO(this);
-        allIncomeContentFromDBList = incomeContentDAO.getAllIncomeContentFromDB();
-        float moneySum1 = incomeContentDAO.getMoneySum();
-        tv_mybalance_income.setText(moneySum1+"");
-        if (allPayoutContentFromDBList.size()!=0||allIncomeContentFromDBList.size()!=0){
-            Log.i(TAG,"allIncomeContentFromDBList="+allIncomeContentFromDBList);
-            Log.i(TAG,"allPayoutContentFromDBList="+allPayoutContentFromDBList);
-            rl_mybalanceactivity_norecord.setVisibility(View.GONE);
+        //获取此时的年月
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH)+1;
+        Log.i("?????","month="+month);
+        tv_mybalanceactivity_titleDate.setText(year+"年"+month+"月的账单详情");
+
+        //获取需要显示的数据（测试数据）
+        if (childData!=null) {
+            childData.clear();
         }
-    }
-    ArrayList<PayoutContentInfo> pList;
-    private void compareDate() {
-        pList = new ArrayList<>();
-        int dayTime;
-        int maxNumber;
-        int location;
-        PayoutContentInfo p = new PayoutContentInfo(0, 0, 0, 40, "", "", "", "");
-        if (datePayoutContentFromDB.size() != 0) {
-            dayTime = datePayoutContentFromDB.get(0).day;
-            //第0个位日期
-            //pList.add(p);
-            //用户有添加收入和支出
-            while (datePayoutContentFromDB.size() != 0) {
-                //初始为最后一个，因为为最近用户添加的
-                maxNumber = datePayoutContentFromDB.get(datePayoutContentFromDB.size() - 1).day;
-                location = datePayoutContentFromDB.size() - 1;
-                //循环一次找出最大的一个天数
-                for (int i = datePayoutContentFromDB.size() - 1; i >= 0; i--) {
-                    //找出最大值
-                    if (maxNumber < datePayoutContentFromDB.get(i).day) {
-                        maxNumber = datePayoutContentFromDB.get(i).day;
-                        location = i;
-                        Log.i(TAG,"location="+i);
-                    }
-                }
-                //循环结束，把最大的一个加入到新集合中
-                if (pList.size() != 0) {
-                    //最后一个肯定不是日期,除了第一次进来
-                    Log.i(TAG,"location2="+pList.get(pList.size() - 1).day);
-                    if (maxNumber < pList.get(pList.size() - 1).day) {
-                        //出现日期不一致，增加标志位
-                        if (pList.get(pList.size() - 1).day!=40){
-                            Log.i(TAG,"location3=");
-                            pList.add(p);
-                            pList.add(datePayoutContentFromDB.get(location));
-                            //移除最大的
-                            datePayoutContentFromDB.remove(location);
-                        }else {
-                            pList.add(datePayoutContentFromDB.get(location));
-                            //移除最大的
-                            datePayoutContentFromDB.remove(location);
-                        }
-                    } else {
-                        pList.add(datePayoutContentFromDB.get(location));
-                        //移除最大的
-                        datePayoutContentFromDB.remove(location);
-                    }
-                }else {
-                    //第一次，则添加日期
-                    pList.add(p);
-                }
-           /* for (int i=datePayoutContentFromDB.size()-1;i>=0;i--){
-                if (dayTime<datePayoutContentFromDB.get(i).day){
-                    //有新的日期，先添加一个day为40的PayoutContentInfo
-                    pList.add(p);
-                    pList.add(datePayoutContentFromDB.get(i));
-                }else {
-                    //1表示要出现日期
-                    pList.add(datePayoutContentFromDB.get(i));
-                }
-            }*/
-
-
-            }
+        if (groupData!=null) {
+            groupData.clear();
         }
-    }
-    /**
-     * TextView点击事件，弹出日期选择器，获取日期
-     * @param view
-     */
-    public void settingtime(View view){
-        startActivityForResult(new Intent(MyBalanceActivity.this,ChoiceDateActivity.class),100);
-    }
+        TimeLineDAO detailDao = new TimeLineDAO(this);
+        childData = detailDao.getTimeLinePayOutChildData(month);
+        groupData = detailDao.getTimeLineGroupData(month);
+        Log.i("zzzzz",childData.toString());
+        Log.i("zzzzz",groupData.toString());
 
-    /**
-     * 获取从下个页面传回来的日期信息，并修改TextView
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String choiceDate = data.getStringExtra("choiceDate");
-        Log.i(TAG,"requestCode="+requestCode+" resultCode="+resultCode+" choiceDate="+choiceDate);
 
-        if(requestCode==100&&resultCode==200 && !choiceDate.isEmpty()){
-            tv_mybalanceactivity_choiceDate.setText(choiceDate);
-        }
+       /* groupStrings = new String[]{"西游记", "水浒传", "三国演义", "红楼梦"};
+        childStrings = new String[][]{
+                {"唐三藏", "孙悟空", "猪八戒", "沙和尚"},
+                {"宋江", "林冲", "李逵", "鲁智深"},
+                {"曹操", "刘备", "孙权", "诸葛亮", "周瑜"},
+                {"贾宝玉", "林黛玉", "薛宝钗", "王熙凤"}
+        };*/
 
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void back(View view){
         finish();
     }
 
-    private class MyRecordListAdapter extends BaseAdapter {
+    private class MyExpandableListAdapter extends BaseExpandableListAdapter {
+        //获取分组（父列表）的个数
         @Override
-        public int getCount() {
-            Log.i(TAG,allIncomeContentFromDBList.size()+"--"+allPayoutContentFromDBList.size());
-            //return allIncomeContentFromDBList.size()+allPayoutContentFromDBList.size()+1;
-            Log.i(TAG,"plist"+pList.size());
-            return pList.size();
+        public int getGroupCount() {
+            return groupData.size();
         }
 
+        //获取指定分组中的子选项的个数
         @Override
-        public Object getItem(int i) {
-            return null;
+        public int getChildrenCount(int i) {
+            return childData.get(i).size();
         }
 
+        //获取指定的分组数据
         @Override
-        public long getItemId(int i) {
-            return 0;
+        public Object getGroup(int i) {
+            return groupData.get(i);
         }
 
+        //获取指定分组中的指定子选项数据
         @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
+        public Object getChild(int i, int j) {
+            return childData.get(i).get(j);
+        }
 
-            View recordView = View.inflate(MyBalanceActivity.this,R.layout.item_recordlist,null);
-            CircleImageView iv_recordlist_icon = (CircleImageView) recordView.findViewById(R.id.iv_recordlist_icon);
-            TextView tv_recordlist_category = (TextView) recordView.findViewById(R.id.tv_recordlist_category);
-            TextView tv_recordlist_remarks = (TextView) recordView.findViewById(R.id.tv_recordlist_remarks);
-            TextView tv_recordlist_money = (TextView) recordView.findViewById(R.id.tv_recordlist_money);
-            int paysize = allPayoutContentFromDBList.size();
-            int insize = allIncomeContentFromDBList.size();
-            //收入和支出分开排列
-            if (pList.size()!=0){
-                //有收入或支出
-                if (pList.get(i).day==40){
-                    Log.i(TAG,i+"=="+pList.get(i).day);
-                    Log.i(TAG,"fei 40");
-                    View inflate = View.inflate(MyBalanceActivity.this, R.layout.item_timeshow, null);
-                    TextView tv_record_time = (TextView) inflate.findViewById(R.id.tv_record_time);
-                    tv_record_time.setText("2016年9月"+pList.get(i+1).day+"日");
-                    return inflate;
-                }else {
-                    Log.i(TAG,"fei 0");
-                    recordView.setVisibility(View.VISIBLE);
-                    iv_recordlist_icon.setImageResource(pList.get(i).resourceID);
-                    tv_recordlist_category.setText(pList.get(i).category);
-                    tv_recordlist_remarks.setText(pList.get(i).remarks);
-                    tv_recordlist_money.setText("-"+pList.get(i).money);
-                    return recordView;
-                }
+        //获取指定分组的ID, 这个ID必须是唯一的
+        @Override
+        public long getGroupId(int groupId) {
+            return groupId;
+        }
+
+        //获取子选项的ID, 这个ID必须是唯一的
+        @Override
+        public long getChildId(int groupId, int childId) {
+            return childId;
+        }
+
+        //分组和子选项是否持有稳定的ID, 就是说底层数据的改变会不会影响到它们。
+        @Override
+        public boolean hasStableIds() {
+            return true;
+        }
+
+        //获取显示指定分组的视图
+        @Override
+        public View getGroupView(int i, boolean b, View convertView, ViewGroup viewGroup) {
+
+            GroupViewHolder groupViewHolder;
+            View view = null;
+            if(convertView!=null){
+                view = convertView;
+                groupViewHolder = (GroupViewHolder) view.getTag();
             }else {
-                return null;
+                view = LayoutInflater.from(MyBalanceActivity.this).inflate(R.layout.groupitem_expandablelistview,null);
+                groupViewHolder = new GroupViewHolder();
+                groupViewHolder.tvTitle = (TextView) view.findViewById(R.id.label_expand_group);
+                view.setTag(groupViewHolder);
             }
-           /* if (i==0){
-                View inflate = View.inflate(MyBalanceActivity.this, R.layout.item_timeshow, null);
-                TextView tv_record_time = (TextView) inflate.findViewById(R.id.tv_record_time);
-                String[] weeks = {"星期日","星期一","星期二","星期三","星期四","星期五","星期六"};
-                Calendar cal = Calendar.getInstance();
-                int week_index = cal.get(Calendar.DAY_OF_WEEK) - 1;
-                if(week_index<0){
-                    week_index = 0;
-                }
-                Log.i(TAG,""+cal.YEAR+"pp--"+cal.MONTH+"--"+cal.DAY_OF_MONTH);
-                tv_record_time.setText(""+cal.get(Calendar.YEAR)+"年"+(cal.get(Calendar.MONTH)+1)+"月"+cal.get(Calendar.DAY_OF_MONTH)+"日  "+weeks[week_index]);
-                return inflate;
-            }else {
-                if (i<paysize+1){
-                    PayoutContentInfo payoutContentInfo = allPayoutContentFromDBList.get(paysize-i);
-                    Log.i(TAG,payoutContentInfo.toString());
-                    iv_recordlist_icon.setImageResource(payoutContentInfo.resourceID);
-                    tv_recordlist_category.setText(payoutContentInfo.category);
-                    if (!payoutContentInfo.remarks.isEmpty()){
-                        tv_recordlist_remarks.setVisibility(View.VISIBLE);
-                        tv_recordlist_remarks.setText(payoutContentInfo.remarks);
-                    }
-                    tv_recordlist_money.setText("-"+payoutContentInfo.money);
-                }else if (i<paysize+insize+1){
-                    IncomeContentInfo incomeContentInfo = allIncomeContentFromDBList.get(insize+paysize-i);
-                    iv_recordlist_icon.setImageResource(incomeContentInfo.resourceID);
-                    tv_recordlist_category.setText(incomeContentInfo.category);
-                    if (!incomeContentInfo.remarks.isEmpty()){
-                        tv_recordlist_remarks.setVisibility(View.VISIBLE);
-                        tv_recordlist_remarks.setText(incomeContentInfo.remarks);
-                    }
-                    tv_recordlist_money.setText("+"+incomeContentInfo.money);
-                }
-            }*/
 
+            groupViewHolder.tvTitle.setText("2016年9月"+groupData.get(i).getDayOfMonth()+"号");
+            return view;
         }
+
+        //获取显示指定分组中的指定子选项的视图
+        @Override
+        public View getChildView(int i, int j, boolean b, View convertView, ViewGroup viewGroup) {
+
+            ChildViewHolder childViewHolder;
+            View view = null;
+            if(convertView!=null){
+                view = convertView;
+                childViewHolder = (ChildViewHolder) view.getTag();
+            }else {
+                view = LayoutInflater.from(MyBalanceActivity.this).inflate(R.layout.childitem_expandablelistview,null);
+                childViewHolder = new ChildViewHolder();
+                childViewHolder.iv_myactivity_childItem_Icon = (ImageView) view.findViewById(R.id.iv_myactivity_childItem_icon);
+                childViewHolder.tv_myactivity_childItem_describe = (TextView) view.findViewById(R.id.tv_myactivity_childItem_describe);
+                childViewHolder.tv_myactivity_childItem_howMuch = (TextView) view.findViewById(R.id.tv_myactivity_childItem_howMuch);
+                view.setTag(childViewHolder);
+            }
+
+            childViewHolder.iv_myactivity_childItem_Icon.setImageResource(childData.get(i).get(j).getIcon());
+            childViewHolder.iv_myactivity_childItem_Icon.setBackgroundResource(R.drawable.account_pager_group_today_icon);
+            childViewHolder.tv_myactivity_childItem_describe.setText(childData.get(i).get(j).getItemDescribe());
+            if(childData.get(i).get(j).isIncome()){
+                childViewHolder.tv_myactivity_childItem_howMuch.setText("+ "+childData.get(i).get(j).getHowmuch());
+            }else {
+                childViewHolder.tv_myactivity_childItem_howMuch.setText("- "+childData.get(i).get(j).getHowmuch());
+            }
+
+            return view;
+        }
+
+        //指定位置上的子元素是否可选中
+        @Override
+        public boolean isChildSelectable(int i, int i1) {
+            return true;
+        }
+    }
+
+    private class GroupViewHolder {
+        TextView tvTitle;
+    }
+
+    private class ChildViewHolder {
+        ImageView iv_myactivity_childItem_Icon;
+        TextView tv_myactivity_childItem_describe;
+        TextView tv_myactivity_childItem_howMuch;
     }
 }

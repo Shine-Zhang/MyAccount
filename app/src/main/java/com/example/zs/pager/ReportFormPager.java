@@ -140,14 +140,14 @@ public class ReportFormPager extends BasePager {
         super(activity);
 
         initData();
-        initChart();
+        //initChart();
     }
 
-    public void refreshPauout(PayoutContentInfo iii){
+    public  void refreshPauout(PayoutContentInfo iii){
         allPayoutCategory.add(iii);
-        initView();
+        //initView();
         initData();
-        initChart();
+        //initChart();
     }
 
     @Override
@@ -237,7 +237,6 @@ public class ReportFormPager extends BasePager {
                             @Override
                             public void onValueSelected(Entry e, Highlight h) {
 
-                                //gets a normalized version of the current rotation angle of the pie chart
                                 //的到整个饼状图当前的一个标准化的角度
                                 float rotationAngle = reportFormincome.pieChart.getRotationAngle();
                                 //获取饼状图中每一部分所占角度的大小
@@ -254,14 +253,13 @@ public class ReportFormPager extends BasePager {
                                 //圆饼旋转动画
                                 reportFormincome.pieChart.spin(500,rotationAngle,end,Easing.EasingOption.EaseInOutQuad);
                                 //同时在点击某个slice的同时，在下方显示与其对应的金额和图标
-                                if(allAccount != 0){
+
                                     tv_reportform_incomedetail.setText(reportFormincome.shouruDataType.get(x) +": "  + y + "元");
                                     tv_reportform_incomedetail.setTextColor(reportFormincome.shouruColors[x%reportFormincome.shouruColors.length]);
 
                                     iv_reportform_incomedetail.setBackgroundResource(R.drawable.account_pager_group_today_icon);
                                     iv_reportform_incomedetail.setImageResource(reportFormincome.reportformfShouruIcon.get(reportFormincome.shouruDataType.get(x)));
 
-                                }
 
                             }
 
@@ -616,6 +614,7 @@ public class ReportFormPager extends BasePager {
     }
 
     public void initChart() {
+        Log.i("3333333333","55555555555555");
         //设置饼状图是否接受点击事件，默认为true
         pc_reportform_piechart.setTouchEnabled(true);
         //设置图饼是否显示百分比
@@ -646,7 +645,7 @@ public class ReportFormPager extends BasePager {
         bindData(zhichuDataType.size());
 
         for(int i = 0;i <zhichuDataType.size();i++ ){
-            Log.i("zhichuDataType",zhichuDataType.get(i));
+            Log.i("zhichuDataType555",zhichuDataType.get(i));
         }
 
         Log.i("zhichuDataType",zhichuDataType.size() + "");
@@ -704,7 +703,7 @@ public class ReportFormPager extends BasePager {
 
     //中间显示的文字数据
     public SpannableString generateCenterSpannableText() {
-        SpannableString s = new SpannableString("总支出\n" + allAccount);
+        SpannableString s = new SpannableString("总支出\n" + String.format("%.2f",allAccount));
         s.setSpan(new RelativeSizeSpan(1.2f), 0, 4, 0);
         s.setSpan(new StyleSpan(Typeface.NORMAL), 0, 4, 0);
         s.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);
