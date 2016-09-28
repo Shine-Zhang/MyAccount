@@ -54,7 +54,7 @@
                 android:layout_width="55dp"
                 android:layout_height="20dp" />
             <View
-                android:layout_marginTop="19dp"
+                android:layout_marginTop="21dp"
                 android:id="@+id/view_account_pager_v1"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/tv_account_pager_buget"
