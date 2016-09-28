@@ -22,7 +22,7 @@ public class MyAplication extends Application{
 
     private BasePager wishPager;
     private BasePager ownerPager;
-
+    private BasePager reportFormPager;
     /**
      * 应用创建时调用oncreate（）
      */
@@ -172,5 +172,11 @@ public class MyAplication extends Application{
         this.wishPager = wishPager;
     }
 
+    public BasePager getReportFormPager() {
+        return reportFormPager;
+    }
 
+    public void setReportFormPager(BasePager reportFormPager) {
+        this.reportFormPager = reportFormPager;
+    }
 }
