@@ -111,6 +111,10 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.rb_mainactivity_list:
                         vp_mainactivity.setCurrentItem(2,false);
                         pageList.get(2).initData();
+                        MyAplication application2 = (MyAplication) getApplication();
+                        if(application2.getReportFormPager()==null) {
+                            application2.setReportFormPager(pageList.get(2));
+                        }
                         break;
 
                     case R.id.rb_mainactivity_mine:
@@ -286,7 +290,10 @@ public class MainActivity extends AppCompatActivity {
             String photoUriString = intent.getStringExtra("photoUriString");
             PayoutContentInfo payouContentInfo = new PayoutContentInfo(id, resourceID, categoryName, year, mouth, day, money, marks, photoUriString);
             Log.i(tag,payouContentInfo.toString());
-
+            Log.i("kkkjjjhj","fggggf");
+            ReportFormPager reportFormPager = (ReportFormPager) pageList.get(2);
+            reportFormPager.refreshPauout(payouContentInfo);
+            Log.i("kkkjjjhj",reportFormPager.toString());
             //super无法执行到
             // return;
         }else if(resultCode==444){
