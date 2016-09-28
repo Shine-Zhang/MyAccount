@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
                         pageList.get(0).initData();
                         MyAplication application0 = (MyAplication) getApplication();
                         if(application0.getAccountPager()==null) {
+                            Log.i("lalalala","设置了");
                             application0.setAccountPager(pageList.get(0));
                         }
                         break;
@@ -131,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
         pageList.get(0).initData();
         MyAplication application0 = (MyAplication) getApplication();
         if(application0.getAccountPager()==null) {
+            Log.i("lalalala","设置了");
             application0.setAccountPager(pageList.get(0));
         }
         Log.i(tag,"wennm");

@@ -24,7 +24,6 @@ public class SeletorUtils {
             if(field.getName().startsWith("pic")){
 
                 try {
-
                     //System.out.println("*******************************"+field.getName().substring(4,field.getName().length())+"******************");
                     all_pics.add(field.getInt(src));
                 } catch (IllegalAccessException e) {

@@ -38,7 +38,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp" />
 
-        <ImageView
+        <com.example.zs.view.CircleImageView
             android:layout_marginRight="5dp"
             android:layout_toLeftOf="@id/ib_account_pager_item_img_describe"
             android:id="@+id/iv_account_pager_item_photo"
