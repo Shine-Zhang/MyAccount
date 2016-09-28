@@ -46,7 +46,8 @@
         android:id="@+id/tv_reportform_time"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:text="2016.9.3"
+        android:text="收入/支出总汇"
+        android:textSize="20sp"
         android:gravity="center"
         />
     <View
@@ -70,23 +71,37 @@
                 android:layout_gravity="center_horizontal">
                 <com.github.mikephil.charting.charts.PieChart
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="350dp"
                     android:layout_marginTop="10dp"
                     android:id="@+id/pc_reportform_piechart">
                 </com.github.mikephil.charting.charts.PieChart>
             </FrameLayout>
-            <!--<TextView
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:id="@+id/tv_reportform_detail"
-                android:textColor="#f00"
-                android:textSize="30sp"/>-->
-            <android.support.v7.widget.RecyclerView
+                android:layout_marginTop="30dp"
+                android:id="@+id/rl_reportform_detail">
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
+                    android:id="@+id/iv_reportform_detail"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="25dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/tv_reportform_detail"
+                    android:textColor="#f00"
+                    android:textSize="25sp"/>
+            </RelativeLayout>
+            <!--<android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/rv_reportformpager_recyclerview">
-            </android.support.v7.widget.RecyclerView>
+            </android.support.v7.widget.RecyclerView>-->
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -97,9 +112,31 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:id="@+id/fl_reportform_shouru"
-                android:layout_height="300dp"
+                android:layout_height="350dp"
                 android:layout_gravity="center_horizontal">
             </FrameLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:id="@+id/rl_reportform_incomedetail">
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
+                    android:id="@+id/iv_reportform_incomedetail"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginRight="25dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/tv_reportform_incomedetail"
+                    android:textColor="#f00"
+                    android:textSize="25sp"/>
+            </RelativeLayout>
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>
