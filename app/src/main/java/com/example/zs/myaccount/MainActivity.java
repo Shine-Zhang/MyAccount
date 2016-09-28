@@ -9,11 +9,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.example.zs.application.MyAplication;
 import com.example.zs.bean.PayoutContentInfo;
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private Uri photoUri;
     //新建ArrayList用于存储ViewPager里的不同page，从BasePager里面拿View
     List<BasePager> pageList =  new ArrayList<BasePager>();
+    private MainActivity_ContentAdapter mainActivity_contentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +79,9 @@ public class MainActivity extends AppCompatActivity {
         pageList.add(new OwnerPager(this));
 
         //新建Adapter用于每个RadioButton点击显示不同页面
-        vp_mainactivity.setAdapter(new MainActivity_ContentAdapter());
+        mainActivity_contentAdapter = new MainActivity_ContentAdapter();
+
+        vp_mainactivity.setAdapter(mainActivity_contentAdapter);
 
         //处理RadioGroup的点击事件，使之与对应的的ViewPager页面对应
         //（暂时跳转两个页面做测试）
@@ -86,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (checkId){
 
                     case R.id.rb_mainactivity_detail:
-                        vp_mainactivity.setCurrentItem(0);
+                        vp_mainactivity.setCurrentItem(0,false);
                         pageList.get(0).initData();
                         MyAplication application0 = (MyAplication) getApplication();
                         if(application0.getAccountPager()==null) {
@@ -96,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.rb_mainactivity_wish:
                         Log.i(tag,"00");
-                        vp_mainactivity.setCurrentItem(1);
+                        vp_mainactivity.setCurrentItem(1,false);
                         pageList.get(1).initData();
                         MyAplication application1 = (MyAplication) getApplication();
                         if(application1.getWishPager()==null) {
@@ -104,13 +109,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                         break;
                     case R.id.rb_mainactivity_list:
-                        vp_mainactivity.setCurrentItem(2);
+                        vp_mainactivity.setCurrentItem(2,false);
                         pageList.get(2).initData();
-
                         break;
 
                     case R.id.rb_mainactivity_mine:
-                        vp_mainactivity.setCurrentItem(3);
+                        vp_mainactivity.setCurrentItem(3,false);
                         pageList.get(3).initData();
                         MyAplication application03 = (MyAplication) getApplication();
                         application03.setOwnerPager(pageList.get(3));
@@ -130,6 +134,22 @@ public class MainActivity extends AppCompatActivity {
 
     //新建Adapter用于每个RadioButton点击显示不同页面
    public class MainActivity_ContentAdapter extends PagerAdapter{
+        private int mChildCount = 0;
+        //解决notifyDataSetChanged 无法刷新page数据的bug
+        @Override
+        public void notifyDataSetChanged() {
+            mChildCount = getCount();
+            super.notifyDataSetChanged();
+        }
+        @Override
+        public int getItemPosition(Object object)   {
+            if ( mChildCount > 0) {
+                mChildCount --;
+                return POSITION_NONE;
+            }
+            return super.getItemPosition(object);
+        }
+
 
         @Override
         public int getCount() {
@@ -153,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
+            Log.i("mainActivity","viewpager-instantiateItem="+position);
             BasePager basePager = pageList.get(position);
             /*测试代码
             Log.i("hahaha","&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
@@ -194,8 +215,39 @@ public class MainActivity extends AppCompatActivity {
 
         Log.i("11","大油桃");
 
-
     }
+    long firstTime;
+    //方式一
+    //防止用户误触返回键退出应用,重写back键
+    @Override
+    public void onBackPressed() {
+        long secondTime = System.currentTimeMillis();
+        if (secondTime-firstTime>1000){//比较优先级低
+            Toast.makeText(MainActivity.this, "再次点击退出钱哆哆记账",
+                    Toast.LENGTH_SHORT).show();
+            firstTime = secondTime;//记录上次的时间
+        }else {
+            super.onBackPressed();
+        }
+    }
+    /*//按键松开触发
+    //方式二
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode==KeyEvent.KEYCODE_BACK){
+            long secondTime = System.currentTimeMillis();
+            if (secondTime-firstTime>1000){
+                Toast.makeText(MainActivity.this, "再次点击退出钱哆哆记账",
+                        Toast.LENGTH_SHORT).show();
+                firstTime = secondTime;
+                return true;
+            }else {
+                finish();
+            }
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+*/
     public void add(View v){
         //test
         /*Intent intent = new Intent(this,AddRecordActivity.class);
@@ -206,11 +258,13 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("day",1);
         intent.putExtra("money","350");
         intent.putExtra("remarks","备注测试");
-        intent.putExtra("photo","this is photo");
+        intent.putExtra("photoUriString","");
         intent.putExtra("resourceID",2130837665);
         intent.putExtra("categoryName","红包");
         startActivityForResult(intent,110);*/
-      startActivity(new Intent(MainActivity.this,AddRecordActivity.class));
+        Intent intent = new Intent(MainActivity.this, AddRecordActivity.class);
+        //test intent.putExtra("photoUriString","content://media/external/images/media/33");
+        startActivityForResult(intent,50);
     }
 
     @Override
@@ -220,6 +274,7 @@ public class MainActivity extends AppCompatActivity {
         Bitmap resultBitmap;
         //确认健返回
         if(resultCode==555&&intent!=null){
+            //刷新page的数据
             int id = intent.getIntExtra("id", 0);
             int resourceID = intent.getIntExtra("resourceID", 0);
             String categoryName = intent.getStringExtra("categoryName");
@@ -228,9 +283,10 @@ public class MainActivity extends AppCompatActivity {
             int day = intent.getIntExtra("day", 0);
             String money = intent.getStringExtra("money");
             String marks = intent.getStringExtra("marks");
-            String photo = intent.getStringExtra("photo");
-            PayoutContentInfo payouContentInfo = new PayoutContentInfo(id, resourceID, categoryName, year, mouth, day, money, marks, photo);
+            String photoUriString = intent.getStringExtra("photoUriString");
+            PayoutContentInfo payouContentInfo = new PayoutContentInfo(id, resourceID, categoryName, year, mouth, day, money, marks, photoUriString);
             Log.i(tag,payouContentInfo.toString());
+
             //super无法执行到
             // return;
         }else if(resultCode==444){

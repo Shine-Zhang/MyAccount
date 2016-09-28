@@ -90,7 +90,7 @@ public class OwnerPager extends BasePager {
 
     @Override
     public View initView() {
-
+        Log.i(TAG,"--initView");
         //填充OwnerPager页面
         View OwnerPagerView = View.inflate(mActivity, R.layout.ownerpager_main,null);
         //找出OwnerPagerView中的所有控件
@@ -174,8 +174,8 @@ public class OwnerPager extends BasePager {
     private void getDataFromDB() {
         PayOutContentDAO payOutContentDAO = new PayOutContentDAO(mActivity);
         IncomeContentDAO incomeContentDAO = new IncomeContentDAO(mActivity);
-        int moneySum = payOutContentDAO.getMoneySum();
-        int moneySum1 = incomeContentDAO.getMoneySum();
+        float moneySum = payOutContentDAO.getMoneySum();
+        float moneySum1 = incomeContentDAO.getMoneySum();
         tv_ownerpager_mybalance.setText(moneySum1-moneySum+"");
     }
 

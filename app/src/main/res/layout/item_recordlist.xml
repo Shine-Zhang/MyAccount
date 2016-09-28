@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FFF">
+    android:background="#FFF"
+    android:visibility="gone">
     <com.example.zs.view.CircleImageView
         android:layout_width="30dp"
         android:layout_height="30dp"
@@ -11,7 +12,7 @@
         android:id="@+id/iv_recordlist_icon"
         android:layout_alignParentLeft="true"
         android:layout_margin="10dp"
-        android:background="#31C9F2"
+        android:background="@drawable/bg_addicon_circular"
         android:src="@drawable/ic_hongbao_yellow"/>
     <LinearLayout
         android:layout_width="wrap_content"
@@ -34,6 +35,7 @@
             android:layout_toRightOf="@id/iv_recordlist_icon"
             android:text="红包"
             android:textSize="10sp"
+            android:visibility="gone"
             android:layout_centerVertical="true"/>
     </LinearLayout>
 

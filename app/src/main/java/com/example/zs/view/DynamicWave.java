@@ -98,7 +98,7 @@ public class DynamicWave extends View {
        // Log.i("hhh","span: "+(upEnd-upStart+1));
         if(!isUpHomisphere){
         for(int i=upStart,j=upStart,k=upStart;i<upEnd;i++) {
-                if (i + mXOneOffset < upEnd) {
+                if (i + mXOneOffset < upEnd-1) {
                     canvas.drawLine(i, mYPositions[mXOneOffset + i - upStart], i, mWaveEnd[i - upStart], mWavePaint);
                  /*   canvas.drawLine(i,mYPositions[mXOneOffset+i-upStart],i,OFFSET_Y+STRETCH_FACTOR_A,mWavePaint);*/
                     // Log.i("hhh",(i-upStart)+"start: "+mYPositions[mXOneOffset+i-upStart]+" end: "+mWaveEnd[i-upStart]);
@@ -120,7 +120,7 @@ public class DynamicWave extends View {
             float tmp=-1;
             for(int i=start,j=start,k=start;i<end;i++) {
 
-                if (i + mXOneOffset < end) {
+                if (i + mXOneOffset < end-1) {
 
                     if( mYPositions[mXOneOffset + i - start]<mSkeleton[i]){
                         tmp = mSkeleton[i];
@@ -135,15 +135,17 @@ public class DynamicWave extends View {
                     //  Log.i("hhh","mXOneOffset+i: "+(mXOneOffset+i));
                 } else {
 
-
-                    if( mYPositions[j - start]<mSkeleton[i]){
-                        tmp = mSkeleton[i];
-                    }else{
-                        tmp =  mYPositions[j - start];
-                    }
-                    canvas.drawLine(i, tmp, i, OFFSET_Y+STRETCH_FACTOR_A, mWavePaint);
+                        if(j-start<end-1) {
+                            if (mYPositions[j - start] < mSkeleton[i]) {
+                                tmp = mSkeleton[i];
+                            } else {
+                                tmp = mYPositions[j - start];
+                            }
+                            canvas.drawLine(i, tmp, i, OFFSET_Y + STRETCH_FACTOR_A, mWavePaint);
                    /* canvas.drawLine(i,mYPositions[j-upStart],i,OFFSET_Y+STRETCH_FACTOR_A,mWavePaint);*/
-                    j++;
+                            j++;
+                        }
+
                 }
             }
 

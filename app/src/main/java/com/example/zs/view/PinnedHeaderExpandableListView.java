@@ -60,7 +60,7 @@ public class PinnedHeaderExpandableListView extends ExpandableListView implement
         public void updatePinnedHeader(View headerView, int firstVisibleGroupPos);
     }
 
-    private View mHeaderView;
+    public View mHeaderView;
     private int mHeaderWidth;
     private int mHeaderHeight;
 
