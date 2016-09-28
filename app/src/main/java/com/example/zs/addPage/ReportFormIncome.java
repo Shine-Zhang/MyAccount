@@ -181,7 +181,7 @@ public class ReportFormIncome {
         pieChart.invalidate();
     }
 
-    private void initData() {
+    public void initData() {
 
         allShouRuAccount = 0;
         IncomeContentDAO incomeContentDAO = new IncomeContentDAO(activity);
@@ -235,14 +235,19 @@ public class ReportFormIncome {
                     boolean flag = true;
                     for(int j = 0; j < shouruDataType.size();j++){
 
-                        Set<String> keyWords = otherShouruAllAccountDD.keySet();
-                        keysString = new String[keyWords.size()];
-                        Object[] keys = keyWords.toArray();
 
-                        for(int k = 0; k < keys.length; k++){
-                            String keyString =  keys[k].toString();
-                            keysString[k] = keyString;
-                        }
+                            Log.i("lololo",category + otherShouruAllAccountDD.size());
+
+                            Set<String> keyWords = otherShouruAllAccountDD.keySet();
+                            keysString = new String[keyWords.size()];
+                            Object[] keys = keyWords.toArray();
+
+                            for(int k = 0; k < keys.length; k++){
+                                String keyString =  keys[k].toString();
+                                keysString[k] = keyString;
+                            }
+
+
 
                         if(!category.equals(shouruDataType.get(j))){
                             if(j == (shouruDataType.size()-1)){
@@ -277,10 +282,6 @@ public class ReportFormIncome {
                     Log.i("kkkkkdkdkddk","h会不会显示3" + "-----" +category + otherShouruAllAccountDD.get(category) + "");
                 }
         }
-
-        /*allShouRuNumber = incomeNumAndAccount.salaryNumber + incomeNumAndAccount.jianzhiNumber
-                + incomeNumAndAccount.lihuaqianAccount +  incomeNumAndAccount.hongbaoNumber
-                + incomeNumAndAccount.licaiNumber;*/
 
         allShouRuAccount += incomeNumAndAccount.licaiAccount + incomeNumAndAccount.hongbaoAccount
                 + incomeNumAndAccount.lihuaqianAccount + incomeNumAndAccount.jianzhiAccount
