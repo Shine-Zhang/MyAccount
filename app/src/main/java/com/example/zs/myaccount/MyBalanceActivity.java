@@ -90,70 +90,8 @@ public class MyBalanceActivity extends AppCompatActivity {
     }
     ArrayList<PayoutContentInfo> pList;
     private void compareDate() {
-        pList = new ArrayList<>();
-        int dayTime;
-        int maxNumber;
-        int location;
-        PayoutContentInfo p = new PayoutContentInfo(0, 0, 0, 40, "", "", "", "");
-        if (datePayoutContentFromDB.size() != 0) {
-            dayTime = datePayoutContentFromDB.get(0).day;
-            //第0个位日期
-            //pList.add(p);
-            //用户有添加收入和支出
-            while (datePayoutContentFromDB.size() != 0) {
-                //初始为最后一个，因为为最近用户添加的
-                maxNumber = datePayoutContentFromDB.get(datePayoutContentFromDB.size() - 1).day;
-                location = datePayoutContentFromDB.size() - 1;
-                //循环一次找出最大的一个天数
-                for (int i = datePayoutContentFromDB.size() - 1; i >= 0; i--) {
-                    //找出最大值
-                    if (maxNumber < datePayoutContentFromDB.get(i).day) {
-                        maxNumber = datePayoutContentFromDB.get(i).day;
-                        location = i;
-                        Log.i(TAG,"location="+i);
-                    }
-                }
-                //循环结束，把最大的一个加入到新集合中
-                if (pList.size() != 0) {
-                    //最后一个肯定不是日期,除了第一次进来
-                    Log.i(TAG,"location2="+pList.get(pList.size() - 1).day);
-                    if (maxNumber < pList.get(pList.size() - 1).day) {
-                        //出现日期不一致，增加标志位
-                        if (pList.get(pList.size() - 1).day!=40){
-                            Log.i(TAG,"location3=");
-                            pList.add(p);
-                            pList.add(datePayoutContentFromDB.get(location));
-                            //移除最大的
-                            datePayoutContentFromDB.remove(location);
-                        }else {
-                            pList.add(datePayoutContentFromDB.get(location));
-                            //移除最大的
-                            datePayoutContentFromDB.remove(location);
-                        }
-                    } else {
-                        pList.add(datePayoutContentFromDB.get(location));
-                        //移除最大的
-                        datePayoutContentFromDB.remove(location);
-                    }
-                }else {
-                    //第一次，则添加日期
-                    pList.add(p);
-                }
-           /* for (int i=datePayoutContentFromDB.size()-1;i>=0;i--){
-                if (dayTime<datePayoutContentFromDB.get(i).day){
-                    //有新的日期，先添加一个day为40的PayoutContentInfo
-                    pList.add(p);
-                    pList.add(datePayoutContentFromDB.get(i));
-                }else {
-                    //1表示要出现日期
-                    pList.add(datePayoutContentFromDB.get(i));
-                }
-            }*/
-
 
             }
-        }
-    }
     /**
      * TextView点击事件，弹出日期选择器，获取日期
      * @param view
