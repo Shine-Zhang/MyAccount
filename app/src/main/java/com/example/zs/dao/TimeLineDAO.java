@@ -112,7 +112,7 @@ public class TimeLineDAO {
                 int dayOfMonth = dayCosts.getInt(dayCosts.getColumnIndex("day"));
                 String itemDescribe = dayCosts.getString(dayCosts.getColumnIndex("category"));
                 String howmuch = dayCosts.getString(dayCosts.getColumnIndex("money"));
-                item = new AccountChildItemBean(month,dayOfMonth,icon,-1,itemDescribe,howmuch,false,id);
+                item = new AccountChildItemBean(month,dayOfMonth,icon,"",itemDescribe,howmuch,false,id);
                 child.add(item);
             }
 
@@ -122,7 +122,7 @@ public class TimeLineDAO {
                 int dayOfMonth = dayIncomes.getInt(dayIncomes.getColumnIndex("day"));
                 String itemDescribe = dayIncomes.getString(dayIncomes.getColumnIndex("category"));
                 String howmuch = dayIncomes.getString(dayIncomes.getColumnIndex("money"));
-                item = new AccountChildItemBean(month,dayOfMonth,icon,-1,itemDescribe,howmuch,true,id);
+                item = new AccountChildItemBean(month,dayOfMonth,icon,"",itemDescribe,howmuch,true,id);
                 child.add(item);
             }
             children.add(child);

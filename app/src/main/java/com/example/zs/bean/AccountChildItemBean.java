@@ -14,7 +14,7 @@ public class AccountChildItemBean {
     int dayOfMonth;
     int icon;
     //此处为期赋初值-1，主要是为了区分是否有图片
-    int photoResId = -1;
+    String photoResurl ="";
     String itemDescribe;
     String howmuch;
     boolean isIncome;
@@ -24,16 +24,16 @@ public class AccountChildItemBean {
      * @param month 添加该条目到帐薄中时的月份
      * @param dayOfMonth 添加该条目到帐薄中时的具体日期
      * @param icon  该条目在帐薄中的图标
-     * @param photoResId 用户自己为该条目添加的图片id
+     * @param photoResurl 用户自己为该条目添加的图片id
      * @param itemDescribe 该条目和图标配套的文字
      * @param howmuch 该条目中具体住处/收入的数额
      * @param isIncome 用来判断该条目是收入/支出
      */
-    public AccountChildItemBean(int month, int dayOfMonth, int icon, int photoResId, String itemDescribe, String howmuch, boolean isIncome,int id) {
+    public AccountChildItemBean(int month, int dayOfMonth, int icon, String photoResurl, String itemDescribe, String howmuch, boolean isIncome,int id) {
         this.month = month;
         this.dayOfMonth = dayOfMonth;
         this.icon = icon;
-        this.photoResId = photoResId;
+        this.photoResurl = photoResurl;
         this.itemDescribe = itemDescribe;
         this.howmuch = howmuch;
         this.isIncome = isIncome;
@@ -64,12 +64,12 @@ public class AccountChildItemBean {
         this.icon = icon;
     }
 
-    public int getPhotoResId() {
-        return photoResId;
+    public String getPhotoResUrl() {
+        return photoResurl;
     }
 
-    public void setPhotoResId(int photoResId) {
-        this.photoResId = photoResId;
+    public void setPhotoResId(String photoResurl) {
+        this.photoResurl = photoResurl;
     }
 
     public String getItemDescribe() {
@@ -120,7 +120,7 @@ public class AccountChildItemBean {
                 ", month=" + month +
                 ", dayOfMonth=" + dayOfMonth +
                 ", icon=" + icon +
-                ", photoResId=" + photoResId +
+                ", photoResId=" + photoResurl +
                 ", itemDescribe='" + itemDescribe + '\'' +
                 ", howmuch='" + howmuch + '\'' +
                 ", isIncome=" + isIncome +

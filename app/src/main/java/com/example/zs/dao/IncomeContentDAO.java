@@ -101,65 +101,6 @@ public class IncomeContentDAO {
         return sum;
     }
 
-    /**
-     * 此函数为Shine-Zhang添加，用于获取时间轴轴中Group数据
-     * @param month
-     */
-   public float[] getTimeLineGroupData(int month){
-
-       Calendar now = Calendar.getInstance();
-       int dayOfMonth = now.get(Calendar.DAY_OF_MONTH);
-       float[] incomes = new float[dayOfMonth];
-       //float[] income = new float[dayOfMonth];
-       for(int i=0;i<incomes.length;i++){
-           incomes[i]=0;
-           // income[i]=0;
-       }
-       // Log.i("wuta","***************************");
-       Cursor costCursor = db.rawQuery("select sum(money),day from incomeContent where month=?group by day order by day DESC",new String[]{month+""});
-       while(costCursor.moveToNext()){
-           // AccountGroupItemBean =
-           int total = costCursor.getInt(costCursor.getColumnIndex("sum(money)"));
-           int day = costCursor.getInt(costCursor.getColumnIndex("day"));
-           incomes[day-1] = total;
-           // Log.i("haha","length "+costs.length+"总支出： "+ costs[day-1]);
-       }
-
-       return incomes;
-   }
-
-
-    /**
-     * 此函数为Shine-Zhang添加，用于获取时间轴轴中Child数据
-     * @param month
-     */
-    public  ArrayList<ArrayList<AccountChildItemBean>>  getTimeLineIncomeChildData(int month){
-
-        ArrayList<ArrayList<AccountChildItemBean>> children = new ArrayList<ArrayList<AccountChildItemBean>>();
-        Cursor dayCursor = db.rawQuery("select day from incomeContent where month=?group by day order by day DESC",new String[]{month+""});
-       //  Log.i("nimama","&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"+dayCursor.getCount());
-        ArrayList<AccountChildItemBean> child=null;
-        while(dayCursor.moveToNext()){
-            child = new ArrayList<AccountChildItemBean>();
-            int day = dayCursor.getInt(dayCursor.getColumnIndex("day"));
-            Cursor itemsCursor = db.rawQuery("select * from incomeContent where month=? and day=?",new String[]{month+"",day+""});
-            AccountChildItemBean item = null;
-          //   Log.i("child","***************************************************");
-            while(itemsCursor.moveToNext()){
-                int id = itemsCursor.getInt(itemsCursor.getColumnIndex("id"));
-                int icon = itemsCursor.getInt(itemsCursor.getColumnIndex("resourceID"));
-                int dayOfMonth = itemsCursor.getInt(itemsCursor.getColumnIndex("day"));
-                String itemDescribe = itemsCursor.getString(itemsCursor.getColumnIndex("category"));
-                String howmuch = itemsCursor.getString(itemsCursor.getColumnIndex("money"));
-                item = new AccountChildItemBean(month,dayOfMonth,icon,-1,itemDescribe,howmuch,true,id);
-                 Log.i("child","hahahahahahah: "+item.toString());
-                // Log.i("child","***************************************************");
-                child.add(item);
-            }
-            children.add(child);
-        }
-        return children;
-    }
 
     /**
      * 用于查询月收入总额
