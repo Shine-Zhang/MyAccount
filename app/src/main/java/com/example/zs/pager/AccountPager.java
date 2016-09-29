@@ -172,7 +172,7 @@ public class AccountPager extends BasePager implements
                 float budget = Float.parseFloat(myBudget);
                 float balance = budget-totalCost;
                 float currentHight = balance/budget;
-                intent.putExtra("currentHight",0.7f);
+                intent.putExtra("currentHight",currentHight);
                 intent.putExtra("balance",balance);
                 intent.putExtra("totalIncome",totalIncome);
                // Log.i("haha","&&&&&&&&&&&&&&&&&&&&:"+currentHight);

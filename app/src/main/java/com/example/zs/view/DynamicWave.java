@@ -99,7 +99,7 @@ public class DynamicWave extends View {
 
             float tmp=-1;
             // Log.i("haha","start---end: "+start+"--"+end+" upstart--upend:"+upStart+" "+upEnd+"mWaveWidth: "+mWaveWidth+" mYPositions: "+mYPositions.length);
-            for(int i=start,j=start,k=start;i<end;i++) {
+            for(int i=start,j=start,k=start;i<end&&flag;i++) {
 
                 if (i + mXOneOffset < end-1) {
                     Log.i("haha","第一条: "+"start--end"+start+"--"+end+"--"+(mXOneOffset + i - start)+"i="+i);
@@ -119,6 +119,7 @@ public class DynamicWave extends View {
                     if(j<end-1) {
                         if (mYPositions[j - start] < mSkeleton[i]) {
                             Log.i("haha","第二条01: "+"start--end"+start+"--"+end+"--"+"upstart--upend:"+upStart+upEnd+"--"+(j - start)+" j="+j+"i: "+i);
+//                            tmp = mSkeleton[i];
                             tmp = mYPositions[j - start];
                         } else {
                             Log.i("haha","第二条02: "+"start--end"+start+"--"+end+"--"+(j - start)+" j="+j+"i: "+i);
@@ -131,6 +132,9 @@ public class DynamicWave extends View {
                 }
             }
         }
+        if(!flag){
+            Log.i("haha","&&&&&&&&&&&&&&&&&&&&&");
+        }
         mXOneOffset += mXOffsetSpeedOne;
         if(!isUpHomisphere){
 
@@ -138,6 +142,7 @@ public class DynamicWave extends View {
                 mXOneOffset = 0;
             }
         }else{
+            //Log.i("haha","**********************");
             if (mXOneOffset >=end) {
                 mXOneOffset = 0;
             }
@@ -145,7 +150,8 @@ public class DynamicWave extends View {
 
         // 引发view重绘，一般可以考虑延迟20-30ms重绘，空出时间片
         if(flag) {
-            postInvalidate();
+            Log.i("haha","**********************");
+           postInvalidate();
         }
     }
 
@@ -195,7 +201,10 @@ public class DynamicWave extends View {
         if(mCurentRatio>=0) {
          //   Log.i("haha","**********************************");
             mWaveHight = getCorrespondingHeight(mCurentRatio);
-            STRETCH_FACTOR_A = mWaveHight/15;
+            STRETCH_FACTOR_A = mWaveHight / 15;
+            if(mCurentRatio>0.5) {
+                STRETCH_FACTOR_A = (float) (mTotalHeight*0.76 / 15);
+            }
             if(mCurentRatio<0.5) {
                 float yDistance = Math.abs(mRadius - mWaveHight);
                 mWaveWidth = (int) Math.sqrt(mRadius * mRadius - yDistance * yDistance);
