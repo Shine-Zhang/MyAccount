@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.example.zs.application.MyAplication;
 import com.example.zs.utils.KeyboardUtil;
 import com.example.zs.view.DynamicWave;
+import com.example.zs.view.WaterWaveView;
 
 import org.w3c.dom.Text;
 
@@ -82,7 +83,6 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
         balance = intent.getFloatExtra("balance",0);
         // Log.i("haha","!!!!!!!!!!!!!!!!! :"+currentRatio);
 
-
         mVpShowBudgetSta = (ViewPager) findViewById(R.id.vp_show_budget_sta);
 
         pagers = new ArrayList<>();
@@ -91,7 +91,6 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
 
         mVpShowBudgetSta.setAdapter(new ContentAdapter());
         mVpShowBudgetSta.setCurrentItem(0);
-
 
         mMapping = new HashMap<>();
 
@@ -408,6 +407,13 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                     tvShowBudgetStateActivityNumTip = (TextView) pagers.get(0).findViewById(R.id.tv_show_budget_state_activity_num_tip);
                     myWave = (DynamicWave) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.dynamicWave_show_budget_activity_mywave);
                     myWave.setmCurentRatio(currentRatio);
+                    Button mButton = (Button) findViewById(R.id.toStop);
+                    mButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            myWave.flag = false;
+                        }
+                    });
                     if(TextUtils.isEmpty(MyAplication.getStringFromSp("myBudget"))){
                         //没数据就给默认值
                         tvShowBudgetStateActivityNumTip.setText("3000");

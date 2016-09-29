@@ -4,10 +4,12 @@ import android.app.Application;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -24,9 +26,17 @@ import com.example.zs.pager.BasePager;
 import com.example.zs.pager.OwnerPager;
 import com.example.zs.pager.ReportFormPager;
 import com.example.zs.pager.WishPager;
+import com.example.zs.utils.DensityUtil;
+import com.example.zs.utils.ScaleBitmapUtils;
+import com.lidroid.xutils.BitmapUtils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -337,10 +347,32 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }else if(requestCode==PHOTO_REQUEST_CAREMA_FROM_ACCOUNT){
-           Uri result =  intent.getData();
-            intent.putExtra("photoUriString",result);
-            startActivityForResult(intent,50);
+            Uri result =  intent.getData();
+            if(result==null){
+                if(intent.hasExtra("data")){
+                    Bitmap bitmap = intent.getParcelableExtra("data");
+                    bitmap.recycle();
+                    bitmap = ScaleBitmapUtils.scaleBitmap(bitmap, DensityUtil.dip2px(this,40), DensityUtil.dip2px(this,40));
+                    String path = Environment.getExternalStorageDirectory() + "/MyAccount/";
+                    String fileName;
+                    File file = new File(path);
+                    if (!file.exists()) {
+                        file.mkdir();
+                    }
+                    fileName= DateFormat.format("yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA))+".jpg";
+                    try {
+                        FileOutputStream out = new FileOutputStream(new File(path + fileName));
+                        bitmap.compress(Bitmap.CompressFormat.JPEG,100,out);
+                        result =  Uri.fromFile(new File(path + fileName));
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
 
+            }
+             Intent leapAddRecordActivityIntent = new Intent(this,AddRecordActivity.class);
+            intent.putExtra("photoUriString",result);
+            startActivityForResult(leapAddRecordActivityIntent,50);
         }
         super.onActivityResult(requestCode, resultCode, intent);
     }
