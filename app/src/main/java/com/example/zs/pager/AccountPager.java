@@ -51,6 +51,7 @@ import com.example.zs.myaccount.MainActivity;
 import com.example.zs.myaccount.R;
 import com.example.zs.myaccount.ShowBudgetStateAcivity;
 import com.example.zs.utils.DensityUtil;
+import com.example.zs.utils.SeletorUtils;
 import com.example.zs.view.CircleImageView;
 import com.example.zs.view.PinnedHeaderExpandableListView;
 import com.example.zs.view.StickyLayout;
@@ -748,7 +749,8 @@ public class AccountPager extends BasePager implements
         //首先设置，条目的图标，因为无论是收入还是支出，其位置都是不变的，都在正中间的位置
         /*holder.ib_account_pager_item_img_describe.setBackground(mActivity.getResources().getDrawable(childItemBean.getIcon()));*/
         holder.ib_account_pager_item_img_describe.setImageResource(childItemBean.getIcon());
-        holder.ib_account_pager_item_img_describe.setBackgroundResource(R.drawable.account_pager_group_today_icon);
+       // holder.ib_account_pager_item_img_describe.setBackgroundResource(R.drawable.account_pager_group_today_icon);
+        SeletorUtils.setBackgroud(childItemBean.getIcon(),holder.ib_account_pager_item_img_describe);
         if(childItemBean.isIncome()){
             //如果当前添加的条目是收入
             //  Log.i("haha","收入*************************");

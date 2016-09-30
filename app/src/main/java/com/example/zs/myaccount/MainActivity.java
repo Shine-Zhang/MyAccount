@@ -106,10 +106,9 @@ public class MainActivity extends AppCompatActivity {
                         vp_mainactivity.setCurrentItem(0, false);
                         pageList.get(0).initData();
                         MyAplication application0 = (MyAplication) getApplication();
-                        if (application0.getAccountPager() == null) {
                             Log.i("lalalala", "设置了");
                             application0.setAccountPager(pageList.get(0));
-                        }
+
                         break;
 
                     case R.id.rb_mainactivity_wish:
@@ -143,10 +142,10 @@ public class MainActivity extends AppCompatActivity {
         vp_mainactivity.setCurrentItem(0);
         pageList.get(0).initData();
         MyAplication application0 = (MyAplication) getApplication();
-        if (application0.getAccountPager() == null) {
+
             Log.i("lalalala", "设置了");
             application0.setAccountPager(pageList.get(0));
-        }
+
         Log.i(tag, "wennm");
     }
 
@@ -244,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         long secondTime = System.currentTimeMillis();
-        if (secondTime - firstTime > 1000) {//比较优先级低
+        if (secondTime - firstTime > 2000) {//比较优先级低
             Toast.makeText(MainActivity.this, "再次点击退出钱哆哆记账",
                     Toast.LENGTH_SHORT).show();
             firstTime = secondTime;//记录上次的时间
