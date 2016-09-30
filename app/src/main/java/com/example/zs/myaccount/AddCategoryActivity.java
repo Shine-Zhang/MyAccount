@@ -42,10 +42,10 @@ public class AddCategoryActivity extends AppCompatActivity {
         GridView gv_addCategory_content = (GridView) findViewById(R.id.gv_addCategory_content);
         cv_addaddCategory_choiceIcon = (CircleImageView) findViewById(R.id.cv_addCategory_choiceIcon);
         et_addCategory_categoryName = (EditText) findViewById(R.id.et_addCategory_categoryName);
-
+        SeletorUtils.setBackgroud(R.id.cv_addCategory_choiceIcon,cv_addaddCategory_choiceIcon);
         //从AllCategoryDB表格获取全部的Category信息
         getInfoFromDB();
-
+        SeletorUtils.setBackgroud( cateoryList.get(0).getResourceID(),cv_addaddCategory_choiceIcon);
         //设置适配器
         gv_addCategory_content.setAdapter(new MyGridViewAdapter());
         //gv_addCategory_content.setSelector(new ColorDrawable(Color.TRANSPARENT));
