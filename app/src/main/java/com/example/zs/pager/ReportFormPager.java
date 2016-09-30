@@ -538,14 +538,14 @@ public class ReportFormPager extends BasePager {
                 boolean flag = true;
                 //循环的遍历支出集合
                 for(int j = 0; j < zhichuDataType.size(); j++){
-
+/*
                     Set<String> keyWords = otherAllAccountDD.keySet();
                     keysString = new String[keyWords.size()];
                     Object[] keys = keyWords.toArray();
                     for(int k = 0; k < keys.length; k++){
                         String keyString =  keys[k].toString();
                         keysString[k] = keyString;
-                    }
+                    }*/
 
                     Log.i("jijiji","----------------------------------------------------");
                     if(!category.equals(zhichuDataType.get(j))){
@@ -554,6 +554,15 @@ public class ReportFormPager extends BasePager {
                             allAccount += Float.valueOf(allPayoutCategory.get(i).money);
                             reportformfIcon.put(category,allPayoutCategory.get(i).resourceID);
                             otherAllAccountDD.put(category,Float.valueOf(allPayoutCategory.get(i).money));
+
+                            Set<String> keyWords = otherAllAccountDD.keySet();
+                            keysString = new String[keyWords.size()];
+                            Object[] keys = keyWords.toArray();
+                            for(int k = 0; k < keys.length; k++){
+                                String keyString =  keys[k].toString();
+                                keysString[k] = keyString;
+                            }
+
                             flag = false;
                             Log.i("jijiji",category + "1.----" + otherAllAccountDD.get(category));
                         }else {
@@ -562,7 +571,17 @@ public class ReportFormPager extends BasePager {
                     }else {
                         if(flag){
                             reportformfIcon.put(category,allPayoutCategory.get(i).resourceID);
-                            for(int h = 0; h < keys.length; h++){
+
+
+                            Set<String> keyWords = otherAllAccountDD.keySet();
+                            keysString = new String[keyWords.size()];
+                            Object[] keys = keyWords.toArray();
+                            for(int k = 0; k < keys.length; k++){
+                                String keyString =  keys[k].toString();
+                                keysString[k] = keyString;
+                            }
+
+                            for(int h = 0; h < keysString.length; h++){
                                 if(keysString[h].equals(category)){
                                     Float integer = otherAllAccountDD.get(keysString[h]);
                                     otherAllAccountDD.put(keysString[h], integer +Float.valueOf(allPayoutCategory.get(i).money));

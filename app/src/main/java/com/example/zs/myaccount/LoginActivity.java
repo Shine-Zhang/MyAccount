@@ -24,6 +24,7 @@ import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.mob.tools.utils.UIHandler;
 
+import java.util.Calendar;
 import java.util.HashMap;
 
 import cn.sharesdk.framework.Platform;
@@ -199,6 +200,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         //登录成功就保存用户信息到当前用户文件中
                         MyAplication.saveCurUsernaemToSp("username",userName);
                         MyAplication.saveUserInfoToSp(userName+"PhotoUri",userIcon);
+
+                        Calendar calendar = Calendar.getInstance();
+                        int year = calendar.get(Calendar.YEAR);
+                        int month = calendar.get(Calendar.MONTH);
+                        int day = calendar.get(Calendar.DAY_OF_MONTH);
+                        String registerDate = year+"年"+month+"月"+day+"日";
+                        MyAplication.saveUserInfoToSp(userName+"registerDate",registerDate);
 
                         MyAplication myAplication = (MyAplication) getApplication();
                         BasePager ownerPager = myAplication.getOwnerPager();

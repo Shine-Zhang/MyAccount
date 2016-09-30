@@ -25,7 +25,7 @@ public class DynamicWave extends View {
     private static  float STRETCH_FACTOR_A = 20;
     private static  int OFFSET_Y = 0;
     // 第一条水波移动速度
-    private static  int TRANSLATE_X_SPEED_ONE = 7;
+    private static  int TRANSLATE_X_SPEED_ONE = 5;
     // 第二条水波移动速度
     private static  int TRANSLATE_X_SPEED_TWO = 11;
     private int mTotalWidth;
@@ -105,11 +105,15 @@ public class DynamicWave extends View {
                     //  Log.i("hhh","i: "+i);
                     //  Log.i("hhh","mXOneOffset+i: "+(mXOneOffset+i));
                 } else {
-                    canvas.drawLine(i, mYPositions[j - upStart], i, mWaveEnd[j - upStart], mWavePaint);
+                    if(j<upEnd-1){
+                        canvas.drawLine(i, mYPositions[j - upStart], i, mWaveEnd[j - upStart], mWavePaint);
                    /* canvas.drawLine(i,mYPositions[j-upStart],i,OFFSET_Y+STRETCH_FACTOR_A,mWavePaint);*/
-                    j++;
+                        j++;
+                    }
+
                 }
             }
+
         }else{
 
 /*            for(int i=start;i<upStart;i++){
@@ -118,8 +122,8 @@ public class DynamicWave extends View {
                 canvas.drawLine(end-i+start,mSkeleton[i], end-i+start, OFFSET_Y+STRETCH_FACTOR_A, mWavePaint);
             }*/
             float tmp=-1;
+           // Log.i("llllllll","mYPositions:" + mYPositions.length + "----"+start +"*" +  end+"----"+"upStart: "+upStart+"--"+upEnd);
             for(int i=start,j=start,k=start;i<end;i++) {
-
                 if (i + mXOneOffset < end-1) {
 
                     if( mYPositions[mXOneOffset + i - start]<mSkeleton[i]){
@@ -129,13 +133,14 @@ public class DynamicWave extends View {
                     }
                     canvas.drawLine(i,tmp, i, OFFSET_Y+STRETCH_FACTOR_A, mWavePaint);
                    // Log.i("hhh","mXOneOffset + i - upStart: "+(mXOneOffset + i - upStart));
-                 /*   canvas.drawLine(i,mYPositions[mXOneOffset+i-upStart],i,OFFSET_Y+STRETCH_FACTOR_A,mWavePaint);*/
                     // Log.i("hhh",(i-upStart)+"start: "+mYPositions[mXOneOffset+i-upStart]+" end: "+mWaveEnd[i-upStart]);
                     //  Log.i("hhh","i: "+i);
                     //  Log.i("hhh","mXOneOffset+i: "+(mXOneOffset+i));
                 } else {
+                 /*   canvas.drawLine(i,mYPositions[mXOneOffset+i-upStart],i,OFFSET_Y+STRETCH_FACTOR_A,mWavePaint);*/
 
-                        if(j-start<end-1) {
+                        if(j<end-1) {
+                       //     Log.i("xue","mYPositions: "+mYPositions.length+"  j= "+(j - start));
                             if (mYPositions[j - start] < mSkeleton[i]) {
                                 tmp = mSkeleton[i];
                             } else {
@@ -156,24 +161,31 @@ public class DynamicWave extends View {
                 canvas.drawLine(i,mYPositions[k],i,OFFSET_Y+20,mWavePaint);
                 k++;
             }*/
+
+        }
+
+        if(!isUpHomisphere){
+            mXOneOffset += mXOffsetSpeedOne;
+            if (mXOneOffset >= upEnd-1) {
+                mXOneOffset = 0;
+            }
+        }else{
+            mXOneOffset += mXOffsetSpeedOne;
+            if (mXOneOffset >= end-2) {
+                mXOneOffset = 0;
+            }
         }
 
         doneInflate(canvas);
         // 改变两条波纹的移动点
-        mXOneOffset += mXOffsetSpeedOne;
-        mXTwoOffset += mXOffsetSpeedTwo;
+
 
         // 如果已经移动到结尾处，则重头记录
-        if (mXOneOffset >= end) {
-            mXOneOffset = 0;
-        }
-        if (mXTwoOffset >=end) {
-            mXTwoOffset = 0;
-        }
+
 
         // 引发view重绘，一般可以考虑延迟20-30ms重绘，空出时间片
 
-       postInvalidate();
+       invalidate();
     }
 
     private void doneInflate(Canvas canvas) {
@@ -222,6 +234,10 @@ public class DynamicWave extends View {
         if(mCurentRatio>=0) {
          //   Log.i("haha","**********************************");
             mWaveHight = getCorrespondingHeight(mCurentRatio);
+            STRETCH_FACTOR_A = mWaveHight/15;
+            if(mCurentRatio>0.76){
+                STRETCH_FACTOR_A = (float) (0.76*mWaveHight/15);
+            }
             if(mCurentRatio<0.5) {
                 float yDistance = Math.abs(mRadius - mWaveHight);
                 mWaveWidth = (int) Math.sqrt(mRadius * mRadius - yDistance * yDistance);
@@ -230,7 +246,6 @@ public class DynamicWave extends View {
                 mWaveWidth = (int) Math.sqrt(mRadius * mRadius - yDistance * yDistance);
             }
             Log.i("hhhh","mWaveWidth: "+mWaveWidth);
-            STRETCH_FACTOR_A = mWaveHight/15;
             OFFSET_Y = mTotalHeight-mWaveHight;
             Log.i("haha","*&*&*&*&*:mCurentRatio"+mCurentRatio);
             // 用于保存原始波纹的y值

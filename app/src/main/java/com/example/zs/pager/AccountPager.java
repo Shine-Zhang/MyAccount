@@ -86,6 +86,8 @@ public class AccountPager extends BasePager implements
 
     private static final int PHOTO_REQUEST_CAREMA = 100;// 拍照
     private static final int PHOTO_REQUEST_GALLERY = 101;// 从相册中选择
+    private static final int PHOTO_REQUEST_CAREMA_FROM_ACCOUNT = 201;
+    private static final int PHOTO_REQUEST_GALLERY_FROM_ACCOUNT = 202;
     private PopupWindow popupwindow_getphoto;
     private Uri photoUri;
     private TimeLineDAO timeDao;
@@ -160,7 +162,7 @@ public class AccountPager extends BasePager implements
         ib_account_pager_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                  // showPhotoPopWindow();
+                   showPhotoPopWindow();
             }
         });
         accountPagerBudgetSta.setOnClickListener(new View.OnClickListener() {
@@ -483,6 +485,7 @@ public class AccountPager extends BasePager implements
                     intent.putExtra("resourceID",childItems.get(tmpGroupPosition).get(tmpChildPosition).getIcon());
                     intent.putExtra("categoryName",childItems.get(tmpGroupPosition).get(tmpChildPosition).getItemDescribe());
                     mActivity.startActivityForResult(intent,110);
+                    unFold(tmpHolder);
 
                 }
             });
@@ -854,7 +857,7 @@ public class AccountPager extends BasePager implements
         Intent intent = new Intent("android.intent.action.PICK");
         intent.setType("image/*");
         // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_GALLERY
-        mActivity.startActivityForResult(intent,PHOTO_REQUEST_GALLERY);
+        mActivity.startActivityForResult(intent,PHOTO_REQUEST_GALLERY_FROM_ACCOUNT);
     }
 
     /**
@@ -862,19 +865,19 @@ public class AccountPager extends BasePager implements
      */
     private void toCamera() {
 
-        String path = Environment.getExternalStorageDirectory() + "/MyAccount/";
+/*        String path = Environment.getExternalStorageDirectory() + "/MyAccount/";
         String fileName;
         File file = new File(path);
         if (!file.exists()) {
             file.mkdir();
-        }
-        new DateFormat();
+        }*/
+       /* new DateFormat();
         fileName= DateFormat.format("yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA))+".jpg";
         photoUri =  Uri.fromFile(new File(path + fileName));
-        Log.i("wwwwwwww","使用相机前  uri="+photoUri);
+        Log.i("wwwwwwww","使用相机前  uri="+photoUri);*/
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT,photoUri);
-        mActivity.startActivityForResult(intent, PHOTO_REQUEST_CAREMA);
+        //intent.putExtra(MediaStore.EXTRA_OUTPUT,photoUri);
+        mActivity.startActivityForResult(intent, PHOTO_REQUEST_CAREMA_FROM_ACCOUNT);
 
     }
 
