@@ -217,12 +217,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                         break;
                     case 2: {
-                        Toast.makeText(LoginActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "登录失败!", Toast.LENGTH_SHORT).show();
                     }
                     break;
                     case 3: {
                         // 取消, cancel notification
-                        Toast.makeText(LoginActivity.this, "取消授权", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "取消授权!", Toast.LENGTH_SHORT).show();
                     }
                     break;
                 }
