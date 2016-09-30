@@ -22,6 +22,7 @@ import com.example.zs.dao.PayoutCategoryDAO;
 import com.example.zs.myaccount.AddCategoryActivity;
 import com.example.zs.myaccount.AddRecordActivity;
 import com.example.zs.myaccount.R;
+import com.example.zs.utils.SeletorUtils;
 import com.example.zs.view.CircleImageView;
 
 import android.view.ViewGroup;
@@ -374,6 +375,8 @@ public class PayOutPage extends AddBasePage {
             TextView tv_addPage_catagoryContent = (TextView) inflate.findViewById(R.id.tv_addPage_catagoryContent);
             Log.i(TAG, "getView: " + iv_addPage_catagoryIcon.toString());
             if (i < payoutCategoryToDB.size()) {
+                //设置选择器
+                SeletorUtils.setSelector(payoutCategoryToDB.get(i).getResourceID(),iv_addPage_catagoryIcon);
                 //放在这里就能
                 //为删除小图标设置点击事件，当小图标为visible时，点击可以调用
                     cv_addPage_delete.setOnClickListener(new View.OnClickListener() {
