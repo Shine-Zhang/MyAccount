@@ -19,6 +19,7 @@ import com.example.zs.application.MyAplication;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.Calendar;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -71,6 +72,14 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                         if (isEmail(mail)) {
                             Log.i(TAG, "是邮箱格式");
                             MyAplication.saveUserInfoToSp(username, password);
+
+                            Calendar calendar = Calendar.getInstance();
+                            int year = calendar.get(Calendar.YEAR);
+                            int month = calendar.get(Calendar.MONTH);
+                            int day = calendar.get(Calendar.DAY_OF_MONTH);
+                            String registerDate = year+"年"+month+"月"+day+"日";
+                            MyAplication.saveUserInfoToSp(username+"registerDate",registerDate);
+
                             Toast.makeText(RegisterActivity.this, "注册成功，请重新登录！", Toast.LENGTH_SHORT).show();
                             finish();
                         } else {

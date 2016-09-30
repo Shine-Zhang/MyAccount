@@ -181,7 +181,7 @@ public class ReportFormIncome {
         pieChart.invalidate();
     }
 
-    private void initData() {
+    public void initData() {
 
         allShouRuAccount = 0;
         IncomeContentDAO incomeContentDAO = new IncomeContentDAO(activity);
@@ -233,16 +233,17 @@ public class ReportFormIncome {
                 }else {
                     String category = allIncomeContentFromDB.get(i).category;
                     boolean flag = true;
+
                     for(int j = 0; j < shouruDataType.size();j++){
 
-                        Set<String> keyWords = otherShouruAllAccountDD.keySet();
+                        /*Set<String> keyWords = otherShouruAllAccountDD.keySet();
                         keysString = new String[keyWords.size()];
                         Object[] keys = keyWords.toArray();
 
                         for(int k = 0; k < keys.length; k++){
                             String keyString =  keys[k].toString();
                             keysString[k] = keyString;
-                        }
+                        }*/
 
                         if(!category.equals(shouruDataType.get(j))){
                             if(j == (shouruDataType.size()-1)){
@@ -250,6 +251,18 @@ public class ReportFormIncome {
                                 allShouRuAccount += Float.valueOf(allIncomeContentFromDB.get(i).money);
                                 reportformfShouruIcon.put(category,allIncomeContentFromDB.get(i).resourceID);
                                 otherShouruAllAccountDD.put(category,Float.valueOf(allIncomeContentFromDB.get(i).money));
+
+
+                                Set<String> keyWords = otherShouruAllAccountDD.keySet();
+                                keysString = new String[keyWords.size()];
+                                Object[] keys = keyWords.toArray();
+
+                                for(int k = 0; k < keys.length; k++){
+                                    String keyString =  keys[keys.length - 1 - k].toString();
+                                    keysString[k] = keyString;
+                                    Log.i("jujuju",k + "----" + keysString[k]);
+                                }
+
                                 Log.i("kkkkkdkdkddk","h会不会显示1" + "-----" + category + otherShouruAllAccountDD.get(category));
                                 flag = false;
                             }else {
@@ -258,7 +271,20 @@ public class ReportFormIncome {
                         }else {
                                 if(flag){
                                     reportformfShouruIcon.put(category,allIncomeContentFromDB.get(i).resourceID);
+
+                                    Log.i("lololo",category + otherShouruAllAccountDD.size());
+
+                                    Set<String> keyWords = otherShouruAllAccountDD.keySet();
+                                    keysString = new String[keyWords.size()];
+                                    Object[] keys = keyWords.toArray();
+
+                                    for(int k = 0; k < keys.length; k++){
+                                        String keyString =  keys[keys.length - 1 - k].toString();
+                                        keysString[k] = keyString;
+                                    }
+
                                     for(int h = 0; h < keysString.length; h++){
+
                                         if(keysString[h].equals(category)){
                                             Float integer = otherShouruAllAccountDD.get(category);
                                             otherShouruAllAccountDD.put(keysString[h], integer + Float.valueOf(allIncomeContentFromDB.get(i).money));
@@ -277,10 +303,6 @@ public class ReportFormIncome {
                     Log.i("kkkkkdkdkddk","h会不会显示3" + "-----" +category + otherShouruAllAccountDD.get(category) + "");
                 }
         }
-
-        /*allShouRuNumber = incomeNumAndAccount.salaryNumber + incomeNumAndAccount.jianzhiNumber
-                + incomeNumAndAccount.lihuaqianAccount +  incomeNumAndAccount.hongbaoNumber
-                + incomeNumAndAccount.licaiNumber;*/
 
         allShouRuAccount += incomeNumAndAccount.licaiAccount + incomeNumAndAccount.hongbaoAccount
                 + incomeNumAndAccount.lihuaqianAccount + incomeNumAndAccount.jianzhiAccount

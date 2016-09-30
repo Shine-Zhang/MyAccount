@@ -268,14 +268,14 @@ public class StickyLayout extends LinearLayout {
         builder.setPositiveButton("去登陆", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(context,"去登陆",Toast.LENGTH_SHORT).show();
+               // Toast.makeText(context,"去登陆",Toast.LENGTH_SHORT).show();
             }
         });
 
         builder.setNegativeButton("暂不同步", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(context,"暂不同步",Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(context,"暂不同步",Toast.LENGTH_SHORT).show();
             }
         });
 

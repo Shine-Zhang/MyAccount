@@ -18,6 +18,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -29,6 +30,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,6 +43,7 @@ import android.widget.Toast;
 import com.example.zs.addPage.AddBasePage;
 import com.example.zs.addPage.IncomePage;
 import com.example.zs.addPage.PayOutPage;
+import com.example.zs.addPage.ReportFormIncome;
 import com.example.zs.application.MyAplication;
 import com.example.zs.bean.IncomeContentInfo;
 import com.example.zs.bean.PayoutContentInfo;
@@ -147,13 +150,32 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 MyAplication application = (MyAplication) getApplication();
                 BasePager accountPager = application.getAccountPager();
                 BasePager ownerPager = application.getOwnerPager();
-
+                BasePager reportFormPager = application.getReportFormPager();
                 if(accountPager!=null){
-                    Log.i("haha","&&&&&&&&&&&&&&&&&");
+                    Log.i("lalalala","获取了");
                     accountPager.initData();
                 }
                 if(ownerPager!=null){
                     ownerPager.initData();
+                }
+                if(reportFormPager!=null){
+                    //reportFormPager.toString();
+                    Log.i("kkkkkk","kkkkkkkreportFormPager.toString()");
+                    reportFormPager.initData();
+
+
+                   /* View inflate = View.inflate(AddRecordActivity.this, R.layout.reportformpager_content, null);
+                    FrameLayout fl_reportform_shouru = (FrameLayout) inflate.findViewById(R.id.fl_reportform_shouru);
+
+                    LinearLayout ll_reportform_shouru = (LinearLayout) inflate.findViewById(R.id.ll_reportform_shouru);
+
+                    ReportFormIncome reportFormIncome = new ReportFormIncome(AddRecordActivity.this);
+
+                    ll_reportform_shouru.setVisibility(View.VISIBLE);
+                    fl_reportform_shouru.removeAllViews();
+                    fl_reportform_shouru.addView(reportFormIncome.pieChart);
+                    Log.i("xxxxxxx","reportFormIncome.to5555555String()");
+                    Log.i("jjijijii","reportFormIncome.to5555555String()");*/
                 }
             }
         });
@@ -277,6 +299,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
             Log.i(TAG,"intent="+intent.toString());//intent=Intent { cmp=com.example.zs.myaccount/.AddRecordActivity }
             String money = intent.getStringExtra("money");
             photo = intent.getStringExtra("photoUriString");
+            Log.i(TAG,"intent="+photo);
             if (money!=null){
                 isJumpActivity = true;
                 setDate(isJumpActivity);
@@ -298,10 +321,11 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 //photo = intent.getStringExtra("photoUriString");
                 tv_addRecordActivity_inputNumber.setText(stringNumber);
                 btn_addRecordActivity_time.setText(month+"月"+day+"日");
-                if (!photo.isEmpty()){
+                if (!TextUtils.isEmpty(photo)){
                     iv_addRecordActivity_photo.setImageURI(Uri.parse(photo));
                 }
             }else if(photo!=null){
+                Log.i(TAG,"remarkContent="+photo);
                 //直接从Acount拍照过来的没有id
                 //直接显示照片即可
                 iv_addRecordActivity_photo.setImageURI(Uri.parse(photo));

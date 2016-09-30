@@ -22,7 +22,7 @@ public class MyAplication extends Application{
 
     private BasePager wishPager;
     private BasePager ownerPager;
-
+    private BasePager reportFormPager;
     /**
      * 应用创建时调用oncreate（）
      */
@@ -92,18 +92,14 @@ public class MyAplication extends Application{
         return wishInfo;
     }
 
-
-
-
-
     /**
-     * 保存用户名和密码到SharedPreferences,用户名为键，密码为值
+     * 保存用户名和与用户相关的信息到SharedPreferences,用户名为键，密码为值
      * @param username  用户名
-     * @param password  密码
+     * @param key  密码、或用户注册时间
      */
-    public static void saveUserInfoToSp(String username,String password){
+    public static void saveUserInfoToSp(String username,String key){
         SharedPreferences.Editor edit = UserInfosp.edit();
-        edit.putString(username,password);
+        edit.putString(username,key);
         edit.commit();
     }
 
@@ -134,6 +130,12 @@ public class MyAplication extends Application{
      */
     public static String getCurUsernameFromSp(String key){
         return   CurUsersp.getString(key,"");
+    }
+
+    public static String getCurUserRegisterDate(){
+        String username = getCurUsernameFromSp("username");
+        String curUserRegisterDate = getUserInfoFromSp(username + "registerDate");
+        return curUserRegisterDate;
     }
 
     /**
@@ -172,5 +174,11 @@ public class MyAplication extends Application{
         this.wishPager = wishPager;
     }
 
+    public BasePager getReportFormPager() {
+        return reportFormPager;
+    }
 
+    public void setReportFormPager(BasePager reportFormPager) {
+        this.reportFormPager = reportFormPager;
+    }
 }

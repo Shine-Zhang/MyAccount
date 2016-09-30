@@ -43,7 +43,7 @@
     </RelativeLayout>
 
     <!--中间动画部分-->
-    <com.example.zs.view.DynamicWave
+<!--    <com.example.zs.view.DynamicWave
         android:id="@+id/dynamicWave_show_budget_activity_mywave"
         android:layout_centerInParent="true"
         android:layout_width="200dp"
@@ -51,7 +51,13 @@
         android:background="@drawable/account_pager_budget_state"
         android:paddingBottom="20dp"
         >
-    </com.example.zs.view.DynamicWave>
+    </com.example.zs.view.DynamicWave>-->
+    <com.example.zs.view.WaveView
+        android:id="@+id/dynamicWave_show_budget_activity_mywave"
+        android:layout_centerInParent="true"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:paddingBottom="20dp"/>
     <LinearLayout
         android:gravity="center"
         android:paddingBottom="20dp"
@@ -126,5 +132,4 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
-
 </RelativeLayout>
