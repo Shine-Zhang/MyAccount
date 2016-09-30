@@ -322,8 +322,8 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 if (intent != null) {
                     if (intent.hasExtra("data")) {
-                        Bitmap bitmap = intent.getParcelableExtra("data");
 
+                        Bitmap bitmap = intent.getParcelableExtra("data");
                     }
                     //获取图片的全路径uri
                     photoUri = intent.getData();
@@ -351,59 +351,23 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             }
-        } else if (requestCode == PHOTO_REQUEST_CAREMA_FROM_ACCOUNT) {
+        } else if (requestCode == PHOTO_REQUEST_CAREMA_FROM_ACCOUNT||requestCode==PHOTO_REQUEST_GALLERY_FROM_ACCOUNT) {
+           // Log.i("lalala","1212121");
             Uri result = intent.getData();
             if (result == null) {
                 if (intent.hasExtra("data")) {
                     Bitmap bitmap = intent.getParcelableExtra("data");
+                    result = ScaleBitmapUtils.scaleBitmap(bitmap, DensityUtil.dip2px(this, 200), DensityUtil.dip2px(this, 200));
                     bitmap.recycle();
-                    result = ScaleBitmapUtils.scaleBitmap(bitmap, DensityUtil.dip2px(this, 40), DensityUtil.dip2px(this, 40));
-                    Log.i("lalala", result.toString());
+
                 }
-                Intent leapAddRecordActivityIntent = new Intent(this, AddRecordActivity.class);
-                intent.putExtra("photoUriString", result);
-                startActivityForResult(leapAddRecordActivityIntent, 50);
             }
+            Log.i("lalala", result.toString());
+            Intent leapAddRecordActivityIntent = new Intent(this, AddRecordActivity.class);
+            leapAddRecordActivityIntent.putExtra("photoUriString", result.toString());
+            startActivityForResult(leapAddRecordActivityIntent, 50);
             super.onActivityResult(requestCode, resultCode, intent);
         }
 
-        /**
-         * 该函数用于获取传回来的数据。
-         * 即 跳转到其他地方之后获取到想要的信息，将信息传回来
-         * @param requestCode
-         * @param resultCode
-         * @param data
-         */
-/*    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        Log.i("wwwwwwwwwwwwwww","onActivityResult requestCode="+requestCode+"  resultCode="+resultCode+"   data="+data);
-        //去图库获取到的数据
-        if(requestCode==PHOTO_REQUEST_GALLERY){
-            if(resultCode==RESULT_OK){
-                if(data!=null){
-                    if(data.hasExtra("data")){
-                        Bitmap bitmap = data.getParcelableExtra("data");
-                        civ_addwishactivity_image.setImageBitmap(bitmap);
-                    }
-                    //获取图片的全路径uri
-                    photoUri = data.getData();
-                    Log.i("wwwwwwww","调用图库  uri="+photoUri);
-                    civ_addwishactivity_image.setImageURI(photoUri);
-                    iv_addwishactivity_photo.setVisibility(View.INVISIBLE);
-
-                }else{
-                    return;
-                }
-            }
-        }
-        //照相
-        if(requestCode==PHOTO_REQUEST_CAREMA){
-            if(resultCode==RESULT_OK){
-                civ_addwishactivity_image.setImageURI(photoUri);
-                iv_addwishactivity_photo.setVisibility(View.INVISIBLE);
-            }
-        }
-    }*/
     }
 }

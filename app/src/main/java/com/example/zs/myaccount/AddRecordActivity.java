@@ -298,6 +298,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
             Log.i(TAG,"intent="+intent.toString());//intent=Intent { cmp=com.example.zs.myaccount/.AddRecordActivity }
             String money = intent.getStringExtra("money");
             photo = intent.getStringExtra("photoUriString");
+            Log.i(TAG,"intent="+photo);
             if (money!=null){
                 isJumpActivity = true;
                 setDate(isJumpActivity);
@@ -323,6 +324,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                     iv_addRecordActivity_photo.setImageURI(Uri.parse(photo));
                 }
             }else if(photo!=null){
+                Log.i(TAG,"remarkContent="+photo);
                 //直接从Acount拍照过来的没有id
                 //直接显示照片即可
                 iv_addRecordActivity_photo.setImageURI(Uri.parse(photo));

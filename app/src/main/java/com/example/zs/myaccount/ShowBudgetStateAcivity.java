@@ -2,6 +2,7 @@ package com.example.zs.myaccount;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.PagerAdapter;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -27,6 +29,8 @@ import com.example.zs.application.MyAplication;
 import com.example.zs.utils.KeyboardUtil;
 import com.example.zs.view.DynamicWave;
 import com.example.zs.view.WaterWaveView;
+import com.example.zs.view.WaveHelper;
+import com.example.zs.view.WaveView;
 
 import org.w3c.dom.Text;
 
@@ -44,7 +48,6 @@ import java.util.regex.Pattern;
  */
 public class ShowBudgetStateAcivity extends Activity implements View.OnClickListener{
 
-    private DynamicWave myWave;
     private ImageButton ibShowBudgetStaBack;
     private ImageButton ibShowBudgetStaSetting;
     private ViewPager mVpShowBudgetSta;
@@ -70,6 +73,10 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
     private float income;
     private float balance;
     public KeyboardUtil keyboardUtil;
+    private WaveView myWave;
+    private int mBorderColor = Color.parseColor("#44FFFFFF");
+    private int mBorderWidth = 10;
+    private WaveHelper mWaveHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -405,13 +412,24 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                     ibShowBudgetStaBack = (ImageButton) pagers.get(0).findViewById(R.id.ib_show_budeget_sta_back);
                     ibShowBudgetStaSetting = (ImageButton)pagers.get(0). findViewById(R.id.ib_show_budeget_sta_setting);
                     tvShowBudgetStateActivityNumTip = (TextView) pagers.get(0).findViewById(R.id.tv_show_budget_state_activity_num_tip);
-                    myWave = (DynamicWave) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.dynamicWave_show_budget_activity_mywave);
-                    myWave.setmCurentRatio(currentRatio);
-                    Button mButton = (Button) findViewById(R.id.toStop);
-                    mButton.setOnClickListener(new View.OnClickListener() {
+                   // myWave = (DynamicWave) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.dynamicWave_show_budget_activity_mywave);
+                   // myWave.setmCurentRatio(currentRatio);
+                    myWave = (WaveView) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.dynamicWave_show_budget_activity_mywave);
+                    myWave.setShapeType(WaveView.ShapeType.CIRCLE);
+//                    myWave.setmCurentRatio(currentRatio);
+
+
+
+                    myWave.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                         @Override
-                        public void onClick(View v) {
-                            myWave.flag = false;
+                        public void onGlobalLayout() {
+                            myWave.setWaveColor(
+                                    WaveView.DEFAULT_BEHIND_WAVE_COLOR,
+                                    WaveView.DEFAULT_FRONT_WAVE_COLOR);
+                            mBorderColor = Color.parseColor("#44FFFFFF");
+                            myWave.setBorder(mBorderWidth, mBorderColor);
+                            mWaveHelper = new WaveHelper(myWave,currentRatio);
+                            mWaveHelper.start();
                         }
                     });
                     if(TextUtils.isEmpty(MyAplication.getStringFromSp("myBudget"))){

@@ -43,8 +43,12 @@ public class ScaleBitmapUtils {
                         height, bitmapMatrix, true);
                 try
                 {
-                    FileOutputStream out = new FileOutputStream(new File(path + fileName));
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                    File maps = new File(path + fileName);
+                    if(!maps.exists()) {
+                        FileOutputStream out = new FileOutputStream(maps);
+                        resultBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                    }
+                    resultBitmap.recycle();
                 }
                 catch(FileNotFoundException e)
                 {
