@@ -26,6 +26,7 @@ import com.example.zs.bean.PayoutContentInfo;
 import com.example.zs.dao.IncomeContentDAO;
 import com.example.zs.dao.PayOutContentDAO;
 import com.example.zs.dao.TimeLineDAO;
+import com.example.zs.utils.SeletorUtils;
 import com.example.zs.view.CircleImageView;
 
 import java.util.ArrayList;
@@ -197,7 +198,10 @@ public class MyBalanceActivity extends AppCompatActivity {
             }
 
             childViewHolder.iv_myactivity_childItem_Icon.setImageResource(childData.get(i).get(j).getIcon());
-            childViewHolder.iv_myactivity_childItem_Icon.setBackgroundResource(R.drawable.account_pager_group_today_icon);
+            //childViewHolder.iv_myactivity_childItem_Icon.setBackgroundResource(R.drawable.account_pager_group_today_icon);
+            int iconId = childData.get(i).get(j).getId();
+            SeletorUtils.setBackgroud(iconId,childViewHolder.iv_myactivity_childItem_Icon);
+
             childViewHolder.tv_myactivity_childItem_describe.setText(childData.get(i).get(j).getItemDescribe());
             if(childData.get(i).get(j).isIncome()){
                 childViewHolder.tv_myactivity_childItem_howMuch.setText("+ "+childData.get(i).get(j).getHowmuch());
