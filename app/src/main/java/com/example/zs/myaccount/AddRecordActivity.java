@@ -18,6 +18,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -298,6 +299,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
             Log.i(TAG,"intent="+intent.toString());//intent=Intent { cmp=com.example.zs.myaccount/.AddRecordActivity }
             String money = intent.getStringExtra("money");
             photo = intent.getStringExtra("photoUriString");
+            Log.i(TAG,"intent="+photo);
             if (money!=null){
                 isJumpActivity = true;
                 setDate(isJumpActivity);
@@ -319,10 +321,11 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 //photo = intent.getStringExtra("photoUriString");
                 tv_addRecordActivity_inputNumber.setText(stringNumber);
                 btn_addRecordActivity_time.setText(month+"月"+day+"日");
-                if (!photo.isEmpty()){
+                if (!TextUtils.isEmpty(photo)){
                     iv_addRecordActivity_photo.setImageURI(Uri.parse(photo));
                 }
             }else if(photo!=null){
+                Log.i(TAG,"remarkContent="+photo);
                 //直接从Acount拍照过来的没有id
                 //直接显示照片即可
                 iv_addRecordActivity_photo.setImageURI(Uri.parse(photo));

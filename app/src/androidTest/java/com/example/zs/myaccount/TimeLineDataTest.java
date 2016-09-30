@@ -14,17 +14,17 @@ public class TimeLineDataTest extends AndroidTestCase {
     public void testGroupData(){
 
         PayOutContentDAO pay = new PayOutContentDAO(getContext());
-        pay.getTimeLineGroupData(9);
+     //   pay.getTimeLineGroupData(9);
     }
 
     public void  testChildrenData(){
         PayOutContentDAO pay = new PayOutContentDAO(getContext());
-        pay.getTimeLinePayOutChildData(9);
+      //  pay.getTimeLinePayOutChildData(9);
     }
 
     public void  testInChildrenData(){
         IncomeContentDAO pay = new IncomeContentDAO(getContext());
-        pay.getTimeLineIncomeChildData(9);
+       // pay.getTimeLineIncomeChildData(9);
     }
 
 }

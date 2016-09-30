@@ -54,6 +54,8 @@ import com.example.zs.utils.DensityUtil;
 import com.example.zs.view.CircleImageView;
 import com.example.zs.view.PinnedHeaderExpandableListView;
 import com.example.zs.view.StickyLayout;
+import com.example.zs.view.WaveHelper;
+import com.example.zs.view.WaveView;
 import com.lidroid.xutils.view.annotation.ViewInject;
 
 import org.w3c.dom.Text;
@@ -86,8 +88,9 @@ public class AccountPager extends BasePager implements
 
     private static final int PHOTO_REQUEST_CAREMA = 100;// 拍照
     private static final int PHOTO_REQUEST_GALLERY = 101;// 从相册中选择
+    private static final int PHOTO_REQUEST_CAREMA_FROM_ACCOUNT = 201;
+    private static final int PHOTO_REQUEST_GALLERY_FROM_ACCOUNT = 202;
     private PopupWindow popupwindow_getphoto;
-    private Uri photoUri;
     private TimeLineDAO timeDao;
     private Calendar now;
     private int today;
@@ -102,6 +105,14 @@ public class AccountPager extends BasePager implements
     private TextView tvAccountPagerMonthIncome;
     private TextView tvAccountPagerMonthOutcome;
     private TmpHolder[] groups;
+    private WaveView myWave;
+    private int mBorderColor = Color.parseColor("#44FFFFFF");
+    private int mBorderWidth = 10;
+    private WaveHelper mWaveHelper;
+    private float remain;
+    private TextView tvUserStartTime;
+    private int year;
+
     public AccountPager(Activity activity) {
         super(activity);
         TmpHolder tmp = null;
@@ -128,7 +139,10 @@ public class AccountPager extends BasePager implements
     @Override
     public View initView() {
 //        Log.i("jjjjjjjjjj","********************************");
-
+        now = Calendar.getInstance();
+        today = now.get(Calendar.DAY_OF_MONTH);
+        month = now.get(Calendar.MONTH)+1;
+        year = now.get(Calendar.YEAR);
         mrootView = View.inflate(mActivity,R.layout.account_pager_layout,null);
         expandableListView = (PinnedHeaderExpandableListView) mrootView.findViewById(R.id.expandablelist);
         stickyLayout = (StickyLayout) mrootView.findViewById(R.id.sticky_layout);
@@ -136,6 +150,8 @@ public class AccountPager extends BasePager implements
         tvAccountPagerMonthIncome = (TextView) mrootView.findViewById(R.id.tv_account_pager_month_income_tip);
         tvAccountPagerMonthOutcome = (TextView) mrootView.findViewById(R.id.tv_account_pager_month_cost_tip);
         View footView = View.inflate(mActivity,R.layout.account_pager_footview,null);
+        TextView tvUserStartTime =  (TextView) footView.findViewById(R.id.account_pager_record_start_time);
+        tvUserStartTime.setText(year+"年"+month+"月"+today+"日");
         expandableListView.initFootView(footView);
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
@@ -160,7 +176,7 @@ public class AccountPager extends BasePager implements
         ib_account_pager_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                  // showPhotoPopWindow();
+                   showPhotoPopWindow();
             }
         });
         accountPagerBudgetSta.setOnClickListener(new View.OnClickListener() {
@@ -177,9 +193,7 @@ public class AccountPager extends BasePager implements
                 mActivity.startActivity(intent);
             }
         });
-        now = Calendar.getInstance();
-        today = now.get(Calendar.DAY_OF_MONTH);
-        month = now.get(Calendar.MONTH)+1;
+
         tvAccountPagerMonthIncome.setText(month+"月收入");
         tvAccountPagerMonthOutcome.setText(month+"月支出");
         tvAccountPagerBudget = (TextView) mrootView.findViewById(R.id.tv_account_pager_buget);
@@ -279,7 +293,7 @@ public class AccountPager extends BasePager implements
             totalCost += groupItems.get(i).getTotalCosts();
         }
         Log.i("haha","totalIncome****: "+totalIncome);
-        float remain =  Float.parseFloat(myBudget)-totalCost;
+        remain = Float.parseFloat(myBudget)-totalCost;
         tvAccountPagerBudget.setText(String.format("%.2f", remain));
         tvAccountPagerTotalIncome.setText(String.format("%.2f", totalIncome));
         tvAccountPagerTotalCost.setText(String.format("%.2f", totalCost));
@@ -449,6 +463,7 @@ public class AccountPager extends BasePager implements
                 holder.tv_account_pager_word_describe = (TextView) view.findViewById(R.id.tv_account_pager_word_describe);
                 holder.ib_account_pager_item_edit = (ImageButton) view.findViewById(R.id.ib_account_pager_item_edit);
                 holder.ib_account_pager_item_delete = (ImageButton) view.findViewById(R.id.ib_account_pager_item_delete);
+                holder.tv_account_pager_remark = (TextView) view.findViewById(R.id.tv_account_pager_remark);
                 holder.isIncome = false;
 
             }
@@ -471,18 +486,22 @@ public class AccountPager extends BasePager implements
                 public void onClick(View view) {
                     //跳转到第二个标签页
                     //Toast.makeText(mActivity,"******点击了edit: "+tmpHolder.group+"----"+tmpHolder.child,Toast.LENGTH_SHORT).show();
+                    int group = tmpHolder.group;
+                    int child = tmpHolder.child;
                     Intent intent = new Intent(mActivity,AddRecordActivity.class);
-                    intent.putExtra("isIncome",childItems.get(tmpGroupPosition).get(tmpChildPosition).isIncome());
-                    intent.putExtra("id",childItems.get(tmpGroupPosition).get(tmpChildPosition).getId());
+                    intent.putExtra("isIncome",childItems.get(group).get(child).isIncome());
+                    intent.putExtra("id",childItems.get(group).get(child).getId());
                     intent.putExtra("year",2016);
-                    intent.putExtra("month",childItems.get(tmpGroupPosition).get(tmpChildPosition).getMonth());
-                    intent.putExtra("day",childItems.get(tmpGroupPosition).get(tmpChildPosition).getDayOfMonth());
-                    intent.putExtra("money",childItems.get(tmpGroupPosition).get(tmpChildPosition).getHowmuch());
-                    intent.putExtra("remarks","备注");
-                    intent.putExtra("photoUriString","");
-                    intent.putExtra("resourceID",childItems.get(tmpGroupPosition).get(tmpChildPosition).getIcon());
-                    intent.putExtra("categoryName",childItems.get(tmpGroupPosition).get(tmpChildPosition).getItemDescribe());
+                    intent.putExtra("month",childItems.get(group).get(child).getMonth());
+                    intent.putExtra("day",childItems.get(group).get(child).getDayOfMonth());
+                    intent.putExtra("money",childItems.get(group).get(child).getHowmuch());
+                    intent.putExtra("remarks",childItems.get(group).get(child).getRemark());
+                    intent.putExtra("photoUriString",childItems.get(group).get(child).getPhotoResUrl());
+                    Log.i("lalala","group--child--Uri: "+group+"--"+child+"--"+childItems.get(group).get(child).getPhotoResUrl());
+                    intent.putExtra("resourceID",childItems.get(group).get(child).getIcon());
+                    intent.putExtra("categoryName",childItems.get(group).get(child).getItemDescribe());
                     mActivity.startActivityForResult(intent,110);
+                    unFold(tmpHolder);
 
                 }
             });
@@ -525,6 +544,11 @@ public class AccountPager extends BasePager implements
                                 float dayCost = groupItems.get(group).getTotalCosts()-Float.parseFloat(childItems.get(group).get(child).getHowmuch());
                                 TmpHolder groupView = groups[ groupItems.get(group).getDayOfMonth()-1];
                                 groupView.outcome.setText(String.format("%.2f",dayCost));
+                                float nowBudget = remain+Float.parseFloat(childItems.get(group).get(child).getHowmuch());
+                                remain = nowBudget;
+                                groupView.outcome.setText(String.format("%.2f",dayCost));
+                                groupItems.get(group).setTotalCosts(dayCost);
+                                tvAccountPagerBudget.setText(String.format("%.2f",nowBudget));
                                 groupItems.get(group).setTotalCosts(dayCost);
                                 tvAccountPagerTotalCost.setText(String.format("%.2f",total));
                               //  Log.i("lalalala","inid: "+childItems.get(group).get(child).getId());
@@ -594,6 +618,7 @@ public class AccountPager extends BasePager implements
             holder.tv_account_pager_how_much.setVisibility(View.INVISIBLE);
             holder.iv_account_pager_item_photo.setVisibility(View.INVISIBLE);
             holder.tv_account_pager_word_describe.setVisibility(View.INVISIBLE);
+            holder.tv_account_pager_remark.setVisibility(View.INVISIBLE);
             AnimatorSet set = new AnimatorSet();
             ObjectAnimator editorAnimator = ObjectAnimator.ofFloat(holder.ib_account_pager_item_edit, "TranslationX",0, DensityUtil.dip2px(mActivity, 100));
             ObjectAnimator deleteAnimator = ObjectAnimator.ofFloat(holder.ib_account_pager_item_delete, "TranslationX", 0,-DensityUtil.dip2px(mActivity, 100));
@@ -613,9 +638,13 @@ public class AccountPager extends BasePager implements
             holder.ib_account_pager_item_edit.setVisibility(View.GONE);
             holder.ib_account_pager_item_delete.setVisibility(View.GONE);
             holder.tv_account_pager_word_describe.setVisibility(View.VISIBLE);
-
-            if( holder.group>0&&holder.child>0&&!TextUtils.isEmpty(childItems.get(holder.group).get(holder.child).getPhotoResUrl())) {
+         //   Log.i("haha","childItems.get(holder.group).get(holder.child).getPhotoResUrl():"+childItems.get(holder.group).get(holder.child).getPhotoResUrl());
+            if( !TextUtils.isEmpty(childItems.get(holder.group).get(holder.child).getPhotoResUrl())) {
+             //   Log.i("haha","()()((()()(()()(");
                 holder.iv_account_pager_item_photo.setVisibility(View.VISIBLE);
+            }
+            if(!TextUtils.isEmpty(childItems.get(holder.group).get(holder.child).getRemark())){
+                holder.tv_account_pager_remark.setVisibility(View.VISIBLE);
             }
             holder.tv_account_pager_how_much.setVisibility(View.VISIBLE);
 
@@ -656,6 +685,7 @@ public class AccountPager extends BasePager implements
         TextView tv_account_pager_how_much;
         ImageButton ib_account_pager_item_edit;
         ImageButton ib_account_pager_item_delete;
+        TextView tv_account_pager_remark;
         int child;
         int group;
     }
@@ -738,6 +768,7 @@ public class AccountPager extends BasePager implements
                     //如果用户设置了图片,就在改变为之后的ImageView中显示该图片
                    // Glide.with(mActivity).load(childItemBean.getPhotoResUrl()).into(holder.iv_account_pager_item_photo);
                    // holder.iv_account_pager_item_photo.setImageURI(Uri.parse(childItemBean.getPhotoResUrl()));
+                    Log.i("haha","898989889889");
                     Glide.with(mActivity)
                             .load(childItemBean.getPhotoResUrl())
                             .listener(mRequestListener)//配置监听器
@@ -746,6 +777,21 @@ public class AccountPager extends BasePager implements
                 } else {
                     //如果没有图片就设置imageView为不可见,同时为了方便用户之后可能会存在的添加行为,同时也要改变ImageView的布局
                     holder.iv_account_pager_item_photo.setVisibility(View.INVISIBLE);
+                }
+                //设置备注的布局
+                RelativeLayout.LayoutParams remarkLayoutParams = (RelativeLayout.LayoutParams) holder.tv_account_pager_remark.getLayoutParams();
+                //首先清除之前的布局，否则新的布局不会生效不会生效
+                remarkLayoutParams.removeRule(RelativeLayout.RIGHT_OF);
+                remarkLayoutParams.addRule(RelativeLayout.LEFT_OF, R.id.ib_account_pager_item_img_describe);
+                remarkLayoutParams.addRule(RelativeLayout.LEFT_OF, R.id.ib_account_pager_item_img_describe);
+                remarkLayoutParams.setMargins(0, 0, DensityUtil.dip2px(mActivity, 5), 0);
+                holder.tv_account_pager_remark.setLayoutParams(remarkLayoutParams);
+
+                if(!TextUtils.isEmpty(childItemBean.getRemark())){
+                    holder.tv_account_pager_remark.setText(childItemBean.getRemark());
+                    holder.tv_account_pager_remark.setVisibility(View.VISIBLE);
+                }else{
+                    holder.tv_account_pager_remark.setVisibility(View.INVISIBLE);
                 }
 
                 //设置账目的语言描述和支出/收入金额
@@ -776,6 +822,13 @@ public class AccountPager extends BasePager implements
                             .into(holder.iv_account_pager_item_photo);
                 }else{
                     holder.iv_account_pager_item_photo.setVisibility(View.INVISIBLE);
+                }
+
+                if(!TextUtils.isEmpty(childItemBean.getRemark())){
+                    holder.tv_account_pager_remark.setText(childItemBean.getRemark());
+                    holder.tv_account_pager_remark.setVisibility(View.VISIBLE);
+                }else{
+                    holder.tv_account_pager_remark.setVisibility(View.INVISIBLE);
                 }
                 holder.tv_account_pager_word_describe.setText(childItemBean.getItemDescribe());
                 holder.tv_account_pager_how_much.setText(childItemBean.getHowmuch());
@@ -810,6 +863,8 @@ public class AccountPager extends BasePager implements
                     holder.iv_account_pager_item_photo.setVisibility(View.INVISIBLE);
                 }
 
+
+
                 //设置账目的语言描述和支出/收入金额
                 RelativeLayout.LayoutParams wordLayoutParams = (RelativeLayout.LayoutParams) holder.tv_account_pager_word_describe.getLayoutParams();
                 wordLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
@@ -819,6 +874,21 @@ public class AccountPager extends BasePager implements
                 wordLayoutParams.setMargins( DensityUtil.dip2px(mActivity, 5),0,0, 0);
                 holder.tv_account_pager_word_describe.setLayoutParams(wordLayoutParams);
                 holder.tv_account_pager_word_describe.setText(childItemBean.getItemDescribe());
+
+
+                RelativeLayout.LayoutParams remarkLayoutParams = (RelativeLayout.LayoutParams) holder.tv_account_pager_remark.getLayoutParams();
+                //首先清除之前的布局，否则新的布局不会生效不会生效
+                remarkLayoutParams.removeRule(RelativeLayout.LEFT_OF);
+                remarkLayoutParams.addRule(RelativeLayout.RIGHT_OF, R.id.ib_account_pager_item_img_describe);
+                remarkLayoutParams.setMargins( DensityUtil.dip2px(mActivity, 5),0,0, 0);
+                holder.tv_account_pager_remark.setLayoutParams(remarkLayoutParams);
+
+                if(!TextUtils.isEmpty(childItemBean.getRemark())){
+                    holder.tv_account_pager_remark.setText(childItemBean.getRemark());
+                    holder.tv_account_pager_remark.setVisibility(View.VISIBLE);
+                }else{
+                    holder.tv_account_pager_remark.setVisibility(View.INVISIBLE);
+                }
 
                 RelativeLayout.LayoutParams countlayoutParams = (RelativeLayout.LayoutParams) holder.tv_account_pager_how_much.getLayoutParams();
                 countlayoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
@@ -839,6 +909,13 @@ public class AccountPager extends BasePager implements
                 }else{
                     holder.iv_account_pager_item_photo.setVisibility(View.INVISIBLE);
                 }
+
+                if(!TextUtils.isEmpty(childItemBean.getRemark())){
+                    holder.tv_account_pager_remark.setText(childItemBean.getRemark());
+                    holder.tv_account_pager_remark.setVisibility(View.VISIBLE);
+                }else{
+                    holder.tv_account_pager_remark.setVisibility(View.INVISIBLE);
+                }
                 holder.tv_account_pager_word_describe.setText(childItemBean.getItemDescribe());
                 holder.tv_account_pager_how_much.setText(childItemBean.getHowmuch());
             }
@@ -854,27 +931,15 @@ public class AccountPager extends BasePager implements
         Intent intent = new Intent("android.intent.action.PICK");
         intent.setType("image/*");
         // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_GALLERY
-        mActivity.startActivityForResult(intent,PHOTO_REQUEST_GALLERY);
+        mActivity.startActivityForResult(intent,PHOTO_REQUEST_GALLERY_FROM_ACCOUNT);
     }
 
     /**
      * 该函数用于调用系统的相机，并将拍好的照片传回来
      */
     private void toCamera() {
-
-        String path = Environment.getExternalStorageDirectory() + "/MyAccount/";
-        String fileName;
-        File file = new File(path);
-        if (!file.exists()) {
-            file.mkdir();
-        }
-        new DateFormat();
-        fileName= DateFormat.format("yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA))+".jpg";
-        photoUri =  Uri.fromFile(new File(path + fileName));
-        Log.i("wwwwwwww","使用相机前  uri="+photoUri);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT,photoUri);
-        mActivity.startActivityForResult(intent, PHOTO_REQUEST_CAREMA);
+        mActivity.startActivityForResult(intent, PHOTO_REQUEST_CAREMA_FROM_ACCOUNT);
 
     }
 

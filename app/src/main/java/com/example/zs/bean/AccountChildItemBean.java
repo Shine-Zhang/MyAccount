@@ -19,6 +19,7 @@ public class AccountChildItemBean {
     String howmuch;
     boolean isIncome;
     boolean isFold=true;
+    String remark;
     /**
      *全参构造函数主要是为了方便封装bean类
      * @param month 添加该条目到帐薄中时的月份
@@ -29,7 +30,7 @@ public class AccountChildItemBean {
      * @param howmuch 该条目中具体住处/收入的数额
      * @param isIncome 用来判断该条目是收入/支出
      */
-    public AccountChildItemBean(int month, int dayOfMonth, int icon, String photoResurl, String itemDescribe, String howmuch, boolean isIncome,int id) {
+    public AccountChildItemBean(int month, int dayOfMonth, int icon, String photoResurl, String itemDescribe, String howmuch, boolean isIncome,int id,String remark) {
         this.month = month;
         this.dayOfMonth = dayOfMonth;
         this.icon = icon;
@@ -38,6 +39,7 @@ public class AccountChildItemBean {
         this.howmuch = howmuch;
         this.isIncome = isIncome;
         this.id = id;
+        this.remark = remark;
     }
 
     public int getMonth() {
@@ -112,6 +114,13 @@ public class AccountChildItemBean {
         this.id = id;
     }
 
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     @Override
     public String toString() {
