@@ -18,6 +18,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -320,7 +321,7 @@ public class AddRecordActivity extends AppCompatActivity implements View.OnClick
                 //photo = intent.getStringExtra("photoUriString");
                 tv_addRecordActivity_inputNumber.setText(stringNumber);
                 btn_addRecordActivity_time.setText(month+"月"+day+"日");
-                if (!photo.isEmpty()){
+                if (!TextUtils.isEmpty(photo)){
                     iv_addRecordActivity_photo.setImageURI(Uri.parse(photo));
                 }
             }else if(photo!=null){

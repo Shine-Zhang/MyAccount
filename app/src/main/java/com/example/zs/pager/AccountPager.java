@@ -91,7 +91,6 @@ public class AccountPager extends BasePager implements
     private static final int PHOTO_REQUEST_CAREMA_FROM_ACCOUNT = 201;
     private static final int PHOTO_REQUEST_GALLERY_FROM_ACCOUNT = 202;
     private PopupWindow popupwindow_getphoto;
-    private Uri photoUri;
     private TimeLineDAO timeDao;
     private Calendar now;
     private int today;
@@ -111,6 +110,8 @@ public class AccountPager extends BasePager implements
     private int mBorderWidth = 10;
     private WaveHelper mWaveHelper;
     private float remain;
+    private TextView tvUserStartTime;
+    private int year;
 
     public AccountPager(Activity activity) {
         super(activity);
@@ -138,7 +139,10 @@ public class AccountPager extends BasePager implements
     @Override
     public View initView() {
 //        Log.i("jjjjjjjjjj","********************************");
-
+        now = Calendar.getInstance();
+        today = now.get(Calendar.DAY_OF_MONTH);
+        month = now.get(Calendar.MONTH)+1;
+        year = now.get(Calendar.YEAR);
         mrootView = View.inflate(mActivity,R.layout.account_pager_layout,null);
         expandableListView = (PinnedHeaderExpandableListView) mrootView.findViewById(R.id.expandablelist);
         stickyLayout = (StickyLayout) mrootView.findViewById(R.id.sticky_layout);
@@ -146,6 +150,8 @@ public class AccountPager extends BasePager implements
         tvAccountPagerMonthIncome = (TextView) mrootView.findViewById(R.id.tv_account_pager_month_income_tip);
         tvAccountPagerMonthOutcome = (TextView) mrootView.findViewById(R.id.tv_account_pager_month_cost_tip);
         View footView = View.inflate(mActivity,R.layout.account_pager_footview,null);
+        TextView tvUserStartTime =  (TextView) footView.findViewById(R.id.account_pager_record_start_time);
+        tvUserStartTime.setText(year+"年"+month+"月"+today+"日");
         expandableListView.initFootView(footView);
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
@@ -187,9 +193,7 @@ public class AccountPager extends BasePager implements
                 mActivity.startActivity(intent);
             }
         });
-        now = Calendar.getInstance();
-        today = now.get(Calendar.DAY_OF_MONTH);
-        month = now.get(Calendar.MONTH)+1;
+
         tvAccountPagerMonthIncome.setText(month+"月收入");
         tvAccountPagerMonthOutcome.setText(month+"月支出");
         tvAccountPagerBudget = (TextView) mrootView.findViewById(R.id.tv_account_pager_buget);
@@ -774,7 +778,14 @@ public class AccountPager extends BasePager implements
                     //如果没有图片就设置imageView为不可见,同时为了方便用户之后可能会存在的添加行为,同时也要改变ImageView的布局
                     holder.iv_account_pager_item_photo.setVisibility(View.INVISIBLE);
                 }
-
+                //设置备注的布局
+                RelativeLayout.LayoutParams remarkLayoutParams = (RelativeLayout.LayoutParams) holder.tv_account_pager_remark.getLayoutParams();
+                //首先清除之前的布局，否则新的布局不会生效不会生效
+                remarkLayoutParams.removeRule(RelativeLayout.RIGHT_OF);
+                remarkLayoutParams.addRule(RelativeLayout.LEFT_OF, R.id.ib_account_pager_item_img_describe);
+                remarkLayoutParams.addRule(RelativeLayout.LEFT_OF, R.id.ib_account_pager_item_img_describe);
+                remarkLayoutParams.setMargins(0, 0, DensityUtil.dip2px(mActivity, 5), 0);
+                holder.tv_account_pager_remark.setLayoutParams(remarkLayoutParams);
 
                 if(!TextUtils.isEmpty(childItemBean.getRemark())){
                     holder.tv_account_pager_remark.setText(childItemBean.getRemark());
@@ -852,12 +863,7 @@ public class AccountPager extends BasePager implements
                     holder.iv_account_pager_item_photo.setVisibility(View.INVISIBLE);
                 }
 
-                if(!TextUtils.isEmpty(childItemBean.getRemark())){
-                    holder.tv_account_pager_remark.setText(childItemBean.getRemark());
-                    holder.tv_account_pager_remark.setVisibility(View.VISIBLE);
-                }else{
-                    holder.tv_account_pager_remark.setVisibility(View.INVISIBLE);
-                }
+
 
                 //设置账目的语言描述和支出/收入金额
                 RelativeLayout.LayoutParams wordLayoutParams = (RelativeLayout.LayoutParams) holder.tv_account_pager_word_describe.getLayoutParams();
@@ -868,6 +874,21 @@ public class AccountPager extends BasePager implements
                 wordLayoutParams.setMargins( DensityUtil.dip2px(mActivity, 5),0,0, 0);
                 holder.tv_account_pager_word_describe.setLayoutParams(wordLayoutParams);
                 holder.tv_account_pager_word_describe.setText(childItemBean.getItemDescribe());
+
+
+                RelativeLayout.LayoutParams remarkLayoutParams = (RelativeLayout.LayoutParams) holder.tv_account_pager_remark.getLayoutParams();
+                //首先清除之前的布局，否则新的布局不会生效不会生效
+                remarkLayoutParams.removeRule(RelativeLayout.LEFT_OF);
+                remarkLayoutParams.addRule(RelativeLayout.RIGHT_OF, R.id.ib_account_pager_item_img_describe);
+                remarkLayoutParams.setMargins( DensityUtil.dip2px(mActivity, 5),0,0, 0);
+                holder.tv_account_pager_remark.setLayoutParams(remarkLayoutParams);
+
+                if(!TextUtils.isEmpty(childItemBean.getRemark())){
+                    holder.tv_account_pager_remark.setText(childItemBean.getRemark());
+                    holder.tv_account_pager_remark.setVisibility(View.VISIBLE);
+                }else{
+                    holder.tv_account_pager_remark.setVisibility(View.INVISIBLE);
+                }
 
                 RelativeLayout.LayoutParams countlayoutParams = (RelativeLayout.LayoutParams) holder.tv_account_pager_how_much.getLayoutParams();
                 countlayoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
