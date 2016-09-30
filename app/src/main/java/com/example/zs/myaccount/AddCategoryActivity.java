@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.zs.bean.MyAllCatoryInfo;
 import com.example.zs.dao.AllCategoryDAO;
 import com.example.zs.dao.PayoutCategoryDAO;
+import com.example.zs.utils.SeletorUtils;
 import com.example.zs.view.CircleImageView;
 
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ public class AddCategoryActivity extends AppCompatActivity {
                 //用户点击item后在上方显示当前选中的Category
                 userChoiceID = cateoryList.get(i).getResourceID();
                 cv_addaddCategory_choiceIcon.setImageResource(userChoiceID);
+                SeletorUtils.setBackgroud(userChoiceID,cv_addaddCategory_choiceIcon);
             }
         });
     }
@@ -133,6 +135,7 @@ public class AddCategoryActivity extends AppCompatActivity {
             View inflate = View.inflate(AddCategoryActivity.this, R.layout.page_addcategory_detail, null);
             CircleImageView iv_addCategory_catagoryIcon = (CircleImageView) inflate.findViewById(R.id.iv_addCategory_catagoryIcon);
             iv_addCategory_catagoryIcon.setImageResource(cateoryList.get(i).getResourceID());
+            SeletorUtils.setBackgroud(cateoryList.get(i).getResourceID(),iv_addCategory_catagoryIcon);
             //最后一个为默认item，作用为跳转到addCategory页面
             return inflate;
         }
