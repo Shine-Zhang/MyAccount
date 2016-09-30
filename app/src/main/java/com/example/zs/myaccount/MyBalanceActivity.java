@@ -199,7 +199,7 @@ public class MyBalanceActivity extends AppCompatActivity {
 
             childViewHolder.iv_myactivity_childItem_Icon.setImageResource(childData.get(i).get(j).getIcon());
             //childViewHolder.iv_myactivity_childItem_Icon.setBackgroundResource(R.drawable.account_pager_group_today_icon);
-            int iconId = childData.get(i).get(j).getId();
+            int iconId = childData.get(i).get(j).getIcon();
             SeletorUtils.setBackgroud(iconId,childViewHolder.iv_myactivity_childItem_Icon);
 
             childViewHolder.tv_myactivity_childItem_describe.setText(childData.get(i).get(j).getItemDescribe());
