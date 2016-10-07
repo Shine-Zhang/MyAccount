@@ -281,7 +281,7 @@ public class OwnerPager extends BasePager {
 
     //初始化 意见反馈 条目，添加点击事件
     private void initFeedback() {
-        Log.i(TAG,"initFeedback coming!");
+        Log.i(TAG,"意见反馈");
         oi_ownerpager_feedback.setMyOwnerItemOnClickListener(new OwnerItem.MyOwnerItemOnClickListener() {
             //为oi_ownerpager_balance条目设置自定义的监听，当该条目被点击测会调用onItemClick()，然后跳转到MyBalance页面
             @Override
