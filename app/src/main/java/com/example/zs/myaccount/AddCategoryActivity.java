@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.zs.bean.MyAllCatoryInfo;
 import com.example.zs.dao.AllCategoryDAO;
 import com.example.zs.dao.PayoutCategoryDAO;
+import com.example.zs.utils.SeletorUtils;
 import com.example.zs.view.CircleImageView;
 
 import java.util.ArrayList;
@@ -41,10 +42,10 @@ public class AddCategoryActivity extends AppCompatActivity {
         GridView gv_addCategory_content = (GridView) findViewById(R.id.gv_addCategory_content);
         cv_addaddCategory_choiceIcon = (CircleImageView) findViewById(R.id.cv_addCategory_choiceIcon);
         et_addCategory_categoryName = (EditText) findViewById(R.id.et_addCategory_categoryName);
-
+        SeletorUtils.setBackgroud(R.id.cv_addCategory_choiceIcon,cv_addaddCategory_choiceIcon);
         //从AllCategoryDB表格获取全部的Category信息
         getInfoFromDB();
-
+        SeletorUtils.setBackgroud( cateoryList.get(0).getResourceID(),cv_addaddCategory_choiceIcon);
         //设置适配器
         gv_addCategory_content.setAdapter(new MyGridViewAdapter());
         //gv_addCategory_content.setSelector(new ColorDrawable(Color.TRANSPARENT));
@@ -55,6 +56,7 @@ public class AddCategoryActivity extends AppCompatActivity {
                 //用户点击item后在上方显示当前选中的Category
                 userChoiceID = cateoryList.get(i).getResourceID();
                 cv_addaddCategory_choiceIcon.setImageResource(userChoiceID);
+                SeletorUtils.setBackgroud(userChoiceID,cv_addaddCategory_choiceIcon);
             }
         });
     }
@@ -133,6 +135,7 @@ public class AddCategoryActivity extends AppCompatActivity {
             View inflate = View.inflate(AddCategoryActivity.this, R.layout.page_addcategory_detail, null);
             CircleImageView iv_addCategory_catagoryIcon = (CircleImageView) inflate.findViewById(R.id.iv_addCategory_catagoryIcon);
             iv_addCategory_catagoryIcon.setImageResource(cateoryList.get(i).getResourceID());
+            SeletorUtils.setBackgroud(cateoryList.get(i).getResourceID(),iv_addCategory_catagoryIcon);
             //最后一个为默认item，作用为跳转到addCategory页面
             return inflate;
         }
