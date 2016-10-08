@@ -43,15 +43,15 @@ public class SyncBackgroudUtils {
     {
         StateListDrawable drawable = new StateListDrawable();
         GradientDrawable normalSta = new  GradientDrawable();
-        normalSta.setColor(Color.rgb(230,230,255));
+        normalSta.setColor(Color.rgb(230,230,230));
         normalSta.setShape(GradientDrawable.OVAL);
         GradientDrawable pressSta = new  GradientDrawable();
         pressSta.setColor(getCorrespondingColor(resId));
         pressSta.setShape(GradientDrawable.OVAL);
         //Pressed按下去时的颜色
-        drawable.addState(new int[]{android.R.attr.state_enabled}, pressSta);
+        drawable.addState(new int[]{android.R.attr.state_enabled}, normalSta);
 
-        drawable.addState(new int[]{-android.R.attr.state_enabled},normalSta);
+        drawable.addState(new int[]{-android.R.attr.state_enabled},pressSta);
 
         return drawable;
     }
