@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.graphics.drawable.shapes.Shape;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
@@ -41,13 +42,16 @@ public class SyncBackgroudUtils {
     private static StateListDrawable createStateListDrawable(int resId)
     {
         StateListDrawable drawable = new StateListDrawable();
-
+        GradientDrawable normalSta = new  GradientDrawable();
+        normalSta.setColor(Color.rgb(230,230,255));
+        normalSta.setShape(GradientDrawable.OVAL);
+        GradientDrawable pressSta = new  GradientDrawable();
+        pressSta.setColor(getCorrespondingColor(resId));
+        pressSta.setShape(GradientDrawable.OVAL);
         //Pressed按下去时的颜色
-        drawable.addState(new int[]{android.R.attr.state_pressed},
-                new ColorDrawable(Color.rgb(230,230,255)));
+        drawable.addState(new int[]{android.R.attr.state_enabled}, pressSta);
 
-        drawable.addState(new int[]{-android.R.attr.state_pressed},new
-                ColorDrawable(getCorrespondingColor(resId)));
+        drawable.addState(new int[]{-android.R.attr.state_enabled},normalSta);
 
         return drawable;
     }
@@ -65,13 +69,18 @@ public class SyncBackgroudUtils {
     }
 
 
-    public static void setTimeLineBackgroud(int resId, ImageView target, Context context){
-
+    public static void setTimeLineBackgroud(int resId, ImageView target,int color){
             GradientDrawable myGrad = new GradientDrawable();
-            myGrad.setShape(GradientDrawable.OVAL);
-            myGrad.setSize((int)DensityUtil.dip2px(context,30),(int)DensityUtil.dip2px(context,30));
-            myGrad.setColor(getCorrespondingColor(resId));
-            target.setBackground(myGrad);
+            if(color<0) {
+
+                myGrad.setColor(getCorrespondingColor(resId));
+
+            }else if(color>0){
+                myGrad.setColor(color);
+            }
+
+        myGrad.setShape(GradientDrawable.OVAL);
+        target.setBackground(myGrad);
     }
 }
 

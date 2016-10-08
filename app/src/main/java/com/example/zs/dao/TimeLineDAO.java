@@ -10,8 +10,12 @@ import com.example.zs.bean.AccountGroupItemBean;
 import com.example.zs.dataBase.IncometContentDB;
 import com.example.zs.dataBase.PayOutContentDB;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.TreeSet;
 
@@ -37,9 +41,16 @@ public class TimeLineDAO {
     public ArrayList<AccountGroupItemBean> getTimeLineGroupData(int month){
         ArrayList<AccountGroupItemBean> group = new ArrayList<AccountGroupItemBean>();
         Calendar now = Calendar.getInstance();
-        int dayOfMonth = now.get(Calendar.DAY_OF_MONTH);
-        float[] costs = new float[dayOfMonth];
-        float[] income = new float[dayOfMonth];
+        int year = now.get(Calendar.YEAR);
+        int xMonth = now.get(Calendar.MONTH)+1;
+        int length;
+        if(xMonth>month){
+            length = getWholeDays(year,month);
+        }else {
+            length = now.get(Calendar.DAY_OF_MONTH);
+        }
+        float[] costs = new float[length];
+        float[] income = new float[length];
         for(int i=0;i<costs.length;i++){
             costs[i]=0;
             income[i]=0;
@@ -140,6 +151,31 @@ public class TimeLineDAO {
         for(int i=0;i<cursorSet.size();i++){
             cursorSet.get(i).close();
         }
+    }
+
+    public int getWholeDays(int year,int month){
+        int wholeDays = -1;
+        String monthString = null;
+        if(month<10){
+            monthString = String.format("%2d", month);
+        }else{
+            monthString = ""+month;
+        }
+        String strDate = year+"-"+monthString;
+        Calendar calendar;
+        Date date1;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+            calendar = new GregorianCalendar();
+            date1 = sdf.parse(strDate);
+            calendar.setTime(date1); //放入你的日期
+            wholeDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return wholeDays;
     }
 
 
