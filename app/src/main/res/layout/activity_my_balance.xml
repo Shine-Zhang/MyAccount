@@ -31,10 +31,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/ib_mybalanceactivity_back"
             android:id="@+id/tv_mybalanceactivity_titleDate"
-
+            android:text="2016年8月账单详细"
             android:textSize="16sp"
             android:layout_marginTop="30dp"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:onClick="setMonth"/>
     </RelativeLayout>
     <View
         android:layout_width="match_parent"
@@ -56,13 +57,13 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_mybalance_shouru"
                 android:layout_gravity="center"
-                android:text="收入"/>
+                android:text="年度总收入"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_mybalance_income"
                 android:layout_gravity="center"
-
+                android:text="0.00"
                 />
         </LinearLayout>
         <View
@@ -81,12 +82,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_mybalance_zhichu"
-                android:text="支出"/>
+                android:text="年度总支出"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_mybalanceactivity_pay"
-
+                android:text="0.00"
                 />
         </LinearLayout>
     </LinearLayout>
