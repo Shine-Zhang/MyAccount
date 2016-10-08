@@ -52,6 +52,7 @@ import com.example.zs.myaccount.R;
 import com.example.zs.myaccount.ShowBudgetStateAcivity;
 import com.example.zs.utils.DensityUtil;
 import com.example.zs.utils.SeletorUtils;
+import com.example.zs.utils.SyncBackgroudUtils;
 import com.example.zs.view.CircleImageView;
 import com.example.zs.view.PinnedHeaderExpandableListView;
 import com.example.zs.view.StickyLayout;
@@ -732,7 +733,7 @@ public class AccountPager extends BasePager implements
 
     @Override
     public boolean giveUpTouchEvent(MotionEvent event) {
-        if (expandableListView.getFirstVisiblePosition() == 0) {
+        if (expandableListView.getFirstVisiblePosition() == 0){
             View view = expandableListView.getChildAt(0);
             if (view != null && view.getTop() >= 0) {
                 return true;
@@ -750,7 +751,7 @@ public class AccountPager extends BasePager implements
         /*holder.ib_account_pager_item_img_describe.setBackground(mActivity.getResources().getDrawable(childItemBean.getIcon()));*/
         holder.ib_account_pager_item_img_describe.setImageResource(childItemBean.getIcon());
        // holder.ib_account_pager_item_img_describe.setBackgroundResource(R.drawable.account_pager_group_today_icon);
-        SeletorUtils.setBackgroud(childItemBean.getIcon(),holder.ib_account_pager_item_img_describe);
+        SyncBackgroudUtils.setTimeLineBackgroud(childItemBean.getIcon(),holder.ib_account_pager_item_img_describe,mActivity);
         if(childItemBean.isIncome()){
             //如果当前添加的条目是收入
             //  Log.i("haha","收入*************************");
