@@ -65,13 +65,18 @@ public class SyncBackgroudUtils {
     }
 
 
-    public static void setTimeLineBackgroud(int resId, ImageView target, Context context){
-
+    public static void setTimeLineBackgroud(int resId, ImageView target,int color){
             GradientDrawable myGrad = new GradientDrawable();
-            myGrad.setShape(GradientDrawable.OVAL);
-            myGrad.setSize((int)DensityUtil.dip2px(context,30),(int)DensityUtil.dip2px(context,30));
-            myGrad.setColor(getCorrespondingColor(resId));
-            target.setBackground(myGrad);
+            if(color<0) {
+
+                myGrad.setColor(getCorrespondingColor(resId));
+
+            }else if(color>0){
+                myGrad.setColor(color);
+            }
+
+        myGrad.setShape(GradientDrawable.OVAL);
+        target.setBackground(myGrad);
     }
 }
 
