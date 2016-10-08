@@ -54,6 +54,15 @@
             android:id="@+id/tv_account_pager_word_describe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <TextView
+            android:paddingLeft="5dp"
+            android:layout_below="@+id/ib_account_pager_item_img_describe"
+            android:layout_toRightOf="@id/ib_account_pager_item_img_describe"
+            android:text="你说呢"
+            android:textSize="10sp"
+            android:id="@+id/tv_account_pager_remark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:layout_marginRight="5dp"

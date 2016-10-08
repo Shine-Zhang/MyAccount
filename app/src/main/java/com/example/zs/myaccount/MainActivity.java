@@ -4,10 +4,12 @@ import android.app.Application;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -24,13 +26,21 @@ import com.example.zs.pager.BasePager;
 import com.example.zs.pager.OwnerPager;
 import com.example.zs.pager.ReportFormPager;
 import com.example.zs.pager.WishPager;
+import com.example.zs.utils.DensityUtil;
+import com.example.zs.utils.ScaleBitmapUtils;
+import com.lidroid.xutils.BitmapUtils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String tag="MainActivity";
+    private String tag = "MainActivity";
     public static ViewPager vp_mainactivity;
     public RadioGroup rg_mainactivity_bottom;
     public RadioButton rb_mainactivity_detail;
@@ -44,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int PHOTO_REQUEST_GALLERY_FROM_ACCOUNT = 202;
     private Uri photoUri;
     //新建ArrayList用于存储ViewPager里的不同page，从BasePager里面拿View
-    List<BasePager> pageList =  new ArrayList<BasePager>();
+    List<BasePager> pageList = new ArrayList<BasePager>();
     private MainActivity_ContentAdapter mainActivity_contentAdapter;
 
     @Override
@@ -67,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         //RadioButton
         rb_mainactivity_detail = (RadioButton) findViewById(R.id.rb_mainactivity_detail);
         rb_mainactivity_wish = (RadioButton) findViewById(R.id.rb_mainactivity_wish);
-       // rb_mainactivity_plus = (RadioButton) findViewById(R.id.rb_mainactivity_plus);
+        // rb_mainactivity_plus = (RadioButton) findViewById(R.id.rb_mainactivity_plus);
         rb_mainactivity_list = (RadioButton) findViewById(R.id.rb_mainactivity_list);
         rb_mainactivity_mine = (RadioButton) findViewById(R.id.rb_mainactivity_mine);
         //将“明细”（第一个）按钮默认设为选定状态
@@ -90,38 +100,37 @@ public class MainActivity extends AppCompatActivity {
         rg_mainactivity_bottom.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int checkId) {
-                switch (checkId){
+                switch (checkId) {
 
                     case R.id.rb_mainactivity_detail:
-                        vp_mainactivity.setCurrentItem(0,false);
+                        vp_mainactivity.setCurrentItem(0, false);
                         pageList.get(0).initData();
                         MyAplication application0 = (MyAplication) getApplication();
-                        if(application0.getAccountPager()==null) {
-                            Log.i("lalalala","设置了");
+                            Log.i("lalalala", "设置了");
                             application0.setAccountPager(pageList.get(0));
-                        }
+
                         break;
 
                     case R.id.rb_mainactivity_wish:
-                        Log.i(tag,"00");
-                        vp_mainactivity.setCurrentItem(1,false);
+                        Log.i(tag, "00");
+                        vp_mainactivity.setCurrentItem(1, false);
                         pageList.get(1).initData();
                         MyAplication application1 = (MyAplication) getApplication();
-                        if(application1.getWishPager()==null) {
+                        if (application1.getWishPager() == null) {
                             application1.setWishPager(pageList.get(1));
                         }
                         break;
                     case R.id.rb_mainactivity_list:
-                        vp_mainactivity.setCurrentItem(2,false);
+                        vp_mainactivity.setCurrentItem(2, false);
                         pageList.get(2).initData();
                         MyAplication application2 = (MyAplication) getApplication();
-                        if(application2.getReportFormPager()==null) {
+                        if (application2.getReportFormPager() == null) {
                             application2.setReportFormPager(pageList.get(2));
                         }
                         break;
 
                     case R.id.rb_mainactivity_mine:
-                        vp_mainactivity.setCurrentItem(3,false);
+                        vp_mainactivity.setCurrentItem(3, false);
                         pageList.get(3).initData();
                         MyAplication application03 = (MyAplication) getApplication();
                         application03.setOwnerPager(pageList.get(3));
@@ -133,26 +142,28 @@ public class MainActivity extends AppCompatActivity {
         vp_mainactivity.setCurrentItem(0);
         pageList.get(0).initData();
         MyAplication application0 = (MyAplication) getApplication();
-        if(application0.getAccountPager()==null) {
-            Log.i("lalalala","设置了");
+
+            Log.i("lalalala", "设置了");
             application0.setAccountPager(pageList.get(0));
-        }
-        Log.i(tag,"wennm");
+
+        Log.i(tag, "wennm");
     }
 
     //新建Adapter用于每个RadioButton点击显示不同页面
-   public class MainActivity_ContentAdapter extends PagerAdapter{
+    public class MainActivity_ContentAdapter extends PagerAdapter {
         private int mChildCount = 0;
+
         //解决notifyDataSetChanged 无法刷新page数据的bug
         @Override
         public void notifyDataSetChanged() {
             mChildCount = getCount();
             super.notifyDataSetChanged();
         }
+
         @Override
-        public int getItemPosition(Object object)   {
-            if ( mChildCount > 0) {
-                mChildCount --;
+        public int getItemPosition(Object object) {
+            if (mChildCount > 0) {
+                mChildCount--;
                 return POSITION_NONE;
             }
             return super.getItemPosition(object);
@@ -166,8 +177,8 @@ public class MainActivity extends AppCompatActivity {
             //return 0;
         }
 
-        public BasePager getRefreshTarget(){
-            if(pageList!=null&&pageList.get(3)!=null){
+        public BasePager getRefreshTarget() {
+            if (pageList != null && pageList.get(3) != null) {
                 return pageList.get(3);
             }
             return null;
@@ -175,13 +186,13 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean isViewFromObject(View view, Object object) {
-            return view==object;
+            return view == object;
             // return false;
         }
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            Log.i("mainActivity","viewpager-instantiateItem="+position);
+            Log.i("mainActivity", "viewpager-instantiateItem=" + position);
             BasePager basePager = pageList.get(position);
             /*测试代码
             Log.i("hahaha","&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
@@ -202,42 +213,45 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void test(){
+    public void test() {
 
 
-        Log.i("haha","云中歌");
-
-    }
-
-    public  void  test2(){
-        Log.i("zhangxudong","zhangxudong");
-
-        Log.i("lll","llll");
-
-        Log.i("aola","aolaaolaaola");
+        Log.i("haha", "云中歌");
 
     }
 
-    public  void  test3(){
+    public void test2() {
+        Log.i("zhangxudong", "zhangxudong");
 
+        Log.i("lll", "llll");
 
-        Log.i("11","大油桃");
+        Log.i("aola", "aolaaolaaola");
 
     }
+
+    public void test3() {
+
+
+        Log.i("11", "大油桃");
+
+    }
+
     long firstTime;
+
     //方式一
     //防止用户误触返回键退出应用,重写back键
     @Override
     public void onBackPressed() {
         long secondTime = System.currentTimeMillis();
-        if (secondTime-firstTime>1000){//比较优先级低
+        if (secondTime - firstTime > 2000) {//比较优先级低
             Toast.makeText(MainActivity.this, "再次点击退出钱哆哆记账",
                     Toast.LENGTH_SHORT).show();
             firstTime = secondTime;//记录上次的时间
-        }else {
+        } else {
             super.onBackPressed();
         }
     }
+
     /*//按键松开触发
     //方式二
     @Override
@@ -256,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onKeyUp(keyCode, event);
     }
 */
-    public void add(View v){
+    public void add(View v) {
         //test
         /*Intent intent = new Intent(this,AddRecordActivity.class);
         intent.putExtra("isIncome",false);
@@ -272,16 +286,16 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent,110);*/
         Intent intent = new Intent(MainActivity.this, AddRecordActivity.class);
         //test intent.putExtra("photoUriString","content://media/external/images/media/33");
-        startActivityForResult(intent,50);
+        startActivityForResult(intent, 50);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        Log.i(tag,resultCode+"--"+requestCode);
-        Log.i(tag,"000");
+        Log.i(tag, resultCode + "--" + requestCode);
+        Log.i(tag, "000");
         Bitmap resultBitmap;
         //确认健返回
-        if(resultCode==555&&intent!=null){
+        if (resultCode == 555 && intent != null) {
             //刷新page的数据
             int id = intent.getIntExtra("id", 0);
             int resourceID = intent.getIntExtra("resourceID", 0);
@@ -293,39 +307,39 @@ public class MainActivity extends AppCompatActivity {
             String marks = intent.getStringExtra("marks");
             String photoUriString = intent.getStringExtra("photoUriString");
             PayoutContentInfo payouContentInfo = new PayoutContentInfo(id, resourceID, categoryName, year, mouth, day, money, marks, photoUriString);
-            Log.i(tag,payouContentInfo.toString());
-            Log.i("kkkjjjhj","fggggf");
+            Log.i(tag, payouContentInfo.toString());
+            Log.i("kkkjjjhj", "fggggf");
             ReportFormPager reportFormPager = (ReportFormPager) pageList.get(2);
             reportFormPager.refreshPauout(payouContentInfo);
-            Log.i("kkkjjjhj",reportFormPager.toString());
+            Log.i("kkkjjjhj", reportFormPager.toString());
             //super无法执行到
             // return;
-        }else if(resultCode==444){
+        } else if (resultCode == 444) {
 
-        } else if(requestCode==PHOTO_REQUEST_GALLERY){
+        } else if (requestCode == PHOTO_REQUEST_GALLERY) {
             //去图库获取到的数据
-            if(resultCode==RESULT_OK){
-                if(intent!=null){
-                    if(intent.hasExtra("data")){
-                        Bitmap bitmap = intent.getParcelableExtra("data");
+            if (resultCode == RESULT_OK) {
+                if (intent != null) {
+                    if (intent.hasExtra("data")) {
 
+                        Bitmap bitmap = intent.getParcelableExtra("data");
                     }
                     //获取图片的全路径uri
                     photoUri = intent.getData();
-                    Log.i("wwwwwwww","调用图库  uri="+photoUri);
+                    Log.i("wwwwwwww", "调用图库  uri=" + photoUri);
 
-                }else{
+                } else {
                     return;
                 }
             }
-        } else if(requestCode==PHOTO_REQUEST_CAREMA){
+        } else if (requestCode == PHOTO_REQUEST_CAREMA) {
             //照相
-            if(resultCode==RESULT_OK){
+            if (resultCode == RESULT_OK) {
             }
-        }else if(requestCode==111){
-            Log.i("wwwwwwww","添加愿望onActivityResult---requestCode==111");
-            if (resultCode==112){
-                Log.i("wwwwwwww","添加愿望onActivityResult---resultCode==112");
+        } else if (requestCode == 111) {
+            Log.i("wwwwwwww", "添加愿望onActivityResult---requestCode==111");
+            if (resultCode == 112) {
+                Log.i("wwwwwwww", "添加愿望onActivityResult---resultCode==112");
                 Intent wishintent = getIntent();
                 boolean hasaddwish = wishintent.getBooleanExtra("hasaddwish", false);
                 Log.i("wwwwww", "hasaddwish===" + hasaddwish);
@@ -336,51 +350,23 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             }
-        }else if(requestCode==PHOTO_REQUEST_CAREMA_FROM_ACCOUNT){
-           Uri result =  intent.getData();
-            intent.putExtra("photoUriString",result);
-            startActivityForResult(intent,50);
+        } else if (requestCode == PHOTO_REQUEST_CAREMA_FROM_ACCOUNT||requestCode==PHOTO_REQUEST_GALLERY_FROM_ACCOUNT) {
+           // Log.i("lalala","1212121");
+            Uri result = intent.getData();
+            if (result == null) {
+                if (intent.hasExtra("data")) {
+                    Bitmap bitmap = intent.getParcelableExtra("data");
+                    result = ScaleBitmapUtils.scaleBitmap(bitmap, DensityUtil.dip2px(this, 200), DensityUtil.dip2px(this, 200));
+                    bitmap.recycle();
 
-        }
-        super.onActivityResult(requestCode, resultCode, intent);
-    }
-
-    /**
-     * 该函数用于获取传回来的数据。
-     * 即 跳转到其他地方之后获取到想要的信息，将信息传回来
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-/*    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        Log.i("wwwwwwwwwwwwwww","onActivityResult requestCode="+requestCode+"  resultCode="+resultCode+"   data="+data);
-        //去图库获取到的数据
-        if(requestCode==PHOTO_REQUEST_GALLERY){
-            if(resultCode==RESULT_OK){
-                if(data!=null){
-                    if(data.hasExtra("data")){
-                        Bitmap bitmap = data.getParcelableExtra("data");
-                        civ_addwishactivity_image.setImageBitmap(bitmap);
-                    }
-                    //获取图片的全路径uri
-                    photoUri = data.getData();
-                    Log.i("wwwwwwww","调用图库  uri="+photoUri);
-                    civ_addwishactivity_image.setImageURI(photoUri);
-                    iv_addwishactivity_photo.setVisibility(View.INVISIBLE);
-
-                }else{
-                    return;
                 }
             }
+            Log.i("lalala", result.toString());
+            Intent leapAddRecordActivityIntent = new Intent(this, AddRecordActivity.class);
+            leapAddRecordActivityIntent.putExtra("photoUriString", result.toString());
+            startActivityForResult(leapAddRecordActivityIntent, 50);
+            super.onActivityResult(requestCode, resultCode, intent);
         }
-        //照相
-        if(requestCode==PHOTO_REQUEST_CAREMA){
-            if(resultCode==RESULT_OK){
-                civ_addwishactivity_image.setImageURI(photoUri);
-                iv_addwishactivity_photo.setVisibility(View.INVISIBLE);
-            }
-        }
-    }*/
+
+    }
 }
