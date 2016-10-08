@@ -23,6 +23,7 @@ import com.example.zs.myaccount.AddCategoryActivity;
 import com.example.zs.myaccount.AddRecordActivity;
 import com.example.zs.myaccount.R;
 import com.example.zs.utils.SeletorUtils;
+import com.example.zs.utils.SyncBackgroudUtils;
 import com.example.zs.view.CircleImageView;
 
 import android.view.ViewGroup;
