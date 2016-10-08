@@ -43,7 +43,7 @@ public class SyncBackgroudUtils {
     {
         StateListDrawable drawable = new StateListDrawable();
         GradientDrawable normalSta = new  GradientDrawable();
-        normalSta.setColor(Color.rgb(230,230,255));
+        normalSta.setColor(Color.rgb(230,230,230));
         normalSta.setShape(GradientDrawable.OVAL);
         GradientDrawable pressSta = new  GradientDrawable();
         pressSta.setColor(getCorrespondingColor(resId));
