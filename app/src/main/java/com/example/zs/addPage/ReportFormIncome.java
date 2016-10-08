@@ -350,7 +350,6 @@ public class ReportFormIncome {
         return s;
     }
 }
-
 class IncomeColors{
     public static int salaryColor = Color.rgb(145, 189, 254);
     public static int jianzhiColor = Color.rgb(92, 228, 162);
@@ -358,6 +357,7 @@ class IncomeColors{
     public static int hongbaoColor = Color.rgb(253, 53, 100);
     public static int licaiColor = Color.rgb(145, 189, 254);
 }
+
 
 class IncomeNumAndAccount{
     //工资

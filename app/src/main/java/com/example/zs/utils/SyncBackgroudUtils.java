@@ -49,9 +49,9 @@ public class SyncBackgroudUtils {
         pressSta.setColor(getCorrespondingColor(resId));
         pressSta.setShape(GradientDrawable.OVAL);
         //Pressed按下去时的颜色
-        drawable.addState(new int[]{android.R.attr.state_enabled}, pressSta);
+        drawable.addState(new int[]{android.R.attr.state_enabled}, normalSta);
 
-        drawable.addState(new int[]{-android.R.attr.state_enabled},normalSta);
+        drawable.addState(new int[]{-android.R.attr.state_enabled},pressSta);
 
         return drawable;
     }
@@ -71,11 +71,11 @@ public class SyncBackgroudUtils {
 
     public static void setTimeLineBackgroud(int resId, ImageView target,int color){
             GradientDrawable myGrad = new GradientDrawable();
-            if(color<0) {
+            if(color>0) {
 
                 myGrad.setColor(getCorrespondingColor(resId));
 
-            }else if(color>0){
+            }else if(color<0){
                 myGrad.setColor(color);
             }
 

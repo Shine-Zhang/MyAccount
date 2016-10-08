@@ -256,12 +256,24 @@ public class ReportFormPager extends BasePager {
                                 //圆饼旋转动画
                                 reportFormincome.pieChart.spin(500,rotationAngle,end,Easing.EasingOption.EaseInOutQuad);
                                 //同时在点击某个slice的同时，在下方显示与其对应的金额和图标
+                                /*
+                                 tv_reportform_detail.setText(  zhichuDataType.get(x) +":       "  + y + "元" );
+                               //colors[x % colors.length]
+                                tv_reportform_detail.setTextColor(colors[x % colors.length]);
 
+                                Log.i("lllllllll",colors[x % colors.length] + "");
+                                //iv_reportform_detail.setBackgroundResource(R.drawable.account_pager_group_today_icon);
+                                SyncBackgroudUtils.setTimeLineBackgroud(reportformfIcon.get(zhichuDataType.get(x)),iv_reportform_detail,colors[x % colors.length]);
+                                Log.i("lllllllll",colors[x % colors.length] + "");
+
+                                iv_reportform_detail.setImageResource(reportformfIcon.get(zhichuDataType.get(x)));
+                                 */
                                     tv_reportform_incomedetail.setText(reportFormincome.shouruDataType.get(x) +":       "  + y + "元");
 
-                                tv_reportform_incomedetail.setTextColor(reportFormincome.shouruColors[x%reportFormincome.shouruColors.length]);
-
-                                    iv_reportform_incomedetail.setBackgroundResource(R.drawable.account_pager_group_today_icon);
+                                    tv_reportform_incomedetail.setTextColor(reportFormincome.shouruColors[x%reportFormincome.shouruColors.length]);
+                                    SyncBackgroudUtils.setTimeLineBackgroud(reportFormincome.reportformfShouruIcon.get(reportFormincome.shouruDataType.get(x)),iv_reportform_incomedetail,reportFormincome.shouruColors[x%reportFormincome.shouruColors.length]);
+                                   Log.i("kkkkkkk","");
+                                    //iv_reportform_incomedetail.setBackgroundResource(R.drawable.account_pager_group_today_icon);
                                     iv_reportform_incomedetail.setImageResource(reportFormincome.reportformfShouruIcon.get(reportFormincome.shouruDataType.get(x)));
 
 
@@ -706,14 +718,11 @@ public class ReportFormPager extends BasePager {
                //colors[x % colors.length]
                 tv_reportform_detail.setTextColor(colors[x % colors.length]);
 
-
-                Log.i("reportformfIcon",reportformfIcon.size() + "");
-                Log.i("reportformfIcon.get",reportformfIcon.get(zhichuDataType.get(x))+"");
-
+                Log.i("lllllllll",colors[x % colors.length] + "");
                 //iv_reportform_detail.setBackgroundResource(R.drawable.account_pager_group_today_icon);
-                //SeletorUtils.(reportformfIcon.get(zhichuDataType.get(x)),iv_reportform_detail);
-                Log.i("reportformfIcon3333",zhichuDataType.get(x) + "");
-                Log.i("reportformfIcon3333",reportformfIcon.get(zhichuDataType.get(x)) + "");
+                SyncBackgroudUtils.setTimeLineBackgroud(reportformfIcon.get(zhichuDataType.get(x)),iv_reportform_detail,colors[x % colors.length]);
+                Log.i("lllllllll",colors[x % colors.length] + "");
+
                 iv_reportform_detail.setImageResource(reportformfIcon.get(zhichuDataType.get(x)));
 
             }
