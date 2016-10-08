@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.graphics.drawable.shapes.Shape;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
@@ -41,13 +42,16 @@ public class SyncBackgroudUtils {
     private static StateListDrawable createStateListDrawable(int resId)
     {
         StateListDrawable drawable = new StateListDrawable();
-
+        GradientDrawable normalSta = new  GradientDrawable();
+        normalSta.setColor(Color.rgb(230,230,255));
+        normalSta.setShape(GradientDrawable.OVAL);
+        GradientDrawable pressSta = new  GradientDrawable();
+        pressSta.setColor(getCorrespondingColor(resId));
+        pressSta.setShape(GradientDrawable.OVAL);
         //Pressed按下去时的颜色
-        drawable.addState(new int[]{android.R.attr.state_pressed},
-                new ColorDrawable(Color.rgb(230,230,255)));
+        drawable.addState(new int[]{android.R.attr.state_enabled}, pressSta);
 
-        drawable.addState(new int[]{-android.R.attr.state_pressed},new
-                ColorDrawable(getCorrespondingColor(resId)));
+        drawable.addState(new int[]{-android.R.attr.state_enabled},normalSta);
 
         return drawable;
     }
