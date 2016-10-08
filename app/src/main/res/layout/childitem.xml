@@ -63,7 +63,6 @@
             android:id="@+id/tv_account_pager_remark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
         <TextView
             android:layout_marginRight="5dp"
             android:layout_centerVertical="true"

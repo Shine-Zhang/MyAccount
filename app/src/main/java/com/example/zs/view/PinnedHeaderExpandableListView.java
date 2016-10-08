@@ -133,11 +133,7 @@ public class PinnedHeaderExpandableListView extends ExpandableListView implement
             mHeaderWidth = mHeaderHeight = 0;
             return;
         }
-
         int firstVisiblePos = getFirstVisiblePosition();
-      //  Log.i("xuanyan","9090909090:"+firstVisiblePos);
-
-
             int firstVisibleGroupPos = getPackedPositionGroup(getExpandableListPosition(firstVisiblePos));
             if(firstVisibleGroupPos!=-1) {
                 mHeaderView = listener.getPinnedHeader();
@@ -183,39 +179,16 @@ public class PinnedHeaderExpandableListView extends ExpandableListView implement
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-      //  Log.i("haha","进入dispatchTouchEvent！！！！");
         int x = (int) ev.getX();
         int y = (int) ev.getY();
         int pos = pointToPosition(x, y);
-//        int dy;
-       /* if (mHeaderView != null && y >= mHeaderView.getTop() && y <= mHeaderView.getBottom())*/
             if (mHeaderView != null && y >= mHeaderView.getTop()&&y<=mHeaderView.getBottom()){
             if (ev.getAction() == MotionEvent.ACTION_DOWN) {
                 mTouchTarget = getTouchTarget(mHeaderView, x, y);
                 mActionDownHappened = true;
                 //我加的,此句至关重要
                 startY = y;
-            }/* else if(ev.getAction() == MotionEvent.ACTION_MOVE){
-                Log.i("haha","进入dispatchTouchEvent 的Move！！！！");
-                if(mCurrentSta != REFRESHING){
-                int endY = (int) ev.getRawY();
-                dy =  endY - startY;
-                    Log.i("haha","dy = "+dy);
-                if(dy>0){
-                    Log.i("haha","进入dy>0!!!!");
-                        if(dy>mHeaderHeight){
-                            mCurrentSta = RELEASE_TO_REFRESH;
-                            this.dy = dy;
-                            Log.i("haha","调用refreshHeader()!!!!");
-                            refreshHeader();
-                        }else{
-                            mCurrentSta = PULL_TO_REFRESH;
-                            Log.i("haha","进入dy< mHeaderHeight!!!!"+mHeaderView.getHeight());
-
-                        }
-                     }
-                }
-            }*/else if (ev.getAction() == MotionEvent.ACTION_UP) {
+            }else if (ev.getAction() == MotionEvent.ACTION_UP) {
 
                 View touchTarget = getTouchTarget(mHeaderView, x, y);
                 if (touchTarget == mTouchTarget && mTouchTarget.isClickable()) {
@@ -281,7 +254,7 @@ public class PinnedHeaderExpandableListView extends ExpandableListView implement
         if (mHeaderView == null) {
             return;
         }
-//        Log.i("haha","进入refreshHeader()！！！！！！");
+
         int firstVisiblePos = getFirstVisiblePosition();
         int pos = firstVisiblePos + 1;
         int firstVisibleGroupPos = getPackedPositionGroup(getExpandableListPosition(firstVisiblePos));
@@ -303,21 +276,6 @@ public class PinnedHeaderExpandableListView extends ExpandableListView implement
                 //TODO : note it, when cause bug, remove it
                 mHeaderView.layout(0, 0, mHeaderWidth, mHeaderHeight);
             }
-           /* if (view.getTop() < mHeaderHeight) {
-                Log.i("haha","view.getTop() < mHeaderHeight:"+view.getTop());
-                int delta = mHeaderHeight - view.getTop();
-                if(mCurrentSta ==PULL_TO_REFRESH){
-                    mHeaderView.layout(0,-delta,0,0);
-                }
-
-                mHeaderView.layout(0, -delta, mHeaderWidth, mHeaderHeight - delta);
-            } else {
-                Log.i("haha","dy = "+this.dy);
-                mHeaderView.layout(0,0,mHeaderWidth,mHeaderHeight+this.dy);
-                //TODO : note it, when cause bug, remove it
-            }
-
-*/
         } else {
             mHeaderView.layout(0, 0, mHeaderWidth, mHeaderHeight);
         }
@@ -339,24 +297,10 @@ public class PinnedHeaderExpandableListView extends ExpandableListView implement
     public void onScroll(AbsListView view, int firstVisibleItem,
             int visibleItemCount, int totalItemCount) {
         if (totalItemCount > 0) {
-//            Log.i("haha","进入onScroll！！");
             refreshHeader();
         }
         if (mScrollListener != null) {
             mScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
         }
     }
-
-/*    public void setOnRemindGroupExpandStateListener(OnRemindGroupExpandStateListener onRemindGroupExpandStateListener){
-        mOnRemindGroupExpandStateListener = onRemindGroupExpandStateListener;
-    }
-
-    public interface OnRemindGroupExpandStateListener{
-
-        public void setCurrentGroupExpandStateListner(int groupPosition,boolean isExpand);
-    }*/
-
-
-
-
 }
