@@ -35,6 +35,7 @@ import com.example.zs.dao.PayoutCategoryDAO;
 import com.example.zs.myaccount.RportFormDatePickerActivity;
 import com.example.zs.utils.ScreenUtils;
 import com.example.zs.utils.SeletorUtils;
+import com.example.zs.utils.SyncBackgroudUtils;
 import com.example.zs.view.CircleImageView;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
@@ -702,6 +703,7 @@ public class ReportFormPager extends BasePager {
                 Log.i("rotationAngle",x + "");
 
                 tv_reportform_detail.setText(  zhichuDataType.get(x) +":       "  + y + "元" );
+               //colors[x % colors.length]
                 tv_reportform_detail.setTextColor(colors[x % colors.length]);
 
 
@@ -709,7 +711,7 @@ public class ReportFormPager extends BasePager {
                 Log.i("reportformfIcon.get",reportformfIcon.get(zhichuDataType.get(x))+"");
 
                 //iv_reportform_detail.setBackgroundResource(R.drawable.account_pager_group_today_icon);
-                SeletorUtils.setBackgroud(reportformfIcon.get(zhichuDataType.get(x)),iv_reportform_detail);
+                //SeletorUtils.(reportformfIcon.get(zhichuDataType.get(x)),iv_reportform_detail);
                 Log.i("reportformfIcon3333",zhichuDataType.get(x) + "");
                 Log.i("reportformfIcon3333",reportformfIcon.get(zhichuDataType.get(x)) + "");
                 iv_reportform_detail.setImageResource(reportformfIcon.get(zhichuDataType.get(x)));
