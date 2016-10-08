@@ -750,8 +750,7 @@ public class AccountPager extends BasePager implements
         //首先设置，条目的图标，因为无论是收入还是支出，其位置都是不变的，都在正中间的位置
         /*holder.ib_account_pager_item_img_describe.setBackground(mActivity.getResources().getDrawable(childItemBean.getIcon()));*/
         holder.ib_account_pager_item_img_describe.setImageResource(childItemBean.getIcon());
-       // holder.ib_account_pager_item_img_describe.setBackgroundResource(R.drawable.account_pager_group_today_icon);
-        SyncBackgroudUtils.setTimeLineBackgroud(childItemBean.getIcon(),holder.ib_account_pager_item_img_describe,mActivity);
+        SyncBackgroudUtils.setTimeLineBackgroud(childItemBean.getIcon(),holder.ib_account_pager_item_img_describe,-1);
         if(childItemBean.isIncome()){
             //如果当前添加的条目是收入
             //  Log.i("haha","收入*************************");
