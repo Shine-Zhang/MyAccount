@@ -37,7 +37,7 @@ public class AddCategoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_category);
         //隐藏标题栏
-        getSupportActionBar().hide();
+        //getSupportActionBar().hide();
         //找到gridview的布局
         GridView gv_addCategory_content = (GridView) findViewById(R.id.gv_addCategory_content);
         cv_addaddCategory_choiceIcon = (CircleImageView) findViewById(R.id.cv_addCategory_choiceIcon);
