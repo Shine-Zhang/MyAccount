@@ -71,11 +71,11 @@ public class SyncBackgroudUtils {
 
     public static void setTimeLineBackgroud(int resId, ImageView target,int color){
             GradientDrawable myGrad = new GradientDrawable();
-            if(color<0) {
+            if(color>0) {
 
                 myGrad.setColor(getCorrespondingColor(resId));
 
-            }else if(color>0){
+            }else if(color<0){
                 myGrad.setColor(color);
             }
 

@@ -256,7 +256,7 @@ public class MyBalanceActivity extends AppCompatActivity {
             childViewHolder.iv_myactivity_childItem_Icon.setImageResource(childData.get(i).get(j).getIcon());
             //childViewHolder.iv_myactivity_childItem_Icon.setBackgroundResource(R.drawable.account_pager_group_today_icon);
             int iconId = childData.get(i).get(j).getIcon();
-            SyncBackgroudUtils.setTimeLineBackgroud(iconId,childViewHolder.iv_myactivity_childItem_Icon,-1);
+            SyncBackgroudUtils.setTimeLineBackgroud(iconId,childViewHolder.iv_myactivity_childItem_Icon,1);
 
             childViewHolder.tv_myactivity_childItem_describe.setText(childData.get(i).get(j).getItemDescribe());
             if(childData.get(i).get(j).isIncome()){
