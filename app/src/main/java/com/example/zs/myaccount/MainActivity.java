@@ -351,17 +351,20 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         } else if (requestCode == PHOTO_REQUEST_CAREMA_FROM_ACCOUNT||requestCode==PHOTO_REQUEST_GALLERY_FROM_ACCOUNT) {
-           // Log.i("lalala","1212121");
+
             Uri result = intent.getData();
             if (result == null) {
+
                 if (intent.hasExtra("data")) {
+
                     Bitmap bitmap = intent.getParcelableExtra("data");
                     result = ScaleBitmapUtils.scaleBitmap(bitmap, DensityUtil.dip2px(this, 200), DensityUtil.dip2px(this, 200));
                     bitmap.recycle();
 
+                    Log.i("lalala","1212121");
                 }
             }
-            Log.i("lalala", result.toString());
+
             Intent leapAddRecordActivityIntent = new Intent(this, AddRecordActivity.class);
             leapAddRecordActivityIntent.putExtra("photoUriString", result.toString());
             startActivityForResult(leapAddRecordActivityIntent, 50);

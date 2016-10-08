@@ -1,12 +1,18 @@
 package com.example.zs.myaccount;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListAdapter;
@@ -17,6 +23,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.zs.application.MyAplication;
 import com.example.zs.bean.AccountChildItemBean;
@@ -55,6 +62,9 @@ public class MyBalanceActivity extends AppCompatActivity {
     private String[][] childStrings;
     private ArrayList<ArrayList<AccountChildItemBean>> childData;
     private ArrayList<AccountGroupItemBean> groupData;
+    private int this_month;
+    private int this_year;
+    private int select_month;
 
 
     @Override
@@ -68,25 +78,22 @@ public class MyBalanceActivity extends AppCompatActivity {
         tv_mybalance_income = (TextView) findViewById(R.id.tv_mybalance_income);
         tv_mybalance_zhichu = (TextView) findViewById(R.id.tv_mybalanceactivity_pay);
         detailList = (ExpandableListView) findViewById(R.id.expandablelv_mybalanceactivity_detailList);
+
+        //获取此时的年月
+        Calendar calendar = Calendar.getInstance();
+        this_year = calendar.get(Calendar.YEAR);
+        this_month = calendar.get(Calendar.MONTH)+1;
+        //初始化选择的月份
+        select_month = this_month;
+        Log.i("?????","select_month="+ select_month);
+
         initData();
 
-        detailList.setAdapter(new MyExpandableListAdapter());
-        if(!groupData.isEmpty()){
-            //rl_mybalanceactivity_norecord.setVisibility(View.GONE);
-            Log.i("???","有数据，展开");
-            detailList.expandGroup(0);//默认展开第0个组
-        }else {
-            rl_mybalanceactivity_norecord.setVisibility(View.VISIBLE);
-        }
     }
 
     private void initData() {
-        //获取此时的年月
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH)+1;
-        Log.i("?????","month="+month);
-        tv_mybalanceactivity_titleDate.setText(year+"年"+month+"月的账单详情");
+
+        tv_mybalanceactivity_titleDate.setText(this_year +"年"+ select_month +"月的账单详情");
 
         //获取需要显示的数据（测试数据）
         if (childData!=null) {
@@ -95,11 +102,22 @@ public class MyBalanceActivity extends AppCompatActivity {
         if (groupData!=null) {
             groupData.clear();
         }
+
+        //获取收入、支出的总额
+        PayOutContentDAO payOutContentDAO = new PayOutContentDAO(this);
+        float payoutSum = payOutContentDAO.getMoneySum();
+        tv_mybalance_zhichu.setText(payoutSum+"");
+        IncomeContentDAO incomeContentDAO = new IncomeContentDAO(this);
+        allIncomeContentFromDBList = incomeContentDAO.getAllIncomeContentFromDB();
+        float incomeSum = incomeContentDAO.getMoneySum();
+        tv_mybalance_income.setText(incomeSum+"");
+
         TimeLineDAO detailDao = new TimeLineDAO(this);
-        childData = detailDao.getTimeLinePayOutChildData(month);
-        groupData = detailDao.getTimeLineGroupData(month);
-        Log.i("zzzzz",childData.toString());
-        Log.i("zzzzz",groupData.toString());
+        Log.i("???",select_month+"月的账单详细");
+        childData = detailDao.getTimeLinePayOutChildData(select_month);
+        groupData = detailDao.getTimeLineGroupData(select_month);
+        Log.i("???","childData="+childData.toString());
+        Log.i("???","groupData="+groupData.toString());
 
 
        /* groupStrings = new String[]{"西游记", "水浒传", "三国演义", "红楼梦"};
@@ -110,10 +128,46 @@ public class MyBalanceActivity extends AppCompatActivity {
                 {"贾宝玉", "林黛玉", "薛宝钗", "王熙凤"}
         };*/
 
+
+        detailList.setAdapter(new MyExpandableListAdapter());
+        if(!groupData.isEmpty()){
+            rl_mybalanceactivity_norecord.setVisibility(View.GONE);
+            Log.i("???","有数据，展开");
+            detailList.expandGroup(0);//默认展开第0个组
+        }else {
+            rl_mybalanceactivity_norecord.setVisibility(View.VISIBLE);
+        }
+
     }
 
     public void back(View view){
         finish();
+    }
+
+    public void setMonth(View view){
+        final String[] items = new String[]{"1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"};
+
+        Dialog alertDialog = new AlertDialog.Builder(this).
+                setTitle("请选择月份：").
+                setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //Toast.makeText(MyBalanceActivity.this, "您选择了"+items[i], Toast.LENGTH_SHORT).show();
+                        String monthStr= items[i].substring(0, items[i].lastIndexOf("月"));
+                        select_month = Integer.parseInt(monthStr);//获取items中月份的整数
+                        initData();
+                    }
+                }).show();
+
+        //设置alertDialog的大小
+        WindowManager.LayoutParams params = alertDialog.getWindow().getAttributes();
+        params.width = 800;
+        params.height = 1000 ;
+       /* params.y = 50; 设置位置
+        params.x = 20;*/
+
+        alertDialog.getWindow().setAttributes(params);
+
     }
 
     private class MyExpandableListAdapter extends BaseExpandableListAdapter {
@@ -175,7 +229,7 @@ public class MyBalanceActivity extends AppCompatActivity {
                 view.setTag(groupViewHolder);
             }
 
-            groupViewHolder.tvTitle.setText("2016年9月"+groupData.get(i).getDayOfMonth()+"号");
+            groupViewHolder.tvTitle.setText(this_year+"年"+select_month+"月"+groupData.get(i).getDayOfMonth()+"号");
             return view;
         }
 
