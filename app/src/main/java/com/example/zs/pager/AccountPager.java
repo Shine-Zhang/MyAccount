@@ -732,7 +732,7 @@ public class AccountPager extends BasePager implements
 
     @Override
     public boolean giveUpTouchEvent(MotionEvent event) {
-        if (expandableListView.getFirstVisiblePosition() == 0) {
+        if (expandableListView.getFirstVisiblePosition() == 0){
             View view = expandableListView.getChildAt(0);
             if (view != null && view.getTop() >= 0) {
                 return true;
