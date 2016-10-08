@@ -55,6 +55,7 @@ public class MyBalanceActivity extends AppCompatActivity {
     private String[][] childStrings;
     private ArrayList<ArrayList<AccountChildItemBean>> childData;
     private ArrayList<AccountGroupItemBean> groupData;
+    private int month;
 
 
     @Override
@@ -84,9 +85,9 @@ public class MyBalanceActivity extends AppCompatActivity {
         //获取此时的年月
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH)+1;
-        Log.i("?????","month="+month);
-        tv_mybalanceactivity_titleDate.setText(year+"年"+month+"月的账单详情");
+        month = calendar.get(Calendar.MONTH)+1;
+        Log.i("?????","month="+ month);
+        tv_mybalanceactivity_titleDate.setText(year+"年"+ month +"月的账单详情");
 
         //获取需要显示的数据（测试数据）
         if (childData!=null) {
@@ -101,7 +102,13 @@ public class MyBalanceActivity extends AppCompatActivity {
         Log.i("zzzzz",childData.toString());
         Log.i("zzzzz",groupData.toString());
 
-
+        //查询收入和支出
+        IncomeContentDAO incomeContentDAO = new IncomeContentDAO(this);
+        String incomeForMonth = incomeContentDAO.getIncomeForMonth(month);
+        PayOutContentDAO payOutContentDAO = new PayOutContentDAO(this);
+        String payoutForMonth = payOutContentDAO.getExpenseForMonth(month);
+        tv_mybalance_income.setText(incomeForMonth);
+        tv_mybalance_zhichu.setText(payoutForMonth);
        /* groupStrings = new String[]{"西游记", "水浒传", "三国演义", "红楼梦"};
         childStrings = new String[][]{
                 {"唐三藏", "孙悟空", "猪八戒", "沙和尚"},
@@ -175,7 +182,7 @@ public class MyBalanceActivity extends AppCompatActivity {
                 view.setTag(groupViewHolder);
             }
 
-            groupViewHolder.tvTitle.setText("2016年9月"+groupData.get(i).getDayOfMonth()+"号");
+            groupViewHolder.tvTitle.setText("2016年"+month+"月"+groupData.get(i).getDayOfMonth()+"号");
             return view;
         }
 

@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/ib_mybalanceactivity_back"
             android:id="@+id/tv_mybalanceactivity_titleDate"
-            android:text="2016年8月账单详细"
+
             android:textSize="16sp"
             android:layout_marginTop="30dp"
             android:layout_centerHorizontal="true"/>
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_mybalance_income"
                 android:layout_gravity="center"
-                android:text="3100.00"
+
                 />
         </LinearLayout>
         <View
@@ -86,7 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_mybalanceactivity_pay"
-                android:text="2300.00"
+
                 />
         </LinearLayout>
     </LinearLayout>
