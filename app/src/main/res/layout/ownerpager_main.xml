@@ -100,7 +100,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     app:ownerItemIcon="@drawable/ic_yue_default"
-                    app:ownerItemTitle="我的余额"
+                    app:ownerItemTitle="年度总余额"
                     android:background="#FFF"
                     android:id="@+id/oi_ownerpager_balance"
                     ></com.example.zs.view.OwnerItem>
