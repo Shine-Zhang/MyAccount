@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //隐藏标题栏
-//        getSupportActionBar().hide();
+      getSupportActionBar().hide();
 
         /*//透明状态栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -245,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         long secondTime = System.currentTimeMillis();
         if (secondTime - firstTime > 2000) {//比较优先级低
-            Toast.makeText(MainActivity.this, "再次点击退出钱哆哆记账",
+            Toast.makeText(MainActivity.this, "再次点击退出迅记",
                     Toast.LENGTH_SHORT).show();
             firstTime = secondTime;//记录上次的时间
         } else {

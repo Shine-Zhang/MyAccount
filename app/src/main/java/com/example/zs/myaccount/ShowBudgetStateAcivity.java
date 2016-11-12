@@ -1,5 +1,6 @@
 package com.example.zs.myaccount;
 
+import android.accounts.Account;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.zs.application.MyAplication;
+import com.example.zs.pager.AccountPager;
 import com.example.zs.utils.KeyboardUtil;
 import com.example.zs.view.DynamicWave;
 import com.example.zs.view.WaterWaveView;
@@ -77,7 +79,7 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
     private int mBorderColor = Color.parseColor("#44FFFFFF");
     private int mBorderWidth = 10;
     private WaveHelper mWaveHelper;
-
+    private OnBudgetChangedListener mOnBudgetChangedListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,14 +140,14 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
 
             @Override
             public void onPageSelected(int position) {
-
+                String budget="";
                 if(position==0){
-                    String myBudget;
+
                    if((!TextUtils.isEmpty(MyAplication.getStringFromSp("myBudget")))) {
                        //Log.i("haha","***************************"+MyAplication.getStringFromSp("myBudget"));
-                       myBudget =MyAplication.getStringFromSp("myBudget");
+                       budget =MyAplication.getStringFromSp("myBudget");
                        TextView text = (TextView) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.tv_show_budget_state_activity_num_tip);
-                       text.setText(myBudget);
+                       text.setText(budget);
                    }else{
 
                        TextView text = (TextView) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.tv_show_budget_state_activity_num_tip);
@@ -191,22 +193,57 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                         text.setText("未知");
 
                     }*/
+                    TextView showRemain = (TextView) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.tv_show_budget_state_activity);
+                    float nowRemain = Float.parseFloat(budget) - MyAplication.getmCurrentMonthCost();
+                    if(nowRemain>0){
+                        Log.i("haha","()()()()"+nowRemain);
+/*                        myWave.setWaterLevelRatio((float)1.0*nowRemain/Float.parseFloat(budget));
+                        mWaveHelper.cancel();
+                        myWave.setWaveColor(
+                                WaveView.DEFAULT_BEHIND_WAVE_COLOR,
+                                WaveView.DEFAULT_FRONT_WAVE_COLOR);
+                        mBorderColor = Color.parseColor("#44FFFFFF");
+                        myWave.setBorder(mBorderWidth, mBorderColor);
+                        mWaveHelper = new WaveHelper(myWave,(float)1.0*nowRemain/Float.parseFloat(budget));
+                        mWaveHelper.start();*/
+                       // mWaveHelper.restart();
+            /*            mWaveHelper = new WaveHelper(myWave,(float)1.0*nowRemain/Float.parseFloat(budget));
+                        mWaveHelper.cancel();
+                        mWaveHelper.start();*/
+                        mWaveHelper.setmWaveHight((float)1.0*nowRemain/Float.parseFloat(budget));
+                        //mWaveHelper.restart();
+                        showRemain.setText(String.format("%.2f",nowRemain));
+                        showRemain.setTextColor(Color.rgb(0,0,0));
+                    }else{
+/*                       myWave.setWaterLevelRatio(0);
+                        mWaveHelper.cancel();
+                        myWave.setWaveColor(
+                                WaveView.DEFAULT_BEHIND_WAVE_COLOR,
+                                WaveView.DEFAULT_FRONT_WAVE_COLOR);
+                        mBorderColor = Color.parseColor("#44FFFFFF");
+                        myWave.setBorder(mBorderWidth, mBorderColor);
+                        mWaveHelper = new WaveHelper(myWave,0);*/
+                 /*       mWaveHelper.setmWaveHight(0);
+                        mWaveHelper.restart();*/
+                     //mWaveHelper.restart();
+                        showRemain.setText("赤字啦！");
+                        showRemain.setTextColor(Color.RED);
+                    }
 
                 }
 
                 else if(position==1){
 
-                    String myBudget;
+                    String myBudget="";
                     if((!TextUtils.isEmpty(MyAplication.getStringFromSp("myBudget")))) {
                         myBudget =MyAplication.getStringFromSp("myBudget");
                         TextView text = (TextView) mVpShowBudgetSta.getChildAt(1).findViewById(R.id.et_show_budeget_sta_setbudget);
                         text.setText(myBudget);
-                    }else{
+                    }else {
 
                         TextView text = (TextView) mVpShowBudgetSta.getChildAt(1).findViewById(R.id.et_show_budeget_sta_setbudget);
                         text.setText("3000");
                     }
-
 
 
                    /* if(!TextUtils.isEmpty(MyAplication.getStringFromSp("budget_deadline"))) {
@@ -347,7 +384,16 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                                 float tmp =Float.parseFloat(budget);
                                 budget = String.format("%.2f",tmp);
                                 MyAplication.saveStringToSp("myBudget", budget);
-                                mVpShowBudgetSta.setCurrentItem(0);
+                                MyAplication.setmCurrentBudget(tmp);
+                                //mVpShowBudgetSta.setCurrentItem(0);
+                                MyAplication application = (MyAplication) getApplication();
+                                AccountPager pager = (AccountPager) application.getAccountPager();
+                                Log.i("ooooo",pager.toString());
+                                if(pager!=null) {
+                                    pager.myBudget =budget; ;
+                                    pager.tvAccountPagerBudget.setText(String.format("%.2f",tmp - MyAplication.getmCurrentMonthCost()));
+                                }
+                                finish();
                             } else {
 
                                 Toast.makeText(ShowBudgetStateAcivity.this, "请设置正确的预算!", Toast.LENGTH_SHORT).show();
@@ -428,7 +474,11 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                                     WaveView.DEFAULT_FRONT_WAVE_COLOR);
                             mBorderColor = Color.parseColor("#44FFFFFF");
                             myWave.setBorder(mBorderWidth, mBorderColor);
-                            mWaveHelper = new WaveHelper(myWave,currentRatio);
+                            if(balance>0){
+                                mWaveHelper = new WaveHelper(myWave,currentRatio);
+                            }else{
+                                mWaveHelper = new WaveHelper(myWave,0);
+                            }
                             mWaveHelper.start();
                         }
                     });
@@ -456,11 +506,18 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                     TextView text1 = (TextView) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.tv_show_budget_state_activity_deadSpan);
                     text1.setText(span);
                     TextView text2 = (TextView) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.tv_show_budget_state_activity);
-                    text2.setText(String.format("%.2f",balance));
+                    if(balance<0){
+                        text2.setText("赤字啦！");
+                        text2.setTextColor(Color.RED);
+                    }else{
+
+                        text2.setText(String.format("%.2f",balance));
+                        text2.setTextColor(Color.rgb(0,0,0));
+                    }
 
                     TextView text3 = (TextView) mVpShowBudgetSta.getChildAt(0).findViewById(R.id.tv_show_budget_state_income);
                     text3.setText(String.format("%.2f",income));
-                    Log.i("hhhhhhh","************************"+span);
+                  //  Log.i("hhhhhhh","************************"+span);
                   /*  if(!TextUtils.isEmpty(MyAplication.getStringFromSp("budget_deadline"))) {
                         String budget_deadline =MyAplication.getStringFromSp("budget_deadline");
 
@@ -549,11 +606,11 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
                             tv_itemsetbudgetdays_day.setEnabled(false);
                            // Toast.makeText(ShowBudgetStateAcivity.this, "click"+daysOfMonth[adapterPosition], Toast.LENGTH_SHORT).show();
                             if(mViewHolder!=null){
-                                Log.i("haha","mViewHoder="+mViewHolder);
+                              //  Log.i("haha","mViewHoder="+mViewHolder);
                                 TextView tmpTextView = (TextView) mViewHolder.itemView.findViewById(R.id.tv_itemsetbudgetdays_day);
                                 tmpTextView.setEnabled(true);
                                 myAdapter.notifyItemChanged(mMapping.get(mViewHolder));
-                                Log.i("haha","mPosition: "+mViewHolder.getAdapterPosition()+"---"+"position: "+ adapterPosition);
+                             //   Log.i("haha","mPosition: "+mViewHolder.getAdapterPosition()+"---"+"position: "+ adapterPosition);
                             }
 
                             mViewHolder = vh;
@@ -697,6 +754,15 @@ public class ShowBudgetStateAcivity extends Activity implements View.OnClickList
         super.onDestroy();
         }
 
+    public interface OnBudgetChangedListener{
+
+        void onBudgetChanged(AccountPager page);
+    }
+
+    public void setOnBudgetChangedListener(OnBudgetChangedListener onBudgetChangedListener){
+        this.mOnBudgetChangedListener = onBudgetChangedListener;
+    }
+
     }
 
 
@@ -757,6 +823,8 @@ abstract class ShowBudgetStateOnItemTouchListener implements RecyclerView.OnItem
             }
         }
     }
+
+
 
 }
 

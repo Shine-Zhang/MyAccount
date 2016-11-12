@@ -274,7 +274,9 @@ public class WaveView extends View {
             // this decides the start position(mWaveShiftRatio for x, mWaterLevelRatio for y) of waves
             mShaderMatrix.postTranslate(
                 mWaveShiftRatio * getWidth(),
-                (DEFAULT_WATER_LEVEL_RATIO - mWaterLevelRatio) * getHeight());
+                (DEFAULT_WATER_LEVEL_RATIO - mWaterLevelRatio) * getHeight()
+
+            );
 
             // assign matrix to invalidate the shader
             mWaveShader.setLocalMatrix(mShaderMatrix);

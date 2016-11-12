@@ -49,7 +49,7 @@ public class PinnedHeaderExpandableListView extends ExpandableListView implement
     private final int RELEASE_TO_REFRESH = 1;
     private final int REFRESHING = 2;
     private View footView;
-
+    private int expandFlag = -1;
     public interface OnHeaderUpdateListener {
         /**
          * 返回一个view对象即可
@@ -192,17 +192,32 @@ public class PinnedHeaderExpandableListView extends ExpandableListView implement
 
                 View touchTarget = getTouchTarget(mHeaderView, x, y);
                 if (touchTarget == mTouchTarget && mTouchTarget.isClickable()) {
+                    Log.i("riririr","错位了");
                     mTouchTarget.performClick();
                     invalidate(new Rect(0, 0, mHeaderWidth, mHeaderHeight));
                 } else if (mIsHeaderGroupClickable){
                     int groupPosition = getPackedPositionGroup(getExpandableListPosition(pos));
                     if (groupPosition != INVALID_POSITION && mActionDownHappened) {
-                        if (isGroupExpanded(groupPosition)) {
+                       /* if (isGroupExpanded(groupPosition)) {
                             collapseGroup(groupPosition);
-
-                        } else {
-                            expandGroup(groupPosition);
-                        }
+                            expandFlag = -1;
+                        }*/
+                            if(expandFlag == -1){
+                                Log.i("riririr","-1*(*(*(*(*(*(*(*(**(");
+                                expandGroup(groupPosition);
+                                setSelectedGroup(groupPosition);
+                                expandFlag = groupPosition;
+                            }else if(expandFlag == groupPosition){
+                                Log.i("riririr","ziji*(*(*(*(*(*(*(*(**(");
+                                collapseGroup(expandFlag);
+                                expandFlag = -1;
+                            }else{
+                                collapseGroup(expandFlag);
+                                Log.i("riririr","?????????????????");
+                                expandGroup(groupPosition);
+                                setSelectedGroup(groupPosition);
+                                expandFlag = groupPosition;
+                            }
                     }
                 }
                 mActionDownHappened = false;
@@ -259,16 +274,9 @@ public class PinnedHeaderExpandableListView extends ExpandableListView implement
         int pos = firstVisiblePos + 1;
         int firstVisibleGroupPos = getPackedPositionGroup(getExpandableListPosition(firstVisiblePos));
         int group = getPackedPositionGroup(getExpandableListPosition(pos));
- /*       if (DEBUG) {
-           // Log.d(TAG, "refreshHeader firstVisibleGroupPos=" + firstVisibleGroupPos);
-        }
-*/
+
         if (group == firstVisibleGroupPos + 1) {
             View view = getChildAt(1);
-   /*         if (view == null) {
-               // Log.w(TAG, "Warning : refreshHeader getChildAt(1)=null");
-                return;
-            }*/
             if (view.getTop() <= mHeaderHeight) {
                 int delta = mHeaderHeight - view.getTop();
                 mHeaderView.layout(0, -delta, mHeaderWidth, mHeaderHeight - delta);
@@ -287,6 +295,12 @@ public class PinnedHeaderExpandableListView extends ExpandableListView implement
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if (mHeaderView != null && scrollState == SCROLL_STATE_IDLE) {
+            int firstVisiblePos = getFirstVisiblePosition();
+            if (firstVisiblePos == 0) {
+                mHeaderView.layout(0, 0, mHeaderWidth, mHeaderHeight);
+            }
+        }
         if (mScrollListener != null) {
             mScrollListener.onScrollStateChanged(view, scrollState);
         }
@@ -303,4 +317,10 @@ public class PinnedHeaderExpandableListView extends ExpandableListView implement
             mScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
         }
     }
+
+    @Override
+    public boolean expandGroup(int groupPos) {
+        return super.expandGroup(groupPos,false);
+    }
+
 }

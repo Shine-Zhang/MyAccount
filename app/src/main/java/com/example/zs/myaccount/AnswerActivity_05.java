@@ -16,7 +16,7 @@ public class AnswerActivity_05 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_answer_activity_05);
         //隐藏标题栏
-        //getSupportActionBar().hide();
+        getSupportActionBar().hide();
         //初始化WebView控件
         wv_answeractivity_05 = (WebView) findViewById(R.id.wv_answeractivity_05);
         WebSettings webSettings = wv_answeractivity_05.getSettings();

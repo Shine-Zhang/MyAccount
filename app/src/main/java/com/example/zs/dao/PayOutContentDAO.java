@@ -112,7 +112,7 @@ public class PayOutContentDAO {
     public int getResourceIDFromName(String name){
         Cursor cursor = db.rawQuery("select resourceID from payouContent where category=?", new String[]{name});
         boolean b = cursor.moveToNext();
-        int resourceID = cursor.getInt(0);
+        int resourceID = cursor.getInt(cursor.getColumnIndex("resourceID"));
         return resourceID;
     }
 

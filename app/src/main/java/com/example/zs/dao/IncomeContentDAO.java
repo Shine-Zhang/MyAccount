@@ -113,4 +113,11 @@ public class IncomeContentDAO {
         String income_month = incomeCursor.getString(0);
         return income_month;
     }
+
+    public int getResourceIDFromName(String name){
+        Cursor cursor = db.rawQuery("select resourceID from incomeContent where category=?", new String[]{name});
+        boolean b = cursor.moveToNext();
+        int resourceID = cursor.getInt(cursor.getColumnIndex("resourceID"));
+        return resourceID;
+    }
 }

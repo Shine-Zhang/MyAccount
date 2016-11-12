@@ -561,7 +561,7 @@ public class OwnerPager extends BasePager {
         oks.disableSSOWhenAuthorize();
 
         // 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
-        //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
+        //oks.setNotification(R.drawable.ic_launcher_origin, getString(R.string.app_name));
         // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
         oks.setTitle("点滴记账");
         // titleUrl是标题的网络链接，仅在人人网和QQ空间使用

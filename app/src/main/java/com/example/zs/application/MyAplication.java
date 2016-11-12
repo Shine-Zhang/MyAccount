@@ -23,6 +23,14 @@ public class MyAplication extends Application{
     private BasePager wishPager;
     private BasePager ownerPager;
     private BasePager reportFormPager;
+
+
+
+    private static float mCurrentMonthCost;
+    private static float mCurrentMonthIcome;
+
+
+    private static float mCurrentBudget;
     /**
      * 应用创建时调用oncreate（）
      */
@@ -180,5 +188,28 @@ public class MyAplication extends Application{
 
     public void setReportFormPager(BasePager reportFormPager) {
         this.reportFormPager = reportFormPager;
+    }
+    public static float getmCurrentMonthCost() {
+        return mCurrentMonthCost;
+    }
+
+    public static void setmCurrentMonthCost(float CurrentMonthCost) {
+        mCurrentMonthCost = CurrentMonthCost;
+    }
+
+    public static  float getmCurrentMonthIcome() {
+        return mCurrentMonthIcome;
+    }
+
+    public static void setmCurrentMonthIcome(float currentMonthIcome) {
+        mCurrentMonthIcome = currentMonthIcome;
+    }
+
+    public static float getmCurrentBudget() {
+        return mCurrentBudget;
+    }
+
+    public static void setmCurrentBudget(float mCurrentBudget) {
+        MyAplication.mCurrentBudget = mCurrentBudget;
     }
 }

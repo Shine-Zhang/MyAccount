@@ -100,8 +100,8 @@ public class AccountPager extends BasePager implements
     private TextView tvAccountPagerTotalCost;
     private float totalIncome;
     private float totalCost;
-    private String myBudget;
-    private TextView tvAccountPagerBudget;
+    public String myBudget;
+    public TextView tvAccountPagerBudget;
     private boolean[] groupExpandSta;
     private  int month;
     private TextView tvAccountPagerMonthIncome;
@@ -155,12 +155,14 @@ public class AccountPager extends BasePager implements
         TextView tvUserStartTime =  (TextView) footView.findViewById(R.id.account_pager_record_start_time);
         tvUserStartTime.setText(year+"年"+month+"月"+today+"日");
         expandableListView.initFootView(footView);
+
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int i) {
 
                 groupExpandSta[groupItems.get(i).getDayOfMonth()-1] = true;
-                Log.i("lalal","g**roupExpandSta[groupItems.get(i).getDayOfMonth()]:"+groupExpandSta[groupItems.get(i).getDayOfMonth()]);
+
+               // Log.i("lalal","g**roupExpandSta[groupItems.get(i).getDayOfMonth()]:"+groupExpandSta[groupItems.get(i).getDayOfMonth()]);
             }
         });
 
@@ -169,7 +171,8 @@ public class AccountPager extends BasePager implements
             public void onGroupCollapse(int i) {
 
                 groupExpandSta[groupItems.get(i).getDayOfMonth()-1] = false;
-                Log.i("lalal","***groupExpandSta[groupItems.get(i).getDayOfMonth()]:"+groupExpandSta[groupItems.get(i).getDayOfMonth()]);
+
+                //Log.i("lalal","***groupExpandSta[groupItems.get(i).getDayOfMonth()]:"+groupExpandSta[groupItems.get(i).getDayOfMonth()]);
             }
         });
         Log.i("haha","*************");
@@ -188,6 +191,7 @@ public class AccountPager extends BasePager implements
                 float budget = Float.parseFloat(myBudget);
                 float balance = budget-totalCost;
                 float currentHight = balance/budget;
+               // Log.i("89898989","))))))))))))"+currentHight);
                 intent.putExtra("currentHight",currentHight);
                 intent.putExtra("balance",balance);
                 intent.putExtra("totalIncome",totalIncome);
@@ -294,7 +298,9 @@ public class AccountPager extends BasePager implements
             totalIncome +=groupItems.get(i).getTotalIncome();
             totalCost += groupItems.get(i).getTotalCosts();
         }
-        Log.i("haha","totalIncome****: "+totalIncome);
+        MyAplication.setmCurrentMonthCost(totalCost);
+        MyAplication.setmCurrentMonthIcome(totalIncome);
+       // Log.i("haha","totalIncome****: "+totalIncome);
         remain = Float.parseFloat(myBudget)-totalCost;
         tvAccountPagerBudget.setText(String.format("%.2f", remain));
         tvAccountPagerTotalIncome.setText(String.format("%.2f", totalIncome));
@@ -313,6 +319,7 @@ public class AccountPager extends BasePager implements
           //  Log.i("haha","************展开所有数据完毕***********"+i);
             if(groupExpandSta[groupItems.get(i).getDayOfMonth()-1]){
                 expandableListView.expandGroup(i);
+
             }else{
                 expandableListView.collapseGroup(i);
             }
@@ -532,6 +539,7 @@ public class AccountPager extends BasePager implements
                                 inDao.deleteIncomeContentItemFromDB(childItems.get(group).get(child).getId());
                                 float total = totalIncome - Float.parseFloat(childItems.get(group).get(child).getHowmuch());
                                 totalIncome = total;
+                                MyAplication.setmCurrentMonthIcome(total);
                                 float dayIncome = groupItems.get(group).getTotalIncome()-Float.parseFloat(childItems.get(group).get(child).getHowmuch());
                                 TmpHolder groupView = groups[ groupItems.get(group).getDayOfMonth()-1];
                                 groupItems.get(group).setTotalIncome(dayIncome);
@@ -543,6 +551,7 @@ public class AccountPager extends BasePager implements
                                 outDao.deletePayoutContentItemFromDB(childItems.get(group).get(child).getId());
                                 float total = totalCost - Float.parseFloat(childItems.get(group).get(child).getHowmuch());
                                 totalCost = total;
+                                MyAplication.setmCurrentMonthCost(totalCost);
                                 float dayCost = groupItems.get(group).getTotalCosts()-Float.parseFloat(childItems.get(group).get(child).getHowmuch());
                                 TmpHolder groupView = groups[ groupItems.get(group).getDayOfMonth()-1];
                                 groupView.outcome.setText(String.format("%.2f",dayCost));
@@ -555,13 +564,14 @@ public class AccountPager extends BasePager implements
                                 tvAccountPagerTotalCost.setText(String.format("%.2f",total));
                               //  Log.i("lalalala","inid: "+childItems.get(group).get(child).getId());
                             }
-                           // Log.i("haha","删除前groupsize: "+childItems.get(group).size());
+                            //Log.i("haha","删除前groupsize: "+childItems.get(group).size());
                             childItems.get(group).remove(child);
-                           // Log.i("haha","删除后groupsize: "+childItems.get(group).size());
+                            //Log.i("haha","删除后groupsize: "+childItems.get(group).size());
                             if( childItems.get(group).size()==0){
-                             //   Log.i("haha","删除前（）："+groupItems.size());
+                                //Log.i("haha","删除前（）："+groupItems.size());
                                 groupItems.remove(group);
-                              // Log.i("haha","删除后（）："+groupItems);
+                                childItems.remove(group);
+                               //Log.i("haha","删除后（）："+groupItems);
                                 if(groupItems.size()==0){
                                     expandableListView.mHeaderView=null;
                                 }
@@ -663,7 +673,16 @@ public class AccountPager extends BasePager implements
     public boolean onGroupClick(final ExpandableListView parent, final View v,
                                 int groupPosition, final long id) {
       //  Log.i("hahaha","&*&&*&*&*&*&*&*&*&*&*&*");
-        return false;
+        if(parent.isGroupExpanded(groupPosition)){
+            //监测到展开状态则收起
+            parent.collapseGroup(groupPosition);
+        }else{
+            //监测到收起状态则展开
+            //第二个参数false表示展开时是否触发默认滚动动画
+            Log.i("jiajiajia","++++++++++++++++");
+            parent.expandGroup(groupPosition,false);
+        }
+        return true;
     }
 
     @Override
@@ -709,6 +728,7 @@ public class AccountPager extends BasePager implements
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         headerView.setBackgroundColor(Color.WHITE);
         return headerView;
+
     }
 
     @Override
@@ -966,5 +986,9 @@ public class AccountPager extends BasePager implements
         TextView income;
         TextView outcome;
     }
+
+
+
+
 
 }

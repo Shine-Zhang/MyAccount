@@ -17,7 +17,7 @@ public class AboutUsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_us);
         //隐藏标题栏
-        //getSupportActionBar().hide();
+        getSupportActionBar().hide();
         //初始化回到上一页的ImageButton控件ib_aboutusactivity_back
         ib_aboutusactivity_back = (ImageButton) findViewById(R.id.ib_aboutusactivity_back);
     }

@@ -85,7 +85,7 @@ public class AddWishActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_wish);
-        //getSupportActionBar().hide();
+        getSupportActionBar().hide();
 
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
