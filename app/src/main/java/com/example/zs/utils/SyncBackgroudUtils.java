@@ -43,7 +43,7 @@ public class SyncBackgroudUtils {
     {
         StateListDrawable drawable = new StateListDrawable();
         GradientDrawable normalSta = new  GradientDrawable();
-        normalSta.setColor(Color.rgb(230,230,255));
+        normalSta.setColor(Color.rgb(230,230,230));
         normalSta.setShape(GradientDrawable.OVAL);
         GradientDrawable pressSta = new  GradientDrawable();
         pressSta.setColor(getCorrespondingColor(resId));
@@ -71,13 +71,16 @@ public class SyncBackgroudUtils {
 
     public static void setTimeLineBackgroud(int resId, ImageView target,int color){
             GradientDrawable myGrad = new GradientDrawable();
-            myGrad.setShape(GradientDrawable.OVAL);
             if(color>0) {
+
                 myGrad.setColor(getCorrespondingColor(resId));
+
             }else if(color<0){
                 myGrad.setColor(color);
             }
-            target.setBackground(myGrad);
+
+        myGrad.setShape(GradientDrawable.OVAL);
+        target.setBackground(myGrad);
     }
 }
 

@@ -23,6 +23,7 @@ import com.example.zs.myaccount.AddCategoryActivity;
 import com.example.zs.myaccount.AddRecordActivity;
 import com.example.zs.myaccount.R;
 import com.example.zs.utils.SeletorUtils;
+import com.example.zs.utils.SyncBackgroudUtils;
 import com.example.zs.view.CircleImageView;
 
 import android.view.ViewGroup;
@@ -301,7 +302,7 @@ public class IncomePage extends AddBasePage {
             CircleImageView cv_addPage_delete = (CircleImageView) inflate.findViewById(R.id.cv_addPage_delete);
             TextView tv_addPage_catagoryContent = (TextView) inflate.findViewById(R.id.tv_addPage_catagoryContent);
             if (i < incomeCategoryToDB.size()) {
-                SeletorUtils.setSelector(incomeCategoryToDB.get(i).getResourceID(),iv_addPage_catagoryIcon);
+                SyncBackgroudUtils.setSelector(incomeCategoryToDB.get(i).getResourceID(),iv_addPage_catagoryIcon);
                 //为删除小图标设置点击事件，当小图标为visible时，点击可以调用
                 cv_addPage_delete.setOnClickListener(new View.OnClickListener() {
                     @Override
