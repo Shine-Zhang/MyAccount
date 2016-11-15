@@ -66,7 +66,7 @@ public class ReportFormIncome {
         initChart();
 
         View inflate = View.inflate(activity, R.layout.reportformpager_content, null);
-        tv_reportform_incomedetail = (TextView) inflate.findViewById(R.id.tv_reportform_incomedetail);
+        tv_reportform_incomedetail = (TextView) inflate.findViewById(R.id.tv_reportform_catagory);
         iv_reportform_incomedetail = (ImageView) inflate.findViewById(R.id.iv_reportform_incomedetail);
     }
 

@@ -44,6 +44,8 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -122,6 +124,7 @@ public class ReportFormPager extends BasePager {
     public ArrayList<String> zhichuDataType;
     private MyAdapter customAdapter;
     private MycustomAnimation mycustomAnimation;
+    private TextView tv_reportform_account;
 
     public ReportFormPager(Activity activity) {
         super(activity);
@@ -165,7 +168,8 @@ public class ReportFormPager extends BasePager {
         //rl_reportform_detail = (RelativeLayout) reportformpager_content_view.findViewById(R.id.rl_reportform_detail);
         //iv_reportform_detail = (ImageView) reportformpager_content_view.findViewById(R.id.iv_reportform_detail);
 
-        tv_reportform_incomedetail = (TextView) reportformpager_content_view.findViewById(R.id.tv_reportform_incomedetail);
+        tv_reportform_incomedetail = (TextView) reportformpager_content_view.findViewById(R.id.tv_reportform_catagory);
+        tv_reportform_account = (TextView) reportformpager_content_view.findViewById(R.id.tv_reportform_account);
         iv_reportform_incomedetail = (ImageView) reportformpager_content_view.findViewById(R.id.iv_reportform_incomedetail);
 
         rv_reportformpager_recyclerview = (HeaderRecyclerView) reportformpager_content_view.findViewById(R.id.rv_reportformpager_recyclerview);
@@ -209,13 +213,9 @@ public class ReportFormPager extends BasePager {
                                 reportFormincome.pieChart.spin(500,rotationAngle,end,Easing.EasingOption.EaseInOutQuad);
                                 //同时在点击某个slice的同时，在下方显示与其对应的金额和图标
 
-                                    tv_reportform_incomedetail.setText(reportFormincome.shouruDataType.get(x) +":       "  + y + "元");
-
-
-                                    //tv_reportform_incomedetail.setTextColor(reportFormincome.shouruColors[x%reportFormincome.shouruColors.length]);
+                                    tv_reportform_incomedetail.setText(reportFormincome.shouruDataType.get(x));
+                                    tv_reportform_account.setText(y+"元");
                                     SyncBackgroudUtils.setTimeLineBackgroud(reportFormincome.reportformfShouruIcon.get(reportFormincome.shouruDataType.get(x)),iv_reportform_incomedetail,reportFormincome.shouruColors[x%reportFormincome.shouruColors.length]);
-                                   //Log.i("kkkkkkk","");
-                                    //iv_reportform_incomedetail.setBackgroundResource(R.drawable.account_pager_group_today_icon);
                                     iv_reportform_incomedetail.setImageResource(reportFormincome.reportformfShouruIcon.get(reportFormincome.shouruDataType.get(x)));
 
 
