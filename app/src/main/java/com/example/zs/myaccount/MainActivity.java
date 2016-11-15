@@ -18,6 +18,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.zs.application.MyAplication;
@@ -120,14 +121,17 @@ public class MainActivity extends AppCompatActivity {
                         if (application1.getWishPager() == null) {
                             application1.setWishPager(pageList.get(1));
                         }
+
                         break;
                     case R.id.rb_mainactivity_list:
                         vp_mainactivity.setCurrentItem(2, false);
-                        pageList.get(2).initData();
+                         pageList.get(2).initData();
                         MyAplication application2 = (MyAplication) getApplication();
                         if (application2.getReportFormPager() == null) {
                             application2.setReportFormPager(pageList.get(2));
                         }
+                        ReportFormPager reportFormPager = (ReportFormPager) pageList.get(2);
+                        reportFormPager.mFlag = false;
                         break;
 
                     case R.id.rb_mainactivity_mine:
@@ -135,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
                         pageList.get(3).initData();
                         MyAplication application03 = (MyAplication) getApplication();
                         application03.setOwnerPager(pageList.get(3));
+
                         break;
                 }
             }

@@ -1,7 +1,6 @@
 package com.example.zs.pager;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.ContentObserver;
@@ -41,14 +40,11 @@ import com.example.zs.myaccount.CompleteWishActivity;
 import com.example.zs.myaccount.R;
 import com.example.zs.utils.ScreenUtils;
 import com.example.zs.utils.ShowPopupWindowUtils;
-import com.example.zs.view.CircleImageView;
-import com.example.zs.view.RoundProgressBar;
 
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -178,12 +174,14 @@ public class WishPager extends BasePager {
             }
 
         }
+
         return view_wishpager;
     }
 
     @Override
     public void initData() {
         //计算可用的愿望资金
+
         totalWishFund = calculateWishFund();
         //未完成愿望的数目和详细信息
         onGoingWishDAO = new OnGoingWishDao(mActivity);

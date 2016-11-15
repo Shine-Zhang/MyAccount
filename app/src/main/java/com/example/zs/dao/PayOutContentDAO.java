@@ -1,10 +1,12 @@
 package com.example.zs.dao;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.util.Log;
 
 import com.example.zs.bean.AccountChildItemBean;
@@ -88,6 +90,9 @@ public class PayOutContentDAO {
         contentValues.put("remarks",payouContentInfo.remarks);
         contentValues.put("photo",payouContentInfo.photo);
         db.insert("payouContent",null,contentValues);
+        ContentResolver resolver = ctx.getContentResolver();
+        Uri uri = Uri.parse("content://com.example.zs.DB.Dao.lockAppchanged");
+        resolver.notifyChange(uri,null);
     }
     //单个删除
     public void deletePayoutContentItemFromDB(int id){

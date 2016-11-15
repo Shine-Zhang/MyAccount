@@ -1,20 +1,9 @@
 package com.example.zs.pager;
 
-import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.provider.ContactsContract;
-import android.support.annotation.ColorInt;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -22,35 +11,28 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
-import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.zs.addPage.ReportFormIncome;
-import com.example.zs.bean.PayoutContentInfo;
+import com.example.zs.animation.MycustomAnimation;
 import com.example.zs.bean.PayoutContentInfo;
 import com.example.zs.dao.PayOutContentDAO;
-import com.example.zs.dao.PayoutCategoryDAO;
-import com.example.zs.myaccount.RportFormDatePickerActivity;
-import com.example.zs.utils.ScreenUtils;
-import com.example.zs.utils.SeletorUtils;
+import com.example.zs.utils.DensityUtil;
 import com.example.zs.utils.SyncBackgroudUtils;
-import com.example.zs.view.CircleImageView;
+import com.example.zs.view.DividerItemDecoration;
+import com.example.zs.view.HeaderRecyclerView;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
+
 import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
+import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -59,16 +41,15 @@ import com.example.zs.myaccount.R;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
+
+import it.gmariotti.recyclerview.itemanimator.SlideInOutTopItemAnimator;
 
 /**
  * 本类是五个pager中的“报表类”，继承至基类BasePager,主要用饼状图的形式分别呈现出各种类型的收入和支出所占的比重
@@ -80,7 +61,8 @@ public class ReportFormPager extends BasePager {
     public TextView tv_reportform_time;
     //对应”收入“和”支出“按钮的RadioGroup
     public RadioGroup rg_reportform;
-
+    public static final int ABSOLUTE_MIDDLE = 90;
+    public boolean mFlag = false;
     //饼状图各部分对应的颜色数组
     public int[] colors = new int[]{PayoutColors.movieColor,
             PayoutColors.phonefeeColor, PayoutColors.hufuColor, PayoutColors.spriteColor, PayoutColors.liwuColor,
@@ -122,7 +104,7 @@ public class ReportFormPager extends BasePager {
     //点击的时候，下方显示的的各项具体金额数
     public TextView tv_reportform_detail;
     //没用到
-    public RecyclerView rv_reportformpager_recyclerview;
+    public HeaderRecyclerView rv_reportformpager_recyclerview;
     //没用到
     public List<String> reportformData;
 
@@ -138,6 +120,8 @@ public class ReportFormPager extends BasePager {
     public TextView tv_reportform_incomedetail;
     public ImageView iv_reportform_incomedetail;
     public ArrayList<String> zhichuDataType;
+    private MyAdapter customAdapter;
+    private MycustomAnimation mycustomAnimation;
 
     public ReportFormPager(Activity activity) {
         super(activity);
@@ -177,45 +161,14 @@ public class ReportFormPager extends BasePager {
         fl_reportform = (FrameLayout) reportformpager_content_view.findViewById(R.id.fl_reportform);
 
 
-        tv_reportform_detail = (TextView) reportformpager_content_view.findViewById(R.id.tv_reportform_detail);
-        rl_reportform_detail = (RelativeLayout) reportformpager_content_view.findViewById(R.id.rl_reportform_detail);
-        iv_reportform_detail = (ImageView) reportformpager_content_view.findViewById(R.id.iv_reportform_detail);
+        //tv_reportform_detail = (TextView) reportformpager_content_view.findViewById(R.id.tv_reportform_detail);
+        //rl_reportform_detail = (RelativeLayout) reportformpager_content_view.findViewById(R.id.rl_reportform_detail);
+        //iv_reportform_detail = (ImageView) reportformpager_content_view.findViewById(R.id.iv_reportform_detail);
 
         tv_reportform_incomedetail = (TextView) reportformpager_content_view.findViewById(R.id.tv_reportform_incomedetail);
         iv_reportform_incomedetail = (ImageView) reportformpager_content_view.findViewById(R.id.iv_reportform_incomedetail);
-        //tv_reportform_incomedetail = (TextView) reportformpager_content_view.findViewById(R.id.tv_reportform_incomedetail);
 
-        //rv_reportformpager_recyclerview = (RecyclerView) reportformpager_content_view.findViewById(R.id.rv_reportformpager_recyclerview);
-        //设置recyclerview的显示规则
-        //rv_reportformpager_recyclerview.setLayoutManager(new SyLinearLayoutManager(mActivity,LinearLayoutManager.VERTICAL,false));
-        //rv_reportformpager_recyclerview.setAdapter(new ReportformRecyclerViewAdapter(reportformData,mActivity));
-        /*rv_reportformpager_recyclerview.addItemDecoration(new DividerItemDecoration(mActivity,
-                DividerItemDecoration.VERTICAL_LIST));*/
-
-
-        //接收由RportFormDataPickerActivity回传的数据
-        /*Intent intent = mActivity.getIntent();
-        String date = intent.getStringExtra("date");
-        //将数据保存到SharedPreferences,以便下次进入的时候回写
-        reporFormsp = mActivity.getSharedPreferences("reportformData", mActivity.MODE_PRIVATE);
-        SharedPreferences.Editor edit = reporFormsp.edit();
-        edit.putString("time", date);
-        edit.commit();
-        if (date != null) {
-            tv_reportform_time.setText(date);
-        } else {
-            String string = reporFormsp.getString("time", "还没有设定时间");
-            tv_reportform_time.setText(string);
-        }*/
-
-        //为显示时间阶段的TextView设置监听器
-        /*tv_reportform_time.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mActivity.startActivity(new Intent(mActivity, RportFormDatePickerActivity.class));
-            }
-        });*/
-
+        rv_reportformpager_recyclerview = (HeaderRecyclerView) reportformpager_content_view.findViewById(R.id.rv_reportformpager_recyclerview);
         //为两个按钮，收入和支出设置监听器，通过点击不同按钮切换收入和支出报表状况
         rg_reportform.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -250,29 +203,18 @@ public class ReportFormPager extends BasePager {
                                 float y = h.getY();
                                 //被点击的slice是饼状图中的第几部分
                                 int x = (int) h.getX();
-
                                 float v = drawAngles[x] / 2;
                                 float end = 450f - (absoluteAngles[x] - v);
                                 //圆饼旋转动画
                                 reportFormincome.pieChart.spin(500,rotationAngle,end,Easing.EasingOption.EaseInOutQuad);
                                 //同时在点击某个slice的同时，在下方显示与其对应的金额和图标
-                                /*
-                                 tv_reportform_detail.setText(  zhichuDataType.get(x) +":       "  + y + "元" );
-                               //colors[x % colors.length]
-                                tv_reportform_detail.setTextColor(colors[x % colors.length]);
 
-                                Log.i("lllllllll",colors[x % colors.length] + "");
-                                //iv_reportform_detail.setBackgroundResource(R.drawable.account_pager_group_today_icon);
-                                SyncBackgroudUtils.setTimeLineBackgroud(reportformfIcon.get(zhichuDataType.get(x)),iv_reportform_detail,colors[x % colors.length]);
-                                Log.i("lllllllll",colors[x % colors.length] + "");
-
-                                iv_reportform_detail.setImageResource(reportformfIcon.get(zhichuDataType.get(x)));
-                                 */
                                     tv_reportform_incomedetail.setText(reportFormincome.shouruDataType.get(x) +":       "  + y + "元");
 
-                                    tv_reportform_incomedetail.setTextColor(reportFormincome.shouruColors[x%reportFormincome.shouruColors.length]);
+
+                                    //tv_reportform_incomedetail.setTextColor(reportFormincome.shouruColors[x%reportFormincome.shouruColors.length]);
                                     SyncBackgroudUtils.setTimeLineBackgroud(reportFormincome.reportformfShouruIcon.get(reportFormincome.shouruDataType.get(x)),iv_reportform_incomedetail,reportFormincome.shouruColors[x%reportFormincome.shouruColors.length]);
-                                   Log.i("kkkkkkk","");
+                                   //Log.i("kkkkkkk","");
                                     //iv_reportform_incomedetail.setBackgroundResource(R.drawable.account_pager_group_today_icon);
                                     iv_reportform_incomedetail.setImageResource(reportFormincome.reportformfShouruIcon.get(reportFormincome.shouruDataType.get(x)));
 
@@ -288,11 +230,14 @@ public class ReportFormPager extends BasePager {
             }
         });
 
+
         return reportformpager_content_view;
     }
 
     @Override
     public void initData() {
+        mFlag = false;
+        rv_reportformpager_recyclerview.getHeaderView(0).setVisibility(View.GONE);
         zhichuDataType = new ArrayList<String>(){{add("电影"); add("话费");add("护肤彩妆"); add("酒水饮料");
            add("礼物"); add("运动");add("衣服鞋包"); add("学习");add("药品"); add("水果");add("生活用品"); add("旅行");
            add("零食"); add("交通");add("腐败聚会"); add("房租");add("餐饮"); add("一般");add("红包");}};
@@ -318,9 +263,9 @@ public class ReportFormPager extends BasePager {
 
                 //allAccountDD.add(payoutNumAndAccount.normalAccount);
 
-                Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
+                //Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
 
-                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+                //Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
 
             }else if(allPayoutCategory.get(i).category.equals("餐饮")){
                 payoutNumAndAccount.canyinNumber = 1;
@@ -332,9 +277,9 @@ public class ReportFormPager extends BasePager {
                 //allAccountDD.add(payoutNumAndAccount.canyinAccount);
 
 
-                Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
+               // Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
 
-                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+                //Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
 
             }else if(allPayoutCategory.get(i).category.equals("交通")){
                 payoutNumAndAccount.transportNumber = 1;
@@ -343,11 +288,11 @@ public class ReportFormPager extends BasePager {
 
                 reportformfIcon.put("交通",allPayoutCategory.get(i).resourceID);
 
-                //allAccountDD.add(payoutNumAndAccount.transportAccount);
 
-                Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
 
-                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+                //Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
+
+                //Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
 
             }else if(allPayoutCategory.get(i).category.equals("零食")){
                 payoutNumAndAccount.linshiNumber = 1;
@@ -358,9 +303,9 @@ public class ReportFormPager extends BasePager {
 
                 //allAccountDD.add(payoutNumAndAccount.linshiAccount);
 
-                Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
+                //Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
 
-                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+                //Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
 
             }else if(allPayoutCategory.get(i).category.equals("水果")){
                 payoutNumAndAccount.fruitNumber = 1;
@@ -369,11 +314,11 @@ public class ReportFormPager extends BasePager {
 
                 reportformfIcon.put("水果",allPayoutCategory.get(i).resourceID);
 
-                //allAccountDD.add(payoutNumAndAccount.fruitAccount);
 
-                Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
 
-                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+                //Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
+
+                //Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
 
             }else if(allPayoutCategory.get(i).category.equals("腐败聚会")){
                 payoutNumAndAccount.juhuiNumber = 1;
@@ -382,11 +327,11 @@ public class ReportFormPager extends BasePager {
 
                 reportformfIcon.put("腐败聚会",allPayoutCategory.get(i).resourceID);
 
-                //allAccountDD.add(payoutNumAndAccount.juhuiAccount);
 
-                Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
 
-                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+               // Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
+
+                //Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
 
             }else if(allPayoutCategory.get(i).category.equals("酒水饮料")){
                 payoutNumAndAccount.jiushuiNumber = 1;
@@ -395,9 +340,9 @@ public class ReportFormPager extends BasePager {
 
                 reportformfIcon.put("酒水饮料",allPayoutCategory.get(i).resourceID);
 
-               //allAccountDD.add(payoutNumAndAccount.jiushuiAccount);
 
-                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+
+               // Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
 
             }else if(allPayoutCategory.get(i).category.equals("电影")){
                 payoutNumAndAccount.movieNumber = 1;
@@ -408,9 +353,9 @@ public class ReportFormPager extends BasePager {
 
                 //allAccountDD.add(payoutNumAndAccount.movieAccount);
 
-                Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
+                //Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
 
-                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+               // Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
 
             }else if(allPayoutCategory.get(i).category.equals("衣服鞋包")){
                 payoutNumAndAccount.clothNumber = 1;
@@ -421,9 +366,9 @@ public class ReportFormPager extends BasePager {
 
                 //allAccountDD.add(payoutNumAndAccount.clothAccount);
 
-                Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
+               // Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
 
-                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+               // Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
 
             }else if(allPayoutCategory.get(i).category.equals("生活用品")){
                 payoutNumAndAccount.lifeNumber = 1;
@@ -434,9 +379,9 @@ public class ReportFormPager extends BasePager {
 
                 //allAccountDD.add(payoutNumAndAccount.lifeAccount);
 
-                Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
+               // Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
 
-                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+               // Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
 
             }else if(allPayoutCategory.get(i).category.equals("话费")){
                 payoutNumAndAccount.huafeiNumber = 1;
@@ -445,9 +390,7 @@ public class ReportFormPager extends BasePager {
 
                 reportformfIcon.put("话费",allPayoutCategory.get(i).resourceID);
 
-                //allAccountDD.add(payoutNumAndAccount.huafeiAccount);
-
-                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+               // Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
 
             }else if(allPayoutCategory.get(i).category.equals("房租")){
                 payoutNumAndAccount.rentNumber = 1;
@@ -458,13 +401,13 @@ public class ReportFormPager extends BasePager {
 
                 //allAccountDD.add(payoutNumAndAccount.rentAccount);
 
-                Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
+               // Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
 
-                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+               // Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
 
             }else if(allPayoutCategory.get(i).category.equals("护肤彩妆")){
                 payoutNumAndAccount.hufuNumber = 1;
-                Log.i("chaizhuang",Float.valueOf(allPayoutCategory.get(i).money) + "");
+              //  Log.i("chaizhuang",Float.valueOf(allPayoutCategory.get(i).money) + "");
                 payoutNumAndAccount.hufuAccount += Float.valueOf(allPayoutCategory.get(i).money);
 
 
@@ -472,9 +415,9 @@ public class ReportFormPager extends BasePager {
 
                // allAccountDD.add(payoutNumAndAccount.hufuAccount);
 
-                Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
+              //  Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
 
-                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+              //  Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
 
             }else if(allPayoutCategory.get(i).category.equals("药品")){
                 payoutNumAndAccount.yaopinNumber = 1;
@@ -485,9 +428,9 @@ public class ReportFormPager extends BasePager {
 
                 //allAccountDD.add(payoutNumAndAccount.yaopinAccount);
 
-                Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
+               // Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
 
-                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+              //  Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
 
             }else if(allPayoutCategory.get(i).category.equals("旅行")){
                 payoutNumAndAccount.lvxingNumber = 1;
@@ -498,9 +441,9 @@ public class ReportFormPager extends BasePager {
 
                 //allAccountDD.add(payoutNumAndAccount.lvxingAccount);
 
-                Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
+              //  Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
 
-                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category + "----" +allPayoutCategory.get(i).money );
+               // Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category + "----" +allPayoutCategory.get(i).money );
 
             }else if(allPayoutCategory.get(i).category.equals("礼物")){
                 payoutNumAndAccount.liwuNumber = 1;
@@ -511,9 +454,9 @@ public class ReportFormPager extends BasePager {
 
                 //allAccountDD.add(payoutNumAndAccount.liwuAccount);
 
-                Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
+              //  Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
 
-                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+              //  Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
 
             }else if(allPayoutCategory.get(i).category.equals("运动")){
                 payoutNumAndAccount.sportNumber = 1;
@@ -524,8 +467,8 @@ public class ReportFormPager extends BasePager {
 
                 //allAccountDD.add(payoutNumAndAccount.sportAccount);
 
-                Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
-                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+              //  Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
+               // Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
 
             }else if(allPayoutCategory.get(i).category.equals("学习")){
                 payoutNumAndAccount.xuexiNumber = 1;
@@ -536,9 +479,9 @@ public class ReportFormPager extends BasePager {
 
                 //allAccountDD.add(payoutNumAndAccount.xuexiAccount);
 
-                Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
+               // Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
 
-                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+               // Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
 
             }else if(allPayoutCategory.get(i).category.equals("红包")){
                 payoutNumAndAccount.hongbaoNumber = 1;
@@ -547,23 +490,14 @@ public class ReportFormPager extends BasePager {
 
                 reportformfIcon.put("红包",allPayoutCategory.get(i).resourceID);
 
-                Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
-                Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
+              //  Log.i("allPayoutCategory",allPayoutCategory.get(i).resourceID + "");
+              //  Log.i("payoutNumAndAccount",allPayoutCategory.get(i).category+ "----" +allPayoutCategory.get(i).money);
             }else {//对应的是自定义的支出类型
                 String category = allPayoutCategory.get(i).category;
                 boolean flag = true;
                 //循环的遍历支出集合
                 for(int j = 0; j < zhichuDataType.size(); j++){
-/*
-                    Set<String> keyWords = otherAllAccountDD.keySet();
-                    keysString = new String[keyWords.size()];
-                    Object[] keys = keyWords.toArray();
-                    for(int k = 0; k < keys.length; k++){
-                        String keyString =  keys[k].toString();
-                        keysString[k] = keyString;
-                    }*/
 
-                    Log.i("jijiji","----------------------------------------------------");
                     if(!category.equals(zhichuDataType.get(j))){
                         if(j == (zhichuDataType.size()-1)){
                             zhichuDataType.add(category);
@@ -580,7 +514,7 @@ public class ReportFormPager extends BasePager {
                             }
 
                             flag = false;
-                            Log.i("jijiji",category + "1.----" + otherAllAccountDD.get(category));
+                          //  Log.i("jijiji",category + "1.----" + otherAllAccountDD.get(category));
                         }else {
                             continue;
                         }
@@ -604,13 +538,13 @@ public class ReportFormPager extends BasePager {
                                 }
                             }
                             allAccount += Float.valueOf(allPayoutCategory.get(i).money);
-                            Log.i("jijiji",category + "22.----" + otherAllAccountDD.get(category));
+                          //  Log.i("jijiji",category + "22.----" + otherAllAccountDD.get(category));
                             break;
                         }
-                        Log.i("jijiji",category + "2.----" + otherAllAccountDD.get(category));
+                      //  Log.i("jijiji",category + "2.----" + otherAllAccountDD.get(category));
                     }
                 }
-                Log.i("jijiji",category + "3.----" + otherAllAccountDD.get(category));
+               // Log.i("jijiji",category + "3.----" + otherAllAccountDD.get(category));
             }
         }
 
@@ -636,20 +570,29 @@ public class ReportFormPager extends BasePager {
         for(int i = 0;i < 19; i ++){
             if(allAccountDD[i] != 0){
                 //reportformData.add(allAccountDD[i] +"---" + dataType[i % dataType.length] );
-                reportformData.add(allAccountDD[i] +"---" + zhichuDataType.get(i % zhichuDataType.size()));
+                reportformData.add(zhichuDataType.get(i));
             }
         }
 
         for(int i = 0;i <reportformData.size(); i ++){
-            Log.i("reportformData",reportformData.get(i));
+           // Log.i("reportformData",reportformData.get(i));
         }
 
        // rv_reportformpager_recyclerview.setAdapter(new ReportformRecyclerViewAdapter(reportformData,mActivity));
         initChart();
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(mActivity,LinearLayoutManager.VERTICAL,false);
+        customAdapter = new MyAdapter();
+        rv_reportformpager_recyclerview.setAdapter(customAdapter);
+        rv_reportformpager_recyclerview.setLayoutManager(mLayoutManager);
+        rv_reportformpager_recyclerview.addItemDecoration(new DividerItemDecoration(mActivity,LinearLayoutManager.VERTICAL));
+        mycustomAnimation = new MycustomAnimation(rv_reportformpager_recyclerview);
+        rv_reportformpager_recyclerview.setItemAnimator(mycustomAnimation);
+       // Log.i("666666","******************"+customAdapter.getItemCount());
+
     }
 
     public void initChart() {
-        Log.i("3333333333","55555555555555");
+        mFlag = false;
         //设置饼状图是否接受点击事件，默认为true
         pc_reportform_piechart.setTouchEnabled(true);
         //设置图饼是否显示百分比
@@ -661,10 +604,10 @@ public class ReportFormPager extends BasePager {
         //设置圆盘中间文字
         pc_reportform_piechart.setCenterText(generateCenterSpannableText());
         //设置中间圆盘的半径,值为所占饼图的百分比
-        pc_reportform_piechart.setHoleRadius(60);
+        pc_reportform_piechart.setHoleRadius(DensityUtil.dip2px(mActivity,22));
         //设置圆盘是否可以转动
         pc_reportform_piechart.setRotationEnabled(true);
-        pc_reportform_piechart.setRotationAngle(90);
+        pc_reportform_piechart.setRotationAngle(ABSOLUTE_MIDDLE);
         //设置动画
         pc_reportform_piechart.animateX(1000, Easing.EasingOption.EaseInOutQuad);
 
@@ -680,30 +623,30 @@ public class ReportFormPager extends BasePager {
         bindData(zhichuDataType.size());
 
         for(int i = 0;i <zhichuDataType.size();i++ ){
-            Log.i("zhichuDataType555",zhichuDataType.get(i));
+          //  Log.i("zhichuDataType555",zhichuDataType.get(i));
         }
 
-        Log.i("zhichuDataType",zhichuDataType.size() + "");
+       // Log.i("zhichuDataType",zhichuDataType.size() + "");
 
         // 设置一个选中区域监听
         pc_reportform_piechart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
-
+               /// Log.i("bbbbbb","比例 = bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"+);
                 float rotationAngle = pc_reportform_piechart.getRotationAngle();
 
-                Log.i("rotationAngle",rotationAngle + "");
+               // Log.i("rotationAngle",rotationAngle + "");
 
                 float[] drawAngles = pc_reportform_piechart.getDrawAngles();
 
                 for(int i = 0; i < drawAngles.length;i ++){
-                    Log.i("drawAngles",drawAngles[i] + "");
+                  //  Log.i("drawAngles",drawAngles[i] + "");
                 }
 
                 float[] absoluteAngles = pc_reportform_piechart.getAbsoluteAngles();
 
                 for(int i = 0; i < absoluteAngles.length;i ++){
-                    Log.i("absoluteAngles",absoluteAngles[i] + "");
+                  //  Log.i("absoluteAngles",absoluteAngles[i] + "");
                 }
 
                 float y = h.getY();
@@ -712,18 +655,39 @@ public class ReportFormPager extends BasePager {
                 float v = drawAngles[x] / 2;
                 float end = 450f - (absoluteAngles[x] - v);
                 pc_reportform_piechart.spin(500,rotationAngle,end,Easing.EasingOption.EaseInOutQuad);
-                Log.i("rotationAngle",x + "");
 
-                tv_reportform_detail.setText(  zhichuDataType.get(x) +":       "  + y + "元" );
-               //colors[x % colors.length]
-                tv_reportform_detail.setTextColor(colors[x % colors.length]);
+                final View view = rv_reportformpager_recyclerview.getHeaderView(0);
+                ImageView img = (ImageView) view.findViewById(R.id.header_custom_icon);
+                TextView tx1 = (TextView) view.findViewById(R.id.header_catagory);
+                TextView tx2 = (TextView) view.findViewById(R.id.header_account);
+                String tmp = null;
+                if(mFlag){
+                   tmp =tx1.getText().toString();
+                }
+/*                tx1.setText(  zhichuDataType.get(x) );
+                tx2.setText(  y+"元" );
+                SyncBackgroudUtils.setTimeLineBackgroud(reportformfIcon.get(zhichuDataType.get(x)),img,colors[x % colors.length]);
 
-                Log.i("lllllllll",colors[x % colors.length] + "");
-                //iv_reportform_detail.setBackgroundResource(R.drawable.account_pager_group_today_icon);
-                SyncBackgroudUtils.setTimeLineBackgroud(reportformfIcon.get(zhichuDataType.get(x)),iv_reportform_detail,colors[x % colors.length]);
-                Log.i("lllllllll",colors[x % colors.length] + "");
+                img.setImageResource(reportformfIcon.get(zhichuDataType.get(x)));*/
+                 int index = findLocation(reportformData,zhichuDataType.get(x));
+                if(index !=-1){
+                    mycustomAnimation.setParams(reportformfIcon.get(zhichuDataType.get(x)),zhichuDataType.get(x),y+"",colors[x % colors.length]);
+                    mycustomAnimation.setContainers(img,tx1,tx2);
+                    reportformData.remove(index);
+                    rv_reportformpager_recyclerview.getAdapter().notifyItemRemoved(index+1);
+                    if(mFlag){
+                        reportformData.add(0, tmp);
+                        rv_reportformpager_recyclerview.getAdapter().notifyItemInserted(1);
+                    }else{
+                        //view.setVisibility(View.VISIBLE);
+                        mFlag = true;
+                    }
 
-                iv_reportform_detail.setImageResource(reportformfIcon.get(zhichuDataType.get(x)));
+                }
+
+
+                Log.i("jjj","*********index******"+index);
+
 
             }
 
@@ -743,7 +707,7 @@ public class ReportFormPager extends BasePager {
         s.setSpan(new ForegroundColorSpan(Color.BLACK), 0, 4, 0);
         s.setSpan(new RelativeSizeSpan(2.0f), 4, s.length(), 0);
         s.setSpan(new StyleSpan(Typeface.BOLD), 4, s.length(), 0);
-        s.setSpan(new ForegroundColorSpan(Color.RED), 4, s.length(), 0);
+        s.setSpan(new ForegroundColorSpan(Color.BLACK), 4, s.length(), 0);
         return s;
     }
 
@@ -754,8 +718,8 @@ public class ReportFormPager extends BasePager {
             if(h < 19){
                 entries.add(new PieEntry(allAccountDD[h],""));
             }else{
-                Log.i("tmdtmd",h + "");
-                Log.i("tmdtmd",zhichuDataType.size() + "");
+               // Log.i("tmdtmd",h + "");
+               // Log.i("tmdtmd",zhichuDataType.size() + "");
                 entries.add(new PieEntry(otherAllAccountDD.get(keysString[h - 19]),""));
             }
         }
@@ -767,7 +731,7 @@ public class ReportFormPager extends BasePager {
         //各个区域不显示具体的数字，即所占百分比
         dataSet.setValueTextColor(Color.TRANSPARENT);
         //被选中部分高出的长度
-        dataSet.setSelectionShift(10f);
+        dataSet.setSelectionShift(7f);
 
         //设置各个区域的颜色
         ArrayList<Integer> color = new ArrayList<Integer>();
@@ -783,6 +747,66 @@ public class ReportFormPager extends BasePager {
 
         pc_reportform_piechart.invalidate();
     }
+
+    public int findLocation(List<String> target,String obj){
+        for(int i=0;i<target.size();i++){
+            if(target.get(i).equals(obj)){
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    public class MyAdapter extends RecyclerView.Adapter<OrdinaryViewHolder>{
+
+        private final LayoutInflater mInflater;
+
+        public MyAdapter(){
+            mInflater =  LayoutInflater.from(mActivity);
+        }
+
+        @Override
+        public OrdinaryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = mInflater.inflate(R.layout.header_view_items,parent,false);
+            OrdinaryViewHolder holder = new OrdinaryViewHolder(view);
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(OrdinaryViewHolder holder, int position) {
+            Log.i("777777777","*************0000000000000");
+            Log.i("777777777","*************"+reportformfIcon.size());
+                Log.i("jj","()()()()()()"+position+"---"+holder.getAdapterPosition());
+                holder.onBindViewHolder(reportformfIcon,position);
+        }
+
+        @Override
+        public int getItemCount() {
+            return reportformData.size();
+        }
+    }
+
+    public class OrdinaryViewHolder extends  RecyclerView.ViewHolder{
+        ImageView icon;
+        TextView catagory;
+        TextView account;
+        public OrdinaryViewHolder(View itemView) {
+            super(itemView);
+            icon = (ImageView) itemView.findViewById(R.id.custom_icon);
+            catagory = (TextView) itemView.findViewById(R.id.catagory);
+            account = (TextView) itemView.findViewById(R.id.account);
+        }
+        public void onBindViewHolder(HashMap<String,Integer> reportformfIcon,int position){
+            Log.i("11111111111111","--------------------"+reportformData.get(position));
+            icon.setImageResource(reportformfIcon.get(reportformData.get(position)));
+            SyncBackgroudUtils.setTimeLineBackgroud(reportformfIcon.get(reportformData.get(position)),icon,colors[ zhichuDataType.indexOf(reportformData.get(position))% colors.length]);
+            catagory.setText(reportformData.get(position));
+            account.setText(allAccountDD[zhichuDataType.indexOf(reportformData.get(position))]+"");
+        }
+    }
+
+
 }
 
 class PayoutNumAndAccount{
@@ -866,232 +890,15 @@ class PayoutColors{
     public  static int hongbaoColor = Color.rgb(255, 41, 12);
 }
 
-//RecyclerView的适配器
-class ReportformRecyclerViewAdapter extends RecyclerView.Adapter<ReportformRecyclerViewAdapter.ReportformViewHolder>{
-    public Context context;
-    private List<String> dataList;
-
-    public ReportformRecyclerViewAdapter(List<String> dataList, Context context) {
-        this.dataList = dataList;
-        this.context = context;
-    }
-
-    @Override
-    public ReportformViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ReportformViewHolder reportformViewHolder = new ReportformViewHolder(LayoutInflater.from(
-                context).inflate(R.layout.item_reportform_recyclerview, parent, false));
-        return reportformViewHolder;
-        //return new ReportformViewHolder(View.inflate(context,R.layout.item_reportform_recyclerview,null));
-    }
-
-    @Override
-    public void onBindViewHolder(ReportformViewHolder holder, int position) {
-        Log.i("dataList", dataList.get(position) + dataList.size());
-        Log.i("position",position + "");
-
-        holder.mTextView.setText(dataList.get(position));
-    }
-
-    @Override
-    public int getItemCount() {
-        return dataList.size();
-    }
-
-    public static class ReportformViewHolder extends RecyclerView.ViewHolder{
-        TextView mTextView;
-        public ReportformViewHolder(View itemView) {
-            super(itemView);
-            mTextView = (TextView) itemView.findViewById(R.id.tv_reportform_rvitem);
-        }
-    }
-}
-
-//RecyclerView分割线
-class DividerItemDecoration extends RecyclerView.ItemDecoration {
-
-    private static final int[] ATTRS = new int[]{
-            android.R.attr.listDivider
-    };
-
-    public static final int HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL;
-
-    public static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
-
-    public Drawable mDivider;
-
-    public int mOrientation;
-
-    public DividerItemDecoration(Context context, int orientation) {
-        final TypedArray a = context.obtainStyledAttributes(ATTRS);
-        mDivider = a.getDrawable(0);
-        a.recycle();
-        setOrientation(orientation);
-    }
-
-    public void setOrientation(int orientation) {
-        if (orientation != HORIZONTAL_LIST && orientation != VERTICAL_LIST) {
-            throw new IllegalArgumentException("invalid orientation");
-        }
-        mOrientation = orientation;
-    }
-
-    @Override
-    public void onDraw(Canvas c, RecyclerView parent) {
-
-        if (mOrientation == VERTICAL_LIST) {
-            drawVertical(c, parent);
-        } else {
-            drawHorizontal(c, parent);
-        }
-
-    }
 
 
-    public void drawVertical(Canvas c, RecyclerView parent) {
-        final int left = parent.getPaddingLeft();
-        final int right = parent.getWidth() - parent.getPaddingRight();
-
-        final int childCount = parent.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            final View child = parent.getChildAt(i);
-            RecyclerView v = new RecyclerView(parent.getContext());
-            final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
-                    .getLayoutParams();
-            final int top = child.getBottom() + params.bottomMargin;
-            final int bottom = top + mDivider.getIntrinsicHeight();
-            mDivider.setBounds(left, top, right, bottom);
-            mDivider.draw(c);
-        }
-    }
-
-    public void drawHorizontal(Canvas c, RecyclerView parent) {
-        final int top = parent.getPaddingTop();
-        final int bottom = parent.getHeight() - parent.getPaddingBottom();
-
-        final int childCount = parent.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            final View child = parent.getChildAt(i);
-            final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
-                    .getLayoutParams();
-            final int left = child.getRight() + params.rightMargin;
-            final int right = left + mDivider.getIntrinsicHeight();
-            mDivider.setBounds(left, top, right, bottom);
-            mDivider.draw(c);
-        }
-    }
-
-    @Override
-    public void getItemOffsets(Rect outRect, int itemPosition, RecyclerView parent) {
-        if (mOrientation == VERTICAL_LIST) {
-            outRect.set(0, 0, 0, mDivider.getIntrinsicHeight());
-        } else {
-            outRect.set(0, 0, mDivider.getIntrinsicWidth(), 0);
-        }
-    }
-}
-
-//recyclerview的item的高度自适应
-class SyLinearLayoutManager extends LinearLayoutManager {
-
-    private static final int CHILD_WIDTH = 0;
-    private static final int CHILD_HEIGHT = 1;
-    private static final int DEFAULT_CHILD_SIZE = 100;
-
-    private final int[] childDimensions = new int[2];
-
-    private int childSize = DEFAULT_CHILD_SIZE;
-    private boolean hasChildSize;
-
-    @SuppressWarnings("UnusedDeclaration")
-    public SyLinearLayoutManager(Context context) {
-        super(context);
-    }
-
-    @SuppressWarnings("UnusedDeclaration")
-    public SyLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
-        super(context, orientation, reverseLayout);
-    }
-
-    private int[] mMeasuredDimension = new int[2];
 
 
-    @Override
-    public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state, int widthSpec, int heightSpec) {
-        final int widthMode = View.MeasureSpec.getMode(widthSpec);
-        final int heightMode = View.MeasureSpec.getMode(heightSpec);
-        final int widthSize = View.MeasureSpec.getSize(widthSpec);
-        final int heightSize = View.MeasureSpec.getSize(heightSpec);
-        int width = 0;
-        int height = 0;
 
 
-        for (int i = 0; i < getItemCount(); i++) {
-
-            try {
-                measureScrapChild(recycler, i,
-                        widthSpec,
-                        View.MeasureSpec.makeMeasureSpec(i, View.MeasureSpec.UNSPECIFIED),
-                        mMeasuredDimension);
-            } catch (IndexOutOfBoundsException e) {
-
-                e.printStackTrace();
-            }
-
-            if (getOrientation() == HORIZONTAL) {
-                width = width + mMeasuredDimension[0];
-                if (i == 0) {
-                    height = mMeasuredDimension[1];
-                }
-            } else {
-                height = height + mMeasuredDimension[1];
-                if (i == 0) {
-                    width = mMeasuredDimension[0];
-                }
-            }
-        }
 
 
-//        Logger.d("ll width:"+width+";widthSize:"+widthSize+";widthSpec:"+widthSpec);
-//        Logger.d("ll height:"+width+";heightSize:"+heightSize+";heightSpec:"+heightSpec);
-//        Logger.d("ll widthMode:"+widthMode+";heightMode:"+heightMode);
 
-        switch (widthMode) {
-            case View.MeasureSpec.EXACTLY:
-//                    width = widthSize;
-            case View.MeasureSpec.AT_MOST:
-            case View.MeasureSpec.UNSPECIFIED:
-        }
 
-        switch (heightMode) {
-            case View.MeasureSpec.EXACTLY:
-                height = heightSize;
-            case View.MeasureSpec.AT_MOST:
-            case View.MeasureSpec.UNSPECIFIED:
-        }
-        setMeasuredDimension(widthSpec, height);
 
-    }
 
-    private void measureScrapChild(RecyclerView.Recycler recycler, int position, int widthSpec, int heightSpec, int[] measuredDimension) {
-        View view = recycler.getViewForPosition(position);
-
-        // For adding Item Decor Insets to view
-//        super.measureChildWithMargins(view, 0, 0);
-
-        if (view != null) {
-            RecyclerView.LayoutParams p = (RecyclerView.LayoutParams) view.getLayoutParams();
-            int childHeightSpec = ViewGroup.getChildMeasureSpec(heightSpec,
-                    getPaddingTop() + getPaddingBottom(), p.height);
-            view.measure(widthSpec, childHeightSpec);
-            measuredDimension[0] = view.getMeasuredWidth() + p.leftMargin + p.rightMargin;
-            measuredDimension[1] = view.getMeasuredHeight() + p.bottomMargin + p.topMargin;
-            recycler.recycleView(view);
-        }
-    }
-
-    @Override
-    public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-//        Logger.e("SyLinearLayoutManager state:" + state.toString());
-        super.onLayoutChildren(recycler, state);
-    }
-}

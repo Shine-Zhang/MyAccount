@@ -70,38 +70,19 @@
                 android:id="@+id/fl_reportform_zhichu"
                 android:layout_gravity="center_horizontal">
                 <com.github.mikephil.charting.charts.PieChart
-                    android:layout_width="match_parent"
-                    android:layout_height="350dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="250dp"
+                    android:layout_height="250dp"
+                    android:layout_marginTop="30dp"
                     android:id="@+id/pc_reportform_piechart">
                 </com.github.mikephil.charting.charts.PieChart>
             </FrameLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:id="@+id/rl_reportform_detail">
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentLeft="true"
-                    android:id="@+id/iv_reportform_detail"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="25dp"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:id="@+id/tv_reportform_detail"
-                    android:textColor="#f00"
-                    android:textSize="25sp"/>
-            </RelativeLayout>
-            <!--<android.support.v7.widget.RecyclerView
+
+            <com.example.zs.view.HeaderRecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/rv_reportformpager_recyclerview">
-            </android.support.v7.widget.RecyclerView>-->
+            </com.example.zs.view.HeaderRecyclerView>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -110,9 +91,10 @@
             android:id="@+id/ll_reportform_shouru"
             android:layout_height="wrap_content">
             <FrameLayout
-                android:layout_width="match_parent"
                 android:id="@+id/fl_reportform_shouru"
-                android:layout_height="350dp"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_marginTop="30dp"
                 android:layout_gravity="center_horizontal">
             </FrameLayout>
             <RelativeLayout
@@ -121,9 +103,9 @@
                 android:layout_marginTop="30dp"
                 android:id="@+id/rl_reportform_incomedetail">
                 <ImageView
-                    android:layout_width="40dp"
+                    android:layout_width="30dp"
                     android:layout_marginLeft="20dp"
-                    android:layout_height="40dp"
+                    android:layout_height="30dp"
                     android:layout_alignParentLeft="true"
                     android:id="@+id/iv_reportform_incomedetail"/>
                 <TextView
@@ -134,8 +116,8 @@
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
                     android:id="@+id/tv_reportform_incomedetail"
-                    android:textColor="#f00"
-                    android:textSize="25sp"/>
+                    android:textColor="#89000000"
+                    android:textSize="16sp"/>
             </RelativeLayout>
         </LinearLayout>
     </FrameLayout>

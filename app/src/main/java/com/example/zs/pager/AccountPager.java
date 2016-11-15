@@ -7,16 +7,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,13 +19,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -47,11 +39,9 @@ import com.example.zs.dao.IncomeContentDAO;
 import com.example.zs.dao.PayOutContentDAO;
 import com.example.zs.dao.TimeLineDAO;
 import com.example.zs.myaccount.AddRecordActivity;
-import com.example.zs.myaccount.MainActivity;
 import com.example.zs.myaccount.R;
 import com.example.zs.myaccount.ShowBudgetStateAcivity;
 import com.example.zs.utils.DensityUtil;
-import com.example.zs.utils.SeletorUtils;
 import com.example.zs.utils.SyncBackgroudUtils;
 import com.example.zs.view.CircleImageView;
 import com.example.zs.view.PinnedHeaderExpandableListView;
@@ -60,13 +50,8 @@ import com.example.zs.view.WaveHelper;
 import com.example.zs.view.WaveView;
 import com.lidroid.xutils.view.annotation.ViewInject;
 
-import org.w3c.dom.Text;
-
-import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Locale;
 
 /**
  *
@@ -209,6 +194,15 @@ public class AccountPager extends BasePager implements
 
   /*      childItems = new  ArrayList<ArrayList<AccountChildItemBean>> ();
         groupItems = new ArrayList<>();*/
+        Uri uri = Uri.parse("content://com.example.zs.DB.Dao.lockAppchanged");
+        //notifyForDescendents:匹配规则,true:精确匹配  false:模糊匹配
+/*        mActivity.getContentResolver().registerContentObserver(uri, true, new ContentObserver(null) {
+            public void onChange(boolean selfChange) {
+                //更新数据
+               // list = watchDogDao.querAllLockApp();
+                Log.i("jiujiu","********************************");
+            };
+        });*/
 
         return mrootView;
 
