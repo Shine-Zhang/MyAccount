@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.example.zs.bean.IncomeContentInfo;
 import com.example.zs.dao.IncomeContentDAO;
 import com.example.zs.myaccount.R;
+import com.example.zs.utils.DensityUtil;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -87,7 +88,7 @@ public class ReportFormIncome {
         //设置圆盘中间文字
         pieChart.setCenterText(generateCenterSpannableText());
         //设置中间圆盘的半径,值为所占饼图的百分比
-        pieChart.setHoleRadius(60);
+        pieChart.setHoleRadius(DensityUtil.dip2px(activity,22));
         //设置圆盘是否可以转动
         pieChart.setRotationEnabled(true);
         pieChart.setRotationAngle(90);
