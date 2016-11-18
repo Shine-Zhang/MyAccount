@@ -85,7 +85,6 @@ public class SyncBackgroudUtils {
 }
 
  class WholeCustomColors{
-
      public  static int phonefeeColor = Color.rgb(92, 228, 162);
      public  static int hufuColor = Color.rgb(248, 137, 235);
      public  static int spriteColor = Color.rgb(247, 181, 45);

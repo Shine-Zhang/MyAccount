@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -192,17 +193,17 @@ public class AccountPager extends BasePager implements
         tvAccountPagerTotalCost = (TextView) mrootView.findViewById(R.id.tv_account_pager_month_cost);
 
 
-  /*      childItems = new  ArrayList<ArrayList<AccountChildItemBean>> ();
-        groupItems = new ArrayList<>();*/
+       childItems = new  ArrayList<ArrayList<AccountChildItemBean>> ();
+        groupItems = new ArrayList<>();
         Uri uri = Uri.parse("content://com.example.zs.DB.Dao.lockAppchanged");
         //notifyForDescendents:匹配规则,true:精确匹配  false:模糊匹配
-/*        mActivity.getContentResolver().registerContentObserver(uri, true, new ContentObserver(null) {
+        mActivity.getContentResolver().registerContentObserver(uri, true, new ContentObserver(null) {
             public void onChange(boolean selfChange) {
                 //更新数据
                // list = watchDogDao.querAllLockApp();
                 Log.i("jiujiu","********************************");
             };
-        });*/
+        });
 
         return mrootView;
 

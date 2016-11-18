@@ -125,6 +125,7 @@ public class ReportFormPager extends BasePager {
     private MyAdapter customAdapter;
     private MycustomAnimation mycustomAnimation;
     private TextView tv_reportform_account;
+    private  boolean isActive;
 
     public ReportFormPager(Activity activity) {
         super(activity);
@@ -237,6 +238,7 @@ public class ReportFormPager extends BasePager {
     @Override
     public void initData() {
         mFlag = false;
+        isActive = false;
         rv_reportformpager_recyclerview.getHeaderView(0).setVisibility(View.GONE);
         zhichuDataType = new ArrayList<String>(){{add("电影"); add("话费");add("护肤彩妆"); add("酒水饮料");
            add("礼物"); add("运动");add("衣服鞋包"); add("学习");add("药品"); add("水果");add("生活用品"); add("旅行");
@@ -614,10 +616,14 @@ public class ReportFormPager extends BasePager {
         //设置饼图右下角的文字描述
         pc_reportform_piechart.setDescription("");
 
+        pc_reportform_piechart.setRotationEnabled(false);
+
         //设置比例图(图例，即那种颜色代表那种消费类型)
         Legend legend = pc_reportform_piechart.getLegend();
         //设置比例图显示在饼图的哪个位置
         legend.setEnabled(false);
+
+
 
         //绑定数据,括号中的内容代表的饼状图将被分为几部分
         bindData(zhichuDataType.size());
@@ -632,61 +638,64 @@ public class ReportFormPager extends BasePager {
         pc_reportform_piechart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
-               /// Log.i("bbbbbb","比例 = bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"+);
-                float rotationAngle = pc_reportform_piechart.getRotationAngle();
+                Log.i("lililili","isActive = "+isActive);
+                if(!isActive){
+                    isActive = true;
+                    /// Log.i("bbbbbb","比例 = bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"+);
+                    float rotationAngle = pc_reportform_piechart.getRotationAngle();
 
-               // Log.i("rotationAngle",rotationAngle + "");
+                    // Log.i("rotationAngle",rotationAngle + "");
 
-                float[] drawAngles = pc_reportform_piechart.getDrawAngles();
+                    float[] drawAngles = pc_reportform_piechart.getDrawAngles();
 
-                for(int i = 0; i < drawAngles.length;i ++){
-                  //  Log.i("drawAngles",drawAngles[i] + "");
-                }
+                    for(int i = 0; i < drawAngles.length;i ++){
+                        //  Log.i("drawAngles",drawAngles[i] + "");
+                    }
 
-                float[] absoluteAngles = pc_reportform_piechart.getAbsoluteAngles();
+                    float[] absoluteAngles = pc_reportform_piechart.getAbsoluteAngles();
 
-                for(int i = 0; i < absoluteAngles.length;i ++){
-                  //  Log.i("absoluteAngles",absoluteAngles[i] + "");
-                }
+                    for(int i = 0; i < absoluteAngles.length;i ++){
+                        //  Log.i("absoluteAngles",absoluteAngles[i] + "");
+                    }
 
-                float y = h.getY();
+                    float y = h.getY();
 
-                int x = (int) h.getX();
-                float v = drawAngles[x] / 2;
-                float end = 450f - (absoluteAngles[x] - v);
-                pc_reportform_piechart.spin(500,rotationAngle,end,Easing.EasingOption.EaseInOutQuad);
+                    int x = (int) h.getX();
+                    float v = drawAngles[x] / 2;
+                    float end = 450f - (absoluteAngles[x] - v);
+                    pc_reportform_piechart.spin(500,rotationAngle,end,Easing.EasingOption.EaseInOutQuad);
 
-                final View view = rv_reportformpager_recyclerview.getHeaderView(0);
-                ImageView img = (ImageView) view.findViewById(R.id.header_custom_icon);
-                TextView tx1 = (TextView) view.findViewById(R.id.header_catagory);
-                TextView tx2 = (TextView) view.findViewById(R.id.header_account);
-                String tmp = null;
-                if(mFlag){
-                   tmp =tx1.getText().toString();
-                }
+                    final View view = rv_reportformpager_recyclerview.getHeaderView(0);
+                    ImageView img = (ImageView) view.findViewById(R.id.header_custom_icon);
+                    TextView tx1 = (TextView) view.findViewById(R.id.header_catagory);
+                    TextView tx2 = (TextView) view.findViewById(R.id.header_account);
+                    String tmp = null;
+                    if(mFlag){
+                        tmp =tx1.getText().toString();
+                    }
 /*                tx1.setText(  zhichuDataType.get(x) );
                 tx2.setText(  y+"元" );
                 SyncBackgroudUtils.setTimeLineBackgroud(reportformfIcon.get(zhichuDataType.get(x)),img,colors[x % colors.length]);
 
                 img.setImageResource(reportformfIcon.get(zhichuDataType.get(x)));*/
-                 int index = findLocation(reportformData,zhichuDataType.get(x));
-                if(index !=-1){
-                    mycustomAnimation.setParams(reportformfIcon.get(zhichuDataType.get(x)),zhichuDataType.get(x),y+"",colors[x % colors.length]);
-                    mycustomAnimation.setContainers(img,tx1,tx2);
-                    reportformData.remove(index);
-                    rv_reportformpager_recyclerview.getAdapter().notifyItemRemoved(index+1);
-                    if(mFlag){
-                        reportformData.add(0, tmp);
-                        rv_reportformpager_recyclerview.getAdapter().notifyItemInserted(1);
-                    }else{
-                        //view.setVisibility(View.VISIBLE);
-                        mFlag = true;
+                    int index = findLocation(reportformData,zhichuDataType.get(x));
+                    if(index !=-1){
+                        mycustomAnimation.setParams(reportformfIcon.get(zhichuDataType.get(x)),zhichuDataType.get(x),y+"",colors[x % colors.length],index);
+                        mycustomAnimation.setContainers(img,tx1,tx2);
+                        reportformData.remove(index);
+                        rv_reportformpager_recyclerview.getAdapter().notifyItemRemoved(index+1);
+                        if(mFlag){
+                            reportformData.add(0, tmp);
+                            rv_reportformpager_recyclerview.getAdapter().notifyItemInserted(1);
+                        }else{
+                            //view.setVisibility(View.VISIBLE);
+                            mFlag = true;
+                        }
+
                     }
 
+                    isActive = false;
                 }
-
-
-                Log.i("jjj","*********index******"+index);
 
 
             }
