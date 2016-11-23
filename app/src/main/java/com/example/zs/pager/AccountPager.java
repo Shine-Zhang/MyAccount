@@ -204,7 +204,6 @@ public class AccountPager extends BasePager implements
                 Log.i("jiujiu","********************************");
             };
         });
-
         return mrootView;
 
     }

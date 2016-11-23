@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.util.Log;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
