@@ -236,7 +236,7 @@ public class IncomePage extends AddBasePage {
      */
     private void initData() {
         //默认为一般种类
-        selectResourceID = R.drawable.ic_yiban_default;
+        selectResourceID = R.drawable.ic_gongzi_default;
         selectCategoryName = "工资";
         Log.i(TAG, "initData");
         incomeCategoryDAO = new IncomeCategoryDAO(activity);

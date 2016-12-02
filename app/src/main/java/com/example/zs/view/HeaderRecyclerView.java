@@ -80,7 +80,6 @@ public class HeaderRecyclerView extends RecyclerView {
         mHeaderViewInfos.add(info);
         if(mAdapter!=null){
             mAdapter.notifyDataSetChanged();
-
         }
     }
 

@@ -126,6 +126,7 @@ public class ReportFormPager extends BasePager {
     private MycustomAnimation mycustomAnimation;
     private TextView tv_reportform_account;
     private  boolean isActive;
+    private String preHeaderString;
 
     public ReportFormPager(Activity activity) {
         super(activity);
@@ -239,6 +240,7 @@ public class ReportFormPager extends BasePager {
     public void initData() {
         mFlag = false;
         isActive = false;
+        preHeaderString = null;
         rv_reportformpager_recyclerview.getHeaderView(0).setVisibility(View.GONE);
         zhichuDataType = new ArrayList<String>(){{add("电影"); add("话费");add("护肤彩妆"); add("酒水饮料");
            add("礼物"); add("运动");add("衣服鞋包"); add("学习");add("药品"); add("水果");add("生活用品"); add("旅行");
@@ -638,67 +640,61 @@ public class ReportFormPager extends BasePager {
         pc_reportform_piechart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
-                Log.i("lililili","isActive = "+isActive);
-                if(!isActive){
-                    isActive = true;
-                    /// Log.i("bbbbbb","比例 = bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"+);
-                    float rotationAngle = pc_reportform_piechart.getRotationAngle();
+                    synchronized (this){
+                        Log.i("lililili","isActive = "+isActive);
+                        /// Log.i("bbbbbb","比例 = bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"+);
+                        float rotationAngle = pc_reportform_piechart.getRotationAngle();
 
-                    // Log.i("rotationAngle",rotationAngle + "");
+                        // Log.i("rotationAngle",rotationAngle + "");
 
-                    float[] drawAngles = pc_reportform_piechart.getDrawAngles();
+                        float[] drawAngles = pc_reportform_piechart.getDrawAngles();
 
-                    for(int i = 0; i < drawAngles.length;i ++){
-                        //  Log.i("drawAngles",drawAngles[i] + "");
-                    }
-
-                    float[] absoluteAngles = pc_reportform_piechart.getAbsoluteAngles();
-
-                    for(int i = 0; i < absoluteAngles.length;i ++){
-                        //  Log.i("absoluteAngles",absoluteAngles[i] + "");
-                    }
-
-                    float y = h.getY();
-
-                    int x = (int) h.getX();
-                    float v = drawAngles[x] / 2;
-                    float end = 450f - (absoluteAngles[x] - v);
-                    pc_reportform_piechart.spin(500,rotationAngle,end,Easing.EasingOption.EaseInOutQuad);
-
-                    final View view = rv_reportformpager_recyclerview.getHeaderView(0);
-                    ImageView img = (ImageView) view.findViewById(R.id.header_custom_icon);
-                    TextView tx1 = (TextView) view.findViewById(R.id.header_catagory);
-                    TextView tx2 = (TextView) view.findViewById(R.id.header_account);
-                    String tmp = null;
-                    if(mFlag){
-                        tmp =tx1.getText().toString();
-                    }
-/*                tx1.setText(  zhichuDataType.get(x) );
-                tx2.setText(  y+"元" );
-                SyncBackgroudUtils.setTimeLineBackgroud(reportformfIcon.get(zhichuDataType.get(x)),img,colors[x % colors.length]);
-
-                img.setImageResource(reportformfIcon.get(zhichuDataType.get(x)));*/
-                    int index = findLocation(reportformData,zhichuDataType.get(x));
-                    if(index !=-1){
-                        mycustomAnimation.setParams(reportformfIcon.get(zhichuDataType.get(x)),zhichuDataType.get(x),y+"",colors[x % colors.length],index);
-                        mycustomAnimation.setContainers(img,tx1,tx2);
-                        reportformData.remove(index);
-                        rv_reportformpager_recyclerview.getAdapter().notifyItemRemoved(index+1);
-                        if(mFlag){
-                            reportformData.add(0, tmp);
-                            rv_reportformpager_recyclerview.getAdapter().notifyItemInserted(1);
-                        }else{
-                            //view.setVisibility(View.VISIBLE);
-                            mFlag = true;
+                        for(int i = 0; i < drawAngles.length;i ++){
+                            //  Log.i("drawAngles",drawAngles[i] + "");
                         }
 
+                        float[] absoluteAngles = pc_reportform_piechart.getAbsoluteAngles();
+
+                        for(int i = 0; i < absoluteAngles.length;i ++){
+                            //  Log.i("absoluteAngles",absoluteAngles[i] + "");
+                        }
+
+                        float y = h.getY();
+
+                        int x = (int) h.getX();
+                        float v = drawAngles[x] / 2;
+                        float end = 450f - (absoluteAngles[x] - v);
+                        pc_reportform_piechart.spin(500,rotationAngle,end,Easing.EasingOption.EaseInOutQuad);
+
+                        final View view = rv_reportformpager_recyclerview.getHeaderView(0);
+                        ImageView img = (ImageView) view.findViewById(R.id.header_custom_icon);
+                        TextView tx1 = (TextView) view.findViewById(R.id.header_catagory);
+                        TextView tx2 = (TextView) view.findViewById(R.id.header_account);
+                        String tmp = null;
+                        if(!mFlag){
+                            //tmp =tx1.getText().toString();
+                            preHeaderString = zhichuDataType.get(x);
+                        }
+
+                        int index = findLocation(reportformData,zhichuDataType.get(x));
+                        if(index !=-1){
+                            mycustomAnimation.setParams(reportformfIcon.get(zhichuDataType.get(x)),zhichuDataType.get(x),y+"",colors[x % colors.length],index);
+                            mycustomAnimation.setContainers(img,tx1,tx2);
+                            reportformData.remove(index);
+                            rv_reportformpager_recyclerview.getAdapter().notifyItemRemoved(index+1);
+                            if(mFlag){
+                                reportformData.add(0, preHeaderString);
+                                preHeaderString = zhichuDataType.get(x);
+                                rv_reportformpager_recyclerview.getAdapter().notifyItemInserted(1);
+                            }else{
+                                //view.setVisibility(View.VISIBLE);
+                                mFlag = true;
+                            }
+
+                        }
                     }
 
-                    isActive = false;
                 }
-
-
-            }
 
             @Override
             public void onNothingSelected() {
